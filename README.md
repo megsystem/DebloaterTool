@@ -18,6 +18,7 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 
 1. **Download the DebloaterTool.exe:**
    - Go to the [DebloaterTool Releases Page](https://github.com/megsystem/DebloaterTool/releases) and download `DebloaterTool.exe`.
+   - Or download the experimental one: [DebloaterTool.exe](https://github.com/megsystem/DebloaterTool/blob/main/DebloaterTool.exe) (Updated whenever the code changes).
 
 2. **Run the executable:**
    - Double-click `DebloaterTool.exe` to start the application. Make sure to run it with **administrator privileges**.
