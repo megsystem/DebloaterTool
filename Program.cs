@@ -12,6 +12,8 @@ using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Management;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 
 // Created by @_giovannigiannone and ChatGPT
 // Inspired from the Talon's Project!
@@ -25,7 +27,7 @@ namespace DebloaterTool
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)768 | (SecurityProtocolType)3072;
 
             // Run the Welcome Screen and EULA
-            Console.Title = "DebloaterTool by ig:@_giovannigiannone tg:fckgiovanni";
+            Console.Title = "DebloaterTool V1.0.1";
             Console.WriteLine("+=================================================================+");
             Console.WriteLine("|    ____       _     _             _              ____           |");
             Console.WriteLine("|   |  _ \\  ___| |__ | | ___   __ _| |_ ___ _ __  | __ ) _   _    |");
@@ -106,6 +108,7 @@ namespace DebloaterTool
             UninstallEdge();
             CleanOutlookAndOneDrive();
             DisableWindowsUpdate();
+            UngoogledInstaller();
             SetCustomWallpaper();
 
             if (restart)
@@ -119,6 +122,96 @@ namespace DebloaterTool
             }
 
             return;
+        }
+
+        [DataContract]
+        public class Release
+        {
+            [DataMember(Name = "assets")]
+            public Asset[] Assets { get; set; }
+        }
+
+        [DataContract]
+        public class Asset
+        {
+            [DataMember(Name = "name")]
+            public string Name { get; set; }
+
+            [DataMember(Name = "browser_download_url")]
+            public string BrowserDownloadUrl { get; set; }
+        }
+
+        public static void UngoogledInstaller()
+        {
+            try
+            {
+                Console.WriteLine("Fetching latest release information...");
+
+                string apiUrl = "https://api.github.com/repos/ungoogled-software/ungoogled-chromium-windows/releases/latest";
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiUrl);
+                // GitHub requires a User-Agent header.
+                request.UserAgent = "Mozilla/5.0 (compatible; AcmeInc/1.0)";
+
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (Stream responseStream = response.GetResponseStream())
+                {
+                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(Release));
+                    Release release = (Release)serializer.ReadObject(responseStream);
+
+                    // Determine OS architecture.
+                    bool is64Bit = Environment.Is64BitOperatingSystem;
+                    string searchPattern = is64Bit ? "installer_x64.exe" : "installer_x86.exe";
+
+                    string downloadUrl = null;
+                    string assetName = null;
+
+                    if (release.Assets != null)
+                    {
+                        foreach (Asset asset in release.Assets)
+                        {
+                            if (!string.IsNullOrEmpty(asset.Name) &&
+                                asset.Name.IndexOf(searchPattern, StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                assetName = asset.Name;
+                                downloadUrl = asset.BrowserDownloadUrl;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (downloadUrl == null)
+                    {
+                        Console.WriteLine("Installer asset not found for pattern: " + searchPattern);
+                        return;
+                    }
+
+                    Console.WriteLine("Latest installer found: " + assetName);
+                    Console.WriteLine("Download URL: " + downloadUrl);
+
+                    // Download the installer file to a temporary location.
+                    string tempFile = Path.Combine(Path.GetTempPath(), assetName);
+                    Console.WriteLine("Downloading installer to " + tempFile + "...");
+                    using (WebClient webClient = new WebClient())
+                    {
+                        webClient.Headers.Add("User-Agent", "Mozilla/5.0 (compatible; AcmeInc/1.0)");
+                        webClient.DownloadFile(downloadUrl, tempFile);
+                    }
+                    Console.WriteLine("Download completed.");
+
+                    // Execute the downloaded installer.
+                    Console.WriteLine("Starting installer...");
+                    Process installerProcess = Process.Start(tempFile);
+                    installerProcess.WaitForExit();
+                    Console.WriteLine("Installer process completed.");
+
+                    // Delete the temporary file:
+                    File.Delete(tempFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
 
         public static void DisableWindowsUpdate()
