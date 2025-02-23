@@ -9,6 +9,9 @@ using Microsoft.Win32;
 using System.Text;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.ServiceProcess;
+using System.Management;
+using System.Collections.Generic;
 
 // Created by @_giovannigiannone and ChatGPT
 // Inspired from the Talon's Project!
@@ -102,6 +105,7 @@ namespace DebloaterTool
             ApplyRegistryChanges();
             UninstallEdge();
             CleanOutlookAndOneDrive();
+            DisableWindowsUpdate();
             SetCustomWallpaper();
 
             if (restart)
@@ -115,6 +119,232 @@ namespace DebloaterTool
             }
 
             return;
+        }
+
+        public static void DisableWindowsUpdate()
+        {
+            // Stop and disable the Windows Update service (wuauserv)
+            StopService("wuauserv");
+            SetServiceStartupType("wuauserv", "Disabled");
+
+            // Stop and disable the Windows Update Medic Service (WaaSMedicSvc)
+            StopService("WaaSMedicSvc");
+            SetServiceStartupType("WaaSMedicSvc", "Disabled");
+
+            // Disable any scheduled tasks related to Windows Update
+            DisableWindowsUpdateScheduledTasks();
+
+            // Block Windows Update from connecting to internet locations via the registry
+            ConfigureWindowsUpdateRegistry();
+        }
+
+        static void StopService(string serviceName)
+        {
+            try
+            {
+                using (ServiceController sc = new ServiceController(serviceName))
+                {
+                    if (sc.Status != ServiceControllerStatus.Stopped &&
+                        sc.Status != ServiceControllerStatus.StopPending)
+                    {
+                        Console.WriteLine($"Stopping service {serviceName}...");
+                        sc.Stop();
+                        sc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
+                        Console.WriteLine($"{serviceName} stopped successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{serviceName} is already stopped.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error stopping service {serviceName}: {ex.Message}");
+            }
+        }
+
+        static void SetServiceStartupType(string serviceName, string startMode)
+        {
+            try
+            {
+                // Use WMI to change the service startup type
+                string query = $"Win32_Service.Name='{serviceName}'";
+                using (ManagementObject service = new ManagementObject(query))
+                {
+                    ManagementBaseObject inParams = service.GetMethodParameters("ChangeStartMode");
+                    inParams["StartMode"] = startMode;
+                    ManagementBaseObject outParams = service.InvokeMethod("ChangeStartMode", inParams, null);
+                    uint returnValue = (uint)outParams["ReturnValue"];
+                    if (returnValue == 0)
+                        Console.WriteLine($"{serviceName} startup type set to {startMode}.");
+                    else
+                        Console.WriteLine($"Failed to change startup type for {serviceName}. Error code: {returnValue}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error setting startup type for {serviceName}: {ex.Message}");
+            }
+        }
+
+        static void DisableWindowsUpdateScheduledTasks()
+        {
+            try
+            {
+                // Query all scheduled tasks in CSV format.
+                Process proc = new Process();
+                proc.StartInfo.FileName = "schtasks";
+                proc.StartInfo.Arguments = "/query /FO CSV /V";
+                proc.StartInfo.RedirectStandardOutput = true;
+                proc.StartInfo.UseShellExecute = false;
+                proc.StartInfo.CreateNoWindow = true;
+                proc.Start();
+                string output = proc.StandardOutput.ReadToEnd();
+                proc.WaitForExit();
+
+                // Split output into lines.
+                var lines = output.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                if (lines.Length > 1)
+                {
+                    // The first line is the CSV header.
+                    for (int i = 1; i < lines.Length; i++)
+                    {
+                        string line = lines[i];
+                        string[] fields = SplitCsvLine(line);
+                        if (fields.Length > 0 && fields[0].IndexOf("WindowsUpdate", StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            string taskName = fields[0];
+                            // Disable the task using schtasks /Change.
+                            Process disableProc = new Process();
+                            disableProc.StartInfo.FileName = "schtasks";
+                            disableProc.StartInfo.Arguments = $"/Change /TN \"{taskName}\" /Disable";
+                            disableProc.StartInfo.UseShellExecute = false;
+                            disableProc.StartInfo.CreateNoWindow = true;
+                            disableProc.Start();
+                            disableProc.WaitForExit();
+                            Console.WriteLine($"Disabled scheduled task: {taskName}");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error disabling scheduled tasks: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Splits a CSV line into fields, handling quoted values.
+        /// </summary>
+        static string[] SplitCsvLine(string line)
+        {
+            var fields = new List<string>();
+            bool inQuotes = false;
+            var fieldBuilder = new StringBuilder();
+
+            for (int i = 0; i < line.Length; i++)
+            {
+                char c = line[i];
+                if (c == '"')
+                {
+                    // If next char is also a quote, it's an escaped quote.
+                    if (inQuotes && i + 1 < line.Length && line[i + 1] == '"')
+                    {
+                        fieldBuilder.Append('"');
+                        i++; // Skip the escaped quote.
+                    }
+                    else
+                    {
+                        inQuotes = !inQuotes;
+                    }
+                }
+                else if (c == ',' && !inQuotes)
+                {
+                    fields.Add(fieldBuilder.ToString());
+                    fieldBuilder.Clear();
+                }
+                else
+                {
+                    fieldBuilder.Append(c);
+                }
+            }
+            // Add the last field.
+            fields.Add(fieldBuilder.ToString());
+            return fields.ToArray();
+        }
+
+        static void ConfigureWindowsUpdateRegistry()
+        {
+            try
+            {
+                // 1. Block Windows Update from connecting to the internet.
+                using (RegistryKey wuKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"))
+                {
+                    if (wuKey != null)
+                    {
+                        wuKey.SetValue("DoNotConnectToWindowsUpdateInternetLocations", 1, RegistryValueKind.DWord);
+                        Console.WriteLine("Registry updated: DoNotConnectToWindowsUpdateInternetLocations set to 1.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to open or create the WindowsUpdate registry key.");
+                    }
+                }
+
+                // 2. Disable Automatic Updates by modifying Windows Update policies.
+                using (RegistryKey auKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"))
+                {
+                    if (auKey == null)
+                        throw new Exception("Failed to open or create the WindowsUpdate\\AU registry key.");
+
+                    auKey.SetValue("NoAutoUpdate", 1, RegistryValueKind.DWord);
+                    auKey.SetValue("AUOptions", 2, RegistryValueKind.DWord);
+                    Console.WriteLine("Registry updated: Automatic updates disabled (NoAutoUpdate=1, AUOptions=2).");
+                }
+
+                // 3. Disable Windows Update Delivery Optimization (applies to Windows 10).
+                using (RegistryKey doKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config", writable: true))
+                {
+                    if (doKey != null)
+                    {
+                        doKey.SetValue("DODownloadMode", 0, RegistryValueKind.DWord);
+                        Console.WriteLine("Registry updated: Delivery Optimization disabled (DODownloadMode=0).");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Delivery Optimization registry key not found.");
+                    }
+                }
+
+                // 4. Set registry values to pause updates.
+                using (RegistryKey uxKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\WindowsUpdate\UX\Settings"))
+                {
+                    if (uxKey == null)
+                        throw new Exception("Failed to open or create the WindowsUpdate\\UX\\Settings registry key.");
+
+                    string dateStart = "2000-01-01T00:00:00Z";
+                    string dateEnd = "3000-12-31T11:59:59Z";
+
+                    uxKey.SetValue("PauseFeatureUpdatesStartTime", dateStart, RegistryValueKind.String);
+                    uxKey.SetValue("PauseQualityUpdatesStartTime", dateStart, RegistryValueKind.String);
+                    // Attempt to set PauseUpdatesStartTime; ignore errors if they occur.
+                    try
+                    {
+                        uxKey.SetValue("PauseUpdatesStartTime", dateStart, RegistryValueKind.String);
+                    }
+                    catch { /* Silently ignore errors */ }
+                    uxKey.SetValue("PauseFeatureUpdatesEndTime", dateEnd, RegistryValueKind.String);
+                    uxKey.SetValue("PauseQualityUpdatesEndTime", dateEnd, RegistryValueKind.String);
+                    uxKey.SetValue("PauseUpdatesExpiryTime", dateEnd, RegistryValueKind.String);
+                    Console.WriteLine("Registry updated: Update pause settings configured.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Registry configuration error: " + ex.Message);
+                Console.WriteLine("Registry configuration error stack trace: " + ex.StackTrace);
+            }
         }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
