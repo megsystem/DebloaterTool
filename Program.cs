@@ -27,7 +27,7 @@ namespace DebloaterTool
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)768 | (SecurityProtocolType)3072;
 
             // Run the Welcome Screen and EULA
-            Console.Title = "DebloaterTool V1.0.2";
+            Console.Title = "DebloaterTool V1.0.3";
             Console.WriteLine("+=================================================================+");
             Console.WriteLine("|    ____       _     _             _              ____           |");
             Console.WriteLine("|   |  _ \\  ___| |__ | | ___   __ _| |_ ___ _ __  | __ ) _   _    |");
@@ -739,6 +739,36 @@ namespace DebloaterTool
                 }
             } catch { }
 
+            // Remove all shortcut containing msedge.exe
+            string[] directories =
+            {
+                Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory),
+                Environment.GetFolderPath(Environment.SpecialFolder.StartMenu),
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu)
+            };
+
+            foreach (string dir in directories)
+            {
+                if (!Directory.Exists(dir)) continue;
+
+                foreach (string shortcut in Directory.GetFiles(dir, "*.lnk", SearchOption.AllDirectories))
+                {
+                    try
+                    {
+                        var shell = new IWshRuntimeLibrary.WshShell();
+                        var link = (IWshRuntimeLibrary.IWshShortcut)shell.CreateShortcut(shortcut);
+
+                        if (link.TargetPath.EndsWith("msedge.exe", StringComparison.OrdinalIgnoreCase))
+                        {
+                            File.Delete(shortcut);
+                            Console.WriteLine($"Deleted: {shortcut}");
+                        }
+                    }
+                    catch { /* Ignore invalid shortcuts */ }
+                }
+            }
+
             // Remove Start Menu shortcuts.
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("Removing Start Menu shortcuts...");
@@ -1056,6 +1086,42 @@ namespace DebloaterTool
                         Console.WriteLine($"Error deleting folder {folder}: {ex.Message}");
                         Console.ResetColor();
                     }
+                }
+            }
+
+            // Remove all shortcut containing outlook.exe and onedrive.exe
+            string[] directories =
+            {
+                Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory),
+                Environment.GetFolderPath(Environment.SpecialFolder.StartMenu),
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu)
+            };
+
+            foreach (string dir in directories)
+            {
+                if (!Directory.Exists(dir)) continue;
+
+                foreach (string shortcut in Directory.GetFiles(dir, "*.lnk", SearchOption.AllDirectories))
+                {
+                    try
+                    {
+                        var shell = new IWshRuntimeLibrary.WshShell();
+                        var link = (IWshRuntimeLibrary.IWshShortcut)shell.CreateShortcut(shortcut);
+
+                        if (link.TargetPath.EndsWith("outlook.exe", StringComparison.OrdinalIgnoreCase))
+                        {
+                            File.Delete(shortcut);
+                            Console.WriteLine($"Deleted: {shortcut}");
+                        }
+
+                        if (link.TargetPath.EndsWith("onedrive.exe", StringComparison.OrdinalIgnoreCase))
+                        {
+                            File.Delete(shortcut);
+                            Console.WriteLine($"Deleted: {shortcut}");
+                        }
+                    }
+                    catch { /* Ignore invalid shortcuts */ }
                 }
             }
 
