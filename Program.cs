@@ -508,7 +508,7 @@ namespace DebloaterTool
 
         static void SetCustomWallpaper()
         {
-            string url = "https://i.imgur.com/p4oQOQM.jpeg";
+            string url = "https://i.imgur.com/bXtHBpd.png";
             string picturesFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             string savePath = Path.Combine(picturesFolder, "DesktopBackground.png");
 
