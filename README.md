@@ -2,15 +2,17 @@
 
 DebloaterTool is a powerful and lightweight Windows debloater designed to remove unnecessary bloatware, disable unwanted services, and optimize system performance with ease. 💨✨
 
+![DebloaterTool UI](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/GitHub/1.png)
+
 ## Features ✅
 - 🗑️ **Remove pre-installed bloatware**
 - 🚫 **Disable unnecessary background services**
 - ⚡ **Improve system speed & responsiveness**
 
 > [!WARNING]  
-> **Disabling essential services may cause system instability. Use with caution!** ⚠️<br>
-> **Some features may disable Windows Defender, affecting system security.** 🛑<br>
-> **It is recommended to create a system restore point before running the tool.** 🛟<br>
+> * *Disabling essential services may cause system instability. Use with caution!* ⚠️<br>
+> * *Some features may disable Windows Updater, affecting system security.* 🛑<br>
+> * *It is recommended to create a system restore point before running the tool.* 🛟<br>
 
 ## Installation 📥
 
@@ -18,7 +20,7 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 
 1. **Download the DebloaterTool.exe:**
    - Go to the [DebloaterTool Releases Page](https://github.com/megsystem/DebloaterTool/releases) and download `DebloaterTool.exe`.
-   - Or download the experimental one: [DebloaterTool.exe](https://github.com/megsystem/DebloaterTool/blob/main/DebloaterTool.exe) (Updated whenever the code changes).
+   - Or download the experimental one: [`DebloaterTool.exe`](https://github.com/megsystem/DebloaterTool/blob/main/DebloaterTool.exe) *(Updated whenever the code changes)*.
 
 2. **Run the executable:**
    - Double-click `DebloaterTool.exe` to start the application. Make sure to run it with **administrator privileges**.
