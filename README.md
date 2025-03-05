@@ -25,6 +25,25 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 2. **Run the executable:**
    - Double-click `DebloaterTool.exe` to start the application. Make sure to run it with **administrator privileges**.
 
+### Option 2: Running the Command Using the `Windows Run Dialog`
+
+1. **Open the Run Dialog:**
+   - Press `Win + R` on your keyboard.
+
+2. **Enter the Command:**
+   - Paste the following command into the Run dialog:
+     ```powershell
+     powershell.exe -w hidden -Command "iex (iwr 'https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/DebloaterTool.ps1').Content"
+     ```
+   - Press `Enter` to execute the command.
+
+3. **Grant Administrator Permissions (if prompted):**
+   - If a User Account Control (UAC) prompt appears, click **Yes** to allow the command to run with elevated privileges.
+
+4. **Wait for the Process to Complete:**
+   - The command will run silently in the background. Once finished, the DebloaterTool should be ready for use.
+
+
 ## Contributing 🤝
 Pull requests are welcome! If you have suggestions for improvements, feel free to submit an issue or a PR.
 
