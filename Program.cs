@@ -27,7 +27,7 @@ namespace DebloaterTool
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)768 | (SecurityProtocolType)3072;
 
             // Run the Welcome Screen and EULA
-            Console.Title = "DebloaterTool V1.0.1";
+            Console.Title = "DebloaterTool V1.0.2";
             Console.WriteLine("+=================================================================+");
             Console.WriteLine("|    ____       _     _             _              ____           |");
             Console.WriteLine("|   |  _ \\  ___| |__ | | ___   __ _| |_ ___ _ __  | __ ) _   _    |");
@@ -109,6 +109,7 @@ namespace DebloaterTool
             CleanOutlookAndOneDrive();
             DisableWindowsUpdate();
             UngoogledInstaller();
+            ChangeUngoogledHomePage();
             SetCustomWallpaper();
 
             if (restart)
@@ -122,6 +123,63 @@ namespace DebloaterTool
             }
 
             return;
+        }
+
+        static void ChangeUngoogledHomePage()
+        {
+            string argToAdd = "--custom-ntp=https://xengshi.github.io/materialYouNewTab/";
+            // Directories to search: Desktop, Common Desktop, Start Menu, Programs, and Taskbar pinned shortcuts.
+            string[] dirs = new string[] {
+                Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory),
+                Environment.GetFolderPath(Environment.SpecialFolder.StartMenu),
+                Environment.GetFolderPath(Environment.SpecialFolder.Programs),
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar"
+            };
+
+            // A single void (Main) with an inline recursive delegate.
+            Action<string> ProcessDirectory = null;
+            ProcessDirectory = delegate (string path)
+            {
+                try
+                {
+                    foreach (string file in Directory.GetFiles(path, "*.lnk"))
+                    {
+                        try
+                        {
+                            var shell = new IWshRuntimeLibrary.WshShell();
+                            IWshRuntimeLibrary.IWshShortcut shortcut = (IWshRuntimeLibrary.IWshShortcut)shell.CreateShortcut(file);
+                            // Check if the target exe is "chrome.exe"
+                            if (string.Equals(Path.GetFileName(shortcut.TargetPath), "chrome.exe", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (string.IsNullOrEmpty(shortcut.Arguments) || !shortcut.Arguments.Contains(argToAdd))
+                                {
+                                    shortcut.Arguments = (shortcut.Arguments + " " + argToAdd).Trim();
+                                    shortcut.Save();
+                                    Console.WriteLine("Updated: " + file);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Error processing shortcut " + file + ": " + ex.Message);
+                        }
+                    }
+                    foreach (string sub in Directory.GetDirectories(path))
+                        ProcessDirectory(sub);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error processing directory " + path + ": " + ex.Message);
+                }
+            };
+
+            foreach (string dir in dirs)
+            {
+                if (Directory.Exists(dir))
+                    ProcessDirectory(dir);
+            }
+            Console.WriteLine("Shortcut update complete.");
         }
 
         [DataContract]
