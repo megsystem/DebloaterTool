@@ -27,7 +27,8 @@ namespace DebloaterTool
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)768 | (SecurityProtocolType)3072;
 
             // Run the Welcome Screen and EULA
-            Console.Title = "DebloaterTool V1.0.3";
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            Console.Title = $"DebloaterTool V{version.Major}.{version.Minor}.{version.Build}";
             Console.WriteLine("+=================================================================+");
             Console.WriteLine("|    ____       _     _             _              ____           |");
             Console.WriteLine("|   |  _ \\  ___| |__ | | ___   __ _| |_ ___ _ __  | __ ) _   _    |");
