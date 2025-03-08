@@ -12,8 +12,7 @@ using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Management;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+using System.Web.Script.Serialization;
 
 // Created by @_giovannigiannone and ChatGPT
 // Inspired from the Talon's Project!
@@ -50,6 +49,7 @@ namespace DebloaterTool
             DisplayMessage("3. Please disable your antivirus before proceeding.", ConsoleColor.Red);
             Console.WriteLine("---------------------------------");
 
+            // EULA Confirmation
             if (!RequestYesOrNo("Do you accept the EULA?"))
             {
                 Console.WriteLine("EULA declined. Press ENTER to close.");
@@ -57,6 +57,7 @@ namespace DebloaterTool
                 Environment.Exit(0);
             }
 
+            // Check if the program is runned with administrator rights!
             if (!IsAdministrator())
             {
                 DisplayMessage("This application must be run with administrator rights!", ConsoleColor.Red);
@@ -73,8 +74,10 @@ namespace DebloaterTool
                 }
             }
 
+            // Restart Confirmation
             bool restart = RequestYesOrNo("Do you want to restart after the process?");
 
+            // Run debloater
             RunTweaks();
             RunWinConfig();
             ApplyRegistryChanges();
@@ -85,6 +88,7 @@ namespace DebloaterTool
             ChangeUngoogledHomePage();
             SetCustomWallpaper();
 
+            // Process completed
             if (restart)
             {
                 Process.Start("shutdown.exe", "-r -t 0"); // Restart the computer
@@ -95,6 +99,7 @@ namespace DebloaterTool
                 Console.ReadLine(); // Wait for user to press Enter
             }
 
+            // End
             return;
         }
 
@@ -188,93 +193,85 @@ namespace DebloaterTool
             Console.WriteLine("Shortcut update complete.");
         }
 
-        [DataContract]
-        public class Release
-        {
-            [DataMember(Name = "assets")]
-            public Asset[] Assets { get; set; }
-        }
-
-        [DataContract]
-        public class Asset
-        {
-            [DataMember(Name = "name")]
-            public string Name { get; set; }
-
-            [DataMember(Name = "browser_download_url")]
-            public string BrowserDownloadUrl { get; set; }
-        }
-
         public static void UngoogledInstaller()
         {
             try
             {
-                Console.WriteLine("Fetching latest release information...");
+                DisplayMessage("Fetching latest release information...", ConsoleColor.Cyan);
 
                 string apiUrl = "https://api.github.com/repos/ungoogled-software/ungoogled-chromium-windows/releases/latest";
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiUrl);
-                // GitHub requires a User-Agent header.
                 request.UserAgent = "Mozilla/5.0 (compatible; AcmeInc/1.0)";
 
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 using (Stream responseStream = response.GetResponseStream())
                 {
-                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(Release));
-                    Release release = (Release)serializer.ReadObject(responseStream);
+                    string json = new StreamReader(responseStream).ReadToEnd();
 
-                    // Determine OS architecture.
+                    JavaScriptSerializer serializer = new JavaScriptSerializer();
+                    dynamic release = serializer.Deserialize<dynamic>(json);
+
                     bool is64Bit = Environment.Is64BitOperatingSystem;
                     string searchPattern = is64Bit ? "installer_x64.exe" : "installer_x86.exe";
-
                     string downloadUrl = null;
                     string assetName = null;
 
-                    if (release.Assets != null)
+                    foreach (var asset in release["assets"])
                     {
-                        foreach (Asset asset in release.Assets)
+                        string name = asset["name"];
+                        if (name.IndexOf(searchPattern, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            if (!string.IsNullOrEmpty(asset.Name) &&
-                                asset.Name.IndexOf(searchPattern, StringComparison.OrdinalIgnoreCase) >= 0)
-                            {
-                                assetName = asset.Name;
-                                downloadUrl = asset.BrowserDownloadUrl;
-                                break;
-                            }
+                            assetName = name;
+                            downloadUrl = asset["browser_download_url"];
+                            break;
                         }
                     }
 
                     if (downloadUrl == null)
                     {
-                        Console.WriteLine("Installer asset not found for pattern: " + searchPattern);
+                        DisplayMessage("Installer asset not found for pattern: " + searchPattern, ConsoleColor.Red);
                         return;
                     }
 
-                    Console.WriteLine("Latest installer found: " + assetName);
-                    Console.WriteLine("Download URL: " + downloadUrl);
+                    DisplayMessage("Latest installer found: " + assetName, ConsoleColor.Cyan);
+                    DisplayMessage("Download URL: " + downloadUrl, ConsoleColor.Cyan);
 
-                    // Download the installer file to a temporary location.
                     string tempFile = Path.Combine(Path.GetTempPath(), assetName);
-                    Console.WriteLine("Downloading installer to " + tempFile + "...");
+                    DisplayMessage("Downloading installer to " + tempFile + "...", ConsoleColor.Cyan);
+
                     using (WebClient webClient = new WebClient())
                     {
                         webClient.Headers.Add("User-Agent", "Mozilla/5.0 (compatible; AcmeInc/1.0)");
-                        webClient.DownloadFile(downloadUrl, tempFile);
-                    }
-                    Console.WriteLine("Download completed.");
+                        ManualResetEvent downloadCompleted = new ManualResetEvent(false);
 
-                    // Execute the downloaded installer.
-                    Console.WriteLine("Starting installer...");
+                        webClient.DownloadProgressChanged += (s, e) =>
+                        {
+                            int progress = e.ProgressPercentage;
+                            Console.Write($"\rDownloading... {progress}%   ");
+                        };
+
+                        webClient.DownloadFileCompleted += (s, e) =>
+                        {
+                            downloadCompleted.Set();
+                        };
+
+                        webClient.DownloadFileAsync(new Uri(downloadUrl), tempFile);
+                        downloadCompleted.WaitOne(); // Wait until the download completes.
+                        Console.WriteLine(); // Move to next line after progress bar.
+                    }
+                    DisplayMessage("Download completed.", ConsoleColor.Green);
+
+                    DisplayMessage("Starting installer...", ConsoleColor.Green);
                     Process installerProcess = Process.Start(tempFile);
                     installerProcess.WaitForExit();
-                    Console.WriteLine("Installer process completed.");
+                    DisplayMessage("Installer process completed.", ConsoleColor.Green);
 
-                    // Delete the temporary file:
                     File.Delete(tempFile);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                DisplayMessage("An error occurred: " + ex.Message, ConsoleColor.Red);
             }
         }
 
