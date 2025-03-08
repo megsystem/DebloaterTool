@@ -47,61 +47,33 @@ namespace DebloaterTool
             Console.WriteLine("By using this software, you agree to the following terms:");
             Console.WriteLine("1. You may not distribute this software without permission.");
             Console.WriteLine("2. The developers are not responsible for any damages.");
-            Console.ForegroundColor = ConsoleColor.Red; // Set text color to red
-            Console.WriteLine("3. Please disable your antivirus before proceeding.");
-            Console.ResetColor(); // Reset to default color
+            DisplayMessage("3. Please disable your antivirus before proceeding.", ConsoleColor.Red);
             Console.WriteLine("---------------------------------");
-            Console.Write("Do you accept the EULA? (yes/no): ");
 
-            string response = Console.ReadLine()?.Trim().ToLower();
-
-            if (response == "yes")
+            if (!RequestYesOrNo("Do you accept the EULA?"))
             {
-                Console.WriteLine("EULA accepted. You may proceed.");
-            }
-            else if (response == "no")
-            {
-                Console.WriteLine("EULA declined. Exiting application.");
+                Console.WriteLine("EULA declined. Press ENTER to close.");
                 Console.ReadKey();
-                return;
-            }
-            else
-            {
-                Console.WriteLine("Invalid response. Please restart and enter 'yes' or 'no'.");
-                Console.ReadKey();
-                return;
+                Environment.Exit(0);
             }
 
             if (!IsAdministrator())
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("This application must be run with administrator rights!");
-                Console.ResetColor();
-                Console.ReadKey();
-                return;
-            }
+                DisplayMessage("This application must be run with administrator rights!", ConsoleColor.Red);
 
-            bool restart = false;
-            while (true)
-            {
-                Console.Write("Do you want to restart after the process? (yes/no): ");
-                string restartResponse = Console.ReadLine()?.Trim().ToLower();
-
-                if (restartResponse == "yes")
+                if (RequestYesOrNo("Do you want to run as administrator?"))
                 {
-                    restart = true;
-                    break;
-                }
-                else if (restartResponse == "no")
-                {
-                    restart = false;
-                    break;
+                    RestartAsAdmin();
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
+                    DisplayMessage("Please restart the program with administrator rights to continue!", ConsoleColor.Red);
+                    Console.ReadKey();
+                    Environment.Exit(0);
                 }
             }
+
+            bool restart = RequestYesOrNo("Do you want to restart after the process?");
 
             RunTweaks();
             RunWinConfig();
@@ -119,11 +91,44 @@ namespace DebloaterTool
             }
             else
             {
-                Console.WriteLine("Restart skipped. Process completed.");
+                DisplayMessage("Restart skipped. Process completed. Press ENTER to close.", ConsoleColor.Green);
                 Console.ReadLine(); // Wait for user to press Enter
             }
 
             return;
+        }
+
+        static bool RequestYesOrNo(string message)
+        {
+            while (true)
+            {
+                Console.Write($"{message} (yes/no): ");
+                string response = Console.ReadLine()?.Trim().ToLower();
+
+                if (response == "yes") return true;
+                if (response == "no") return false;
+
+                Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
+            }
+        }
+
+        static void RestartAsAdmin()
+        {
+            ProcessStartInfo proc = new ProcessStartInfo()
+            {
+                FileName = Process.GetCurrentProcess().MainModule.FileName,
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+            try
+            {
+                Process.Start(proc);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to start as administrator: {ex.Message}");
+            }
+            Environment.Exit(0);
         }
 
         static void ChangeUngoogledHomePage()
@@ -582,9 +587,7 @@ namespace DebloaterTool
             }
             catch (Exception ex)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Error running command {command} {arguments}: {ex.Message}");
-                Console.ResetColor();
+                DisplayMessage($"Error running command {command} {arguments}: {ex.Message}", ConsoleColor.Red);
             }
         }
 
@@ -617,22 +620,22 @@ namespace DebloaterTool
             {
                 RegistryModification[] registryModifications = new RegistryModification[]
                 {
-                // Visual changes
-                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "TaskbarAl", RegistryValueKind.DWord, 0), // Align taskbar to the left
-                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme", RegistryValueKind.DWord, 0), // Set Windows to dark theme
-                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "SystemUsesLightTheme", RegistryValueKind.DWord, 0), // Set Windows to dark theme
-                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Accent", "AccentColorMenu", RegistryValueKind.DWord, 1), // Use accent color for taskbar/start menu
-                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "ColorPrevalence", RegistryValueKind.DWord, 1), // (Redundant?) Use accent color for taskbar/start menu
-                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\DWM", "AccentColorInStartAndTaskbar", RegistryValueKind.DWord, 1), // Use accent color for taskbar/start menu
-                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Accent", "AccentPalette", RegistryValueKind.Binary, new byte[32]), // Makes the taskbar black
-                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\GameDVR", "AppCaptureEnabled", RegistryValueKind.DWord, 0), // Fix the app capture popup
-                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR", "Value", RegistryValueKind.DWord, 0), // Disable Game DVR
-                new RegistryModification(Registry.CurrentUser, @"Control Panel\Desktop", "MenuShowDelay", RegistryValueKind.String, "0"), // Reduce menu delay
-                new RegistryModification(Registry.CurrentUser, @"Control Panel\Desktop\WindowMetrics", "MinAnimate", RegistryValueKind.DWord, 0), // Disable minimize/maximize animations
-                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "ExtendedUIHoverTime", RegistryValueKind.DWord, 1), // Reduce UI hover time
-                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "HideFileExt", RegistryValueKind.DWord, 0), // Show file extensions
-                new RegistryModification(Registry.CurrentUser, @"Control Panel\Colors", "Hilight", RegistryValueKind.String, "0 0 0"), // Sets highlight color to black
-                new RegistryModification(Registry.CurrentUser, @"Control Panel\Colors", "HotTrackingColor", RegistryValueKind.String, "0 0 0") // Sets click-and-drag box color to black
+                    // Visual changes
+                    new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "TaskbarAl", RegistryValueKind.DWord, 0), // Align taskbar to the left
+                    new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme", RegistryValueKind.DWord, 0), // Set Windows to dark theme
+                    new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "SystemUsesLightTheme", RegistryValueKind.DWord, 0), // Set Windows to dark theme
+                    new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Accent", "AccentColorMenu", RegistryValueKind.DWord, 1), // Use accent color for taskbar/start menu
+                    new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "ColorPrevalence", RegistryValueKind.DWord, 1), // (Redundant?) Use accent color for taskbar/start menu
+                    new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\DWM", "AccentColorInStartAndTaskbar", RegistryValueKind.DWord, 1), // Use accent color for taskbar/start menu
+                    new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Accent", "AccentPalette", RegistryValueKind.Binary, new byte[32]), // Makes the taskbar black
+                    new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\GameDVR", "AppCaptureEnabled", RegistryValueKind.DWord, 0), // Fix the app capture popup
+                    new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR", "Value", RegistryValueKind.DWord, 0), // Disable Game DVR
+                    new RegistryModification(Registry.CurrentUser, @"Control Panel\Desktop", "MenuShowDelay", RegistryValueKind.String, "0"), // Reduce menu delay
+                    new RegistryModification(Registry.CurrentUser, @"Control Panel\Desktop\WindowMetrics", "MinAnimate", RegistryValueKind.DWord, 0), // Disable minimize/maximize animations
+                    new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "ExtendedUIHoverTime", RegistryValueKind.DWord, 1), // Reduce UI hover time
+                    new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "HideFileExt", RegistryValueKind.DWord, 0), // Show file extensions
+                    new RegistryModification(Registry.CurrentUser, @"Control Panel\Colors", "Hilight", RegistryValueKind.String, "0 0 0"), // Sets highlight color to black
+                    new RegistryModification(Registry.CurrentUser, @"Control Panel\Colors", "HotTrackingColor", RegistryValueKind.String, "0 0 0") // Sets click-and-drag box color to black
                 };
 
                 // Apply each registry modification.
@@ -684,15 +687,11 @@ namespace DebloaterTool
         // -------------------------
         static void UninstallEdge()
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Edge Vanisher started");
-            Console.WriteLine("Starting Microsoft Edge uninstallation process...");
-            Console.ResetColor();
+            DisplayMessage("Edge Vanisher started", ConsoleColor.Yellow);
+            DisplayMessage("Starting Microsoft Edge uninstallation process...", ConsoleColor.Yellow);
 
             // Terminate Edge processes.
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Terminating Edge processes...");
-            Console.ResetColor();
+            DisplayMessage("Terminating Edge processes...", ConsoleColor.Cyan);
             var edgeProcesses = Process.GetProcesses()
                 .Where(p => p.ProcessName.IndexOf("edge", StringComparison.OrdinalIgnoreCase) >= 0)
                 .ToList();
@@ -702,9 +701,7 @@ namespace DebloaterTool
                 {
                     try
                     {
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.WriteLine($"Terminated process: {proc.ProcessName} (PID: {proc.Id})");
-                        Console.ResetColor();
+                        DisplayMessage($"Terminated process: {proc.ProcessName} (PID: {proc.Id})", ConsoleColor.Cyan);
                         proc.Kill();
                     }
                     catch { }
@@ -712,15 +709,11 @@ namespace DebloaterTool
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("No running Edge processes found.");
-                Console.ResetColor();
+                DisplayMessage("No running Edge processes found.", ConsoleColor.Cyan);
             }
 
             // Uninstall Edge via its setup.exe.
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Uninstalling Edge with setup...");
-            Console.ResetColor();
+            DisplayMessage("Uninstalling Edge with setup...", ConsoleColor.Cyan);
             string programFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
             try
             {
@@ -771,9 +764,7 @@ namespace DebloaterTool
             }
 
             // Remove Start Menu shortcuts.
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Removing Start Menu shortcuts...");
-            Console.ResetColor();
+            DisplayMessage("Removing Start Menu shortcuts...", ConsoleColor.Cyan);
             string[] startMenuPaths = new string[]
             {
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu), "Programs", "Microsoft Edge.lnk"),
@@ -784,38 +775,28 @@ namespace DebloaterTool
             {
                 if (File.Exists(shortcut))
                 {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine($"Deleting: {shortcut}");
-                    Console.ResetColor();
+                    DisplayMessage($"Deleting: {shortcut}", ConsoleColor.Cyan);
                     try
                     {
                         File.Delete(shortcut);
                         if (!File.Exists(shortcut))
                         {
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine($"Successfully deleted: {shortcut}");
-                            Console.ResetColor();
+                            DisplayMessage($"Successfully deleted: {shortcut}", ConsoleColor.Green);
                         }
                         else
                         {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine($"Failed to delete: {shortcut}");
-                            Console.ResetColor();
+                            DisplayMessage($"Failed to delete: {shortcut}", ConsoleColor.Red);
                         }
                     }
                     catch (Exception ex)
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Error deleting {shortcut}: {ex.Message}");
-                        Console.ResetColor();
+                        DisplayMessage($"Error deleting {shortcut}: {ex.Message}", ConsoleColor.Red);
                     }
                 }
             }
 
             // Clean Edge folders.
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Cleaning Edge folders...");
-            Console.ResetColor();
+            DisplayMessage("Cleaning Edge folders...", ConsoleColor.Cyan);
             string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             string programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
             string[] edgePaths = new string[]
@@ -832,9 +813,7 @@ namespace DebloaterTool
             {
                 if (Directory.Exists(path) || File.Exists(path))
                 {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine($"Cleaning: {path}");
-                    Console.ResetColor();
+                    DisplayMessage($"Cleaning: {path}", ConsoleColor.Cyan);
                     // Use external commands to take ownership and set permissions.
                     RunCommand("takeown", $"/F \"{path}\" /R /D Y");
                     RunCommand("icacls", $"\"{path}\" /grant administrators:F /T");
@@ -851,17 +830,13 @@ namespace DebloaterTool
                     }
                     catch (Exception ex)
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Error deleting {path}: {ex.Message}");
-                        Console.ResetColor();
+                        DisplayMessage($"Error deleting {path}: {ex.Message}", ConsoleColor.Red);
                     }
                 }
             }
 
             // Clean Edge registry entries.
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Cleaning Edge registry entries...");
-            Console.ResetColor();
+            DisplayMessage("Cleaning Edge registry entries...", ConsoleColor.Cyan);
             string[] edgeRegKeys = new string[]
             {
                 @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge",
@@ -906,9 +881,7 @@ namespace DebloaterTool
                 }
                 catch (Exception ex)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"Error handling service {service}: {ex.Message}");
-                    Console.ResetColor();
+                    DisplayMessage($"Error handling service {service}: {ex.Message}", ConsoleColor.Red);
                 }
             }
 
@@ -935,14 +908,10 @@ namespace DebloaterTool
             Thread.Sleep(1000);
             Process.Start("explorer");
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("\nMicrosoft Edge uninstallation process completed!");
-            Console.ResetColor();
+            DisplayMessage("\nMicrosoft Edge uninstallation process completed!", ConsoleColor.Green);
 
             // Create protective Edge folders and set security.
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Creating protective Edge folders...");
-            Console.ResetColor();
+            DisplayMessage("Creating protective Edge folders...", ConsoleColor.Cyan);
             var protectiveFolders = new[]
             {
                 new { Base = Path.Combine(programFilesX86, "Microsoft", "Edge"), App = Path.Combine(programFilesX86, "Microsoft", "Edge", "Application"), CreateSubFolder = true },
@@ -958,9 +927,7 @@ namespace DebloaterTool
                     {
                         Directory.CreateDirectory(folder.App);
                     }
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine($"Processing protective folder: {folder.Base}");
-                    Console.ResetColor();
+                    DisplayMessage($"Processing protective folder: {folder.Base}", ConsoleColor.Cyan);
 
                     string currentUser = WindowsIdentity.GetCurrent().Name;
                     // Set ACL for the folder.
@@ -1002,35 +969,25 @@ namespace DebloaterTool
                             try
                             {
                                 Directory.SetAccessControl(subDir, acl);
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine($"Success: {subDir}");
-                                Console.ResetColor();
+                                DisplayMessage($"Success: {subDir}", ConsoleColor.Green);
                             }
                             catch (Exception ex)
                             {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine($"Error occurred: {subDir} - {ex.Message}");
-                                Console.ResetColor();
+                                DisplayMessage($"Error occurred: {subDir} - {ex.Message}", ConsoleColor.Red);
                             }
                         }
                     }
                     else
                     {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"Success: {folder.Base}");
-                        Console.ResetColor();
+                        DisplayMessage($"Success: {folder.Base}", ConsoleColor.Green);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"Error occurred: {folder.Base} - {ex.Message}");
-                    Console.ResetColor();
+                    DisplayMessage($"Error occurred: {folder.Base} - {ex.Message}", ConsoleColor.Red);
                 }
             }
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Protective folders created and security settings configured for Edge and EdgeCore.");
-            Console.ResetColor();
+            DisplayMessage("Protective folders created and security settings configured for Edge and EdgeCore.", ConsoleColor.Green);
         }
 
         // -------------------------------------
@@ -1038,9 +995,7 @@ namespace DebloaterTool
         // -------------------------------------
         static void CleanOutlookAndOneDrive()
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Outlook & OneDrive Cleaner started");
-            Console.ResetColor();
+            DisplayMessage("Outlook & OneDrive Cleaner started", ConsoleColor.Yellow);
 
             // Close Outlook processes.
             var outlookProcesses = Process.GetProcesses()
@@ -1050,9 +1005,7 @@ namespace DebloaterTool
             {
                 try
                 {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine($"Terminating Outlook process: {proc.ProcessName} (PID: {proc.Id})");
-                    Console.ResetColor();
+                    DisplayMessage($"Terminating Outlook process: {proc.ProcessName} (PID: {proc.Id})", ConsoleColor.Cyan);
                     proc.Kill();
                 }
                 catch { }
@@ -1077,15 +1030,11 @@ namespace DebloaterTool
                         RunCommand("takeown", $"/f \"{folder}\" /r /d Y");
                         RunCommand("icacls", $"\"{folder}\" /grant administrators:F /T");
                         Directory.Delete(folder, true);
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"Deleted Outlook folder: {folder}");
-                        Console.ResetColor();
+                        DisplayMessage($"Deleted Outlook folder: {folder}", ConsoleColor.Green);
                     }
                     catch (Exception ex)
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Error deleting folder {folder}: {ex.Message}");
-                        Console.ResetColor();
+                        DisplayMessage($"Error deleting folder {folder}: {ex.Message}", ConsoleColor.Red);
                     }
                 }
             }
@@ -1149,15 +1098,11 @@ namespace DebloaterTool
                     try
                     {
                         File.Delete(shortcut);
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"Deleted shortcut: {shortcut}");
-                        Console.ResetColor();
+                        DisplayMessage($"Deleted shortcut: {shortcut}", ConsoleColor.Green);
                     }
                     catch (Exception ex)
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Error deleting shortcut {shortcut}: {ex.Message}");
-                        Console.ResetColor();
+                        DisplayMessage($"Error deleting shortcut {shortcut}: {ex.Message}", ConsoleColor.Red);
                     }
                 }
             }
@@ -1188,9 +1133,7 @@ namespace DebloaterTool
                 }
                 catch (Exception ex)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"Error cleaning registry at {regPath}: {ex.Message}");
-                    Console.ResetColor();
+                    DisplayMessage($"Error cleaning registry at {regPath}: {ex.Message}", ConsoleColor.Red);
                 }
             }
             // Set ShowTaskViewButton to 0.
@@ -1206,9 +1149,7 @@ namespace DebloaterTool
             }
             catch (Exception ex)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Error setting ShowTaskViewButton: {ex.Message}");
-                Console.ResetColor();
+                DisplayMessage($"Error setting ShowTaskViewButton: {ex.Message}", ConsoleColor.Red);
             }
 
             // Remove LayoutModification.xml and icon/thumbnail caches.
@@ -1267,23 +1208,17 @@ namespace DebloaterTool
                     if (Directory.Exists(path))
                     {
                         Directory.Delete(path, true);
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"Deleted directory: {path}");
-                        Console.ResetColor();
+                        DisplayMessage($"Deleted directory: {path}", ConsoleColor.Green);
                     }
                     else if (File.Exists(path))
                     {
                         File.Delete(path);
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"Deleted file: {path}");
-                        Console.ResetColor();
+                        DisplayMessage($"Deleted file: {path}", ConsoleColor.Green);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"Error deleting {path}: {ex.Message}");
-                    Console.ResetColor();
+                    DisplayMessage($"Error deleting {path}: {ex.Message}", ConsoleColor.Red);
                 }
             }
 
@@ -1310,9 +1245,7 @@ namespace DebloaterTool
             Thread.Sleep(2000);
             Process.Start("explorer");
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Outlook and OneDrive removal process completed!");
-            Console.ResetColor();
+            DisplayMessage("Outlook and OneDrive removal process completed!", ConsoleColor.Green);
         }
 
         /// <summary>
@@ -1531,16 +1464,19 @@ namespace DebloaterTool
             try
             {
                 root.DeleteSubKeyTree(subKeyPath, false);
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"Successfully deleted registry key: {root.Name}\\{subKeyPath}");
-                Console.ResetColor();
+                DisplayMessage($"Successfully deleted registry key: {root.Name}\\{subKeyPath}", ConsoleColor.Green);
             }
             catch (Exception ex)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Failed to delete registry key: {root.Name}\\{subKeyPath} - {ex.Message}");
-                Console.ResetColor();
+                DisplayMessage($"Failed to delete registry key: {root.Name}\\{subKeyPath} - {ex.Message}", ConsoleColor.Red);
             }
+        }
+
+        static void DisplayMessage(string message, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(message);
+            Console.ResetColor();
         }
     }
 }
