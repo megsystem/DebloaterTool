@@ -131,7 +131,7 @@ namespace DebloaterTool
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to start as administrator: {ex.Message}");
+                DisplayMessage($"Failed to start as administrator: {ex.Message}", ConsoleColor.Red);
             }
             Environment.Exit(0);
         }
@@ -167,13 +167,13 @@ namespace DebloaterTool
                                 {
                                     shortcut.Arguments = (shortcut.Arguments + " " + argToAdd).Trim();
                                     shortcut.Save();
-                                    Console.WriteLine("Updated: " + file);
+                                    DisplayMessage("Updated: " + file, ConsoleColor.Green);
                                 }
                             }
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine("Error processing shortcut " + file + ": " + ex.Message);
+                            DisplayMessage("Error processing shortcut " + file + ": " + ex.Message, ConsoleColor.Red);
                         }
                     }
                     foreach (string sub in Directory.GetDirectories(path))
@@ -181,7 +181,7 @@ namespace DebloaterTool
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error processing directory " + path + ": " + ex.Message);
+                    DisplayMessage("Error processing directory " + path + ": " + ex.Message, ConsoleColor.Red);
                 }
             };
 
@@ -190,7 +190,7 @@ namespace DebloaterTool
                 if (Directory.Exists(dir))
                     ProcessDirectory(dir);
             }
-            Console.WriteLine("Shortcut update complete.");
+            DisplayMessage("Shortcut update complete.", ConsoleColor.Green);
         }
 
         public static void UngoogledInstaller()
@@ -247,7 +247,9 @@ namespace DebloaterTool
                         webClient.DownloadProgressChanged += (s, e) =>
                         {
                             int progress = e.ProgressPercentage;
+                            Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.Write($"\rDownloading... {progress}%   ");
+                            Console.ResetColor();
                         };
 
                         webClient.DownloadFileCompleted += (s, e) =>
@@ -301,20 +303,20 @@ namespace DebloaterTool
                     if (sc.Status != ServiceControllerStatus.Stopped &&
                         sc.Status != ServiceControllerStatus.StopPending)
                     {
-                        Console.WriteLine($"Stopping service {serviceName}...");
+                        DisplayMessage($"Stopping service {serviceName}...", ConsoleColor.Yellow);
                         sc.Stop();
                         sc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
-                        Console.WriteLine($"{serviceName} stopped successfully.");
+                        DisplayMessage($"{serviceName} stopped successfully.", ConsoleColor.Green);
                     }
                     else
                     {
-                        Console.WriteLine($"{serviceName} is already stopped.");
+                        DisplayMessage($"{serviceName} is already stopped.", ConsoleColor.Yellow);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error stopping service {serviceName}: {ex.Message}");
+                DisplayMessage($"Error stopping service {serviceName}: {ex.Message}", ConsoleColor.Red);
             }
         }
 
@@ -331,14 +333,14 @@ namespace DebloaterTool
                     ManagementBaseObject outParams = service.InvokeMethod("ChangeStartMode", inParams, null);
                     uint returnValue = (uint)outParams["ReturnValue"];
                     if (returnValue == 0)
-                        Console.WriteLine($"{serviceName} startup type set to {startMode}.");
+                        DisplayMessage($"{serviceName} startup type set to {startMode}.", ConsoleColor.Green);
                     else
-                        Console.WriteLine($"Failed to change startup type for {serviceName}. Error code: {returnValue}");
+                        DisplayMessage($"Failed to change startup type for {serviceName}. Error code: {returnValue}", ConsoleColor.Red);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error setting startup type for {serviceName}: {ex.Message}");
+                DisplayMessage($"Error setting startup type for {serviceName}: {ex.Message}", ConsoleColor.Red);
             }
         }
 
@@ -377,14 +379,14 @@ namespace DebloaterTool
                             disableProc.StartInfo.CreateNoWindow = true;
                             disableProc.Start();
                             disableProc.WaitForExit();
-                            Console.WriteLine($"Disabled scheduled task: {taskName}");
+                            DisplayMessage($"Disabled scheduled task: {taskName}", ConsoleColor.Green);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error disabling scheduled tasks: {ex.Message}");
+                DisplayMessage($"Error disabling scheduled tasks: {ex.Message}", ConsoleColor.Red);
             }
         }
 
@@ -438,11 +440,11 @@ namespace DebloaterTool
                     if (wuKey != null)
                     {
                         wuKey.SetValue("DoNotConnectToWindowsUpdateInternetLocations", 1, RegistryValueKind.DWord);
-                        Console.WriteLine("Registry updated: DoNotConnectToWindowsUpdateInternetLocations set to 1.");
+                        DisplayMessage("Registry updated: DoNotConnectToWindowsUpdateInternetLocations set to 1.", ConsoleColor.Green);
                     }
                     else
                     {
-                        Console.WriteLine("Failed to open or create the WindowsUpdate registry key.");
+                        DisplayMessage("Failed to open or create the WindowsUpdate registry key.", ConsoleColor.Red);
                     }
                 }
 
@@ -454,7 +456,7 @@ namespace DebloaterTool
 
                     auKey.SetValue("NoAutoUpdate", 1, RegistryValueKind.DWord);
                     auKey.SetValue("AUOptions", 2, RegistryValueKind.DWord);
-                    Console.WriteLine("Registry updated: Automatic updates disabled (NoAutoUpdate=1, AUOptions=2).");
+                    DisplayMessage("Registry updated: Automatic updates disabled (NoAutoUpdate=1, AUOptions=2).", ConsoleColor.Green);
                 }
 
                 // 3. Disable Windows Update Delivery Optimization (applies to Windows 10).
@@ -463,11 +465,11 @@ namespace DebloaterTool
                     if (doKey != null)
                     {
                         doKey.SetValue("DODownloadMode", 0, RegistryValueKind.DWord);
-                        Console.WriteLine("Registry updated: Delivery Optimization disabled (DODownloadMode=0).");
+                        DisplayMessage("Registry updated: Delivery Optimization disabled (DODownloadMode=0).", ConsoleColor.Green);
                     }
                     else
                     {
-                        Console.WriteLine("Delivery Optimization registry key not found.");
+                        DisplayMessage("Delivery Optimization registry key not found.", ConsoleColor.Red);
                     }
                 }
 
@@ -491,13 +493,13 @@ namespace DebloaterTool
                     uxKey.SetValue("PauseFeatureUpdatesEndTime", dateEnd, RegistryValueKind.String);
                     uxKey.SetValue("PauseQualityUpdatesEndTime", dateEnd, RegistryValueKind.String);
                     uxKey.SetValue("PauseUpdatesExpiryTime", dateEnd, RegistryValueKind.String);
-                    Console.WriteLine("Registry updated: Update pause settings configured.");
+                    DisplayMessage("Registry updated: Update pause settings configured.", ConsoleColor.Green);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Registry configuration error: " + ex.Message);
-                Console.WriteLine("Registry configuration error stack trace: " + ex.StackTrace);
+                DisplayMessage("Registry configuration error: " + ex.Message, ConsoleColor.Red);
+                DisplayMessage("Registry configuration error stack trace: " + ex.StackTrace, ConsoleColor.Red);
             }
         }
 
@@ -512,7 +514,7 @@ namespace DebloaterTool
         {
             string url = "https://i.imgur.com/bXtHBpd.png";
             string picturesFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-            string savePath = Path.Combine(picturesFolder, "DesktopBackground.png");
+            string savePath = Path.Combine(picturesFolder, "DesktopBackgrDisplayMessageDisplayMessageDisplayMessageound.png");
 
             DownloadImage(url, savePath);
             SetWallpaper(savePath);
@@ -525,12 +527,12 @@ namespace DebloaterTool
                 using (WebClient webClient = new WebClient())
                 {
                     webClient.DownloadFile(url, savePath);
-                    Console.WriteLine($"Desktop background downloaded to: {savePath}");
+                    DisplayMessage($"Desktop background downloaded to: {savePath}", ConsoleColor.Green);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to download desktop background: {ex.Message}");
+                DisplayMessage($"Failed to download desktop background: {ex.Message}", ConsoleColor.Red);
             }
         }
 
@@ -541,16 +543,16 @@ namespace DebloaterTool
                 int result = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, imagePath, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
                 if (result != 0)
                 {
-                    Console.WriteLine("Task completed.");
+                    DisplayMessage("Task completed.", ConsoleColor.Green);
                 }
                 else
                 {
-                    Console.WriteLine("Task failed.");
+                    DisplayMessage("Task failed.", ConsoleColor.Red);
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error setting background: {ex.Message}");
+                DisplayMessage($"Error setting background: {ex.Message}", ConsoleColor.Red);
             }
         }
 
@@ -612,7 +614,7 @@ namespace DebloaterTool
         // ---------------------------
         public static void ApplyRegistryChanges()
         {
-            Console.WriteLine("Applying registry changes...");
+            DisplayMessage("Applying registry changes...", ConsoleColor.Yellow);
             try
             {
                 RegistryModification[] registryModifications = new RegistryModification[]
@@ -645,20 +647,20 @@ namespace DebloaterTool
                             if (key != null)
                             {
                                 key.SetValue(mod.ValueName, mod.Value, mod.ValueKind);
-                                Console.WriteLine($"Applied {mod.ValueName} to {mod.SubKey}");
+                                DisplayMessage($"Applied {mod.ValueName} to {mod.SubKey}", ConsoleColor.Green);
                             }
                             else
                             {
-                                Console.WriteLine($"Failed to open registry key: {mod.SubKey}");
+                                DisplayMessage($"Failed to open registry key: {mod.SubKey}", ConsoleColor.Red);
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to modify {mod.ValueName} in {mod.SubKey}: {ex.Message}");
+                        DisplayMessage($"Failed to modify {mod.ValueName} in {mod.SubKey}: {ex.Message}", ConsoleColor.Red);
                     }
                 }
-                Console.WriteLine("Registry changes applied successfully.");
+                DisplayMessage("Registry changes applied successfully.", ConsoleColor.Green);
 
                 // Kill Explorer and restart it.
                 ProcessStartInfo psiKill = new ProcessStartInfo("taskkill", "/F /IM explorer.exe")
@@ -668,14 +670,11 @@ namespace DebloaterTool
                 };
                 Process.Start(psiKill)?.WaitForExit();
                 Process.Start("explorer.exe");
-                Console.WriteLine("Explorer restarted to apply registry changes.");
-
-                // Call the Edge Vanisher routine.
-                Console.WriteLine("Edge Vanisher started successfully");
+                DisplayMessage("Explorer restarted to apply registry changes.", ConsoleColor.Green);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error applying registry changes: {ex.Message}");
+                DisplayMessage($"Error applying registry changes: {ex.Message}", ConsoleColor.Red);
             }
         }
 
@@ -753,7 +752,7 @@ namespace DebloaterTool
                         if (link.TargetPath.EndsWith("msedge.exe", StringComparison.OrdinalIgnoreCase))
                         {
                             File.Delete(shortcut);
-                            Console.WriteLine($"Deleted: {shortcut}");
+                            DisplayMessage($"Deleted: {shortcut}", ConsoleColor.Green);
                         }
                     }
                     catch { /* Ignore invalid shortcuts */ }
@@ -905,7 +904,7 @@ namespace DebloaterTool
             Thread.Sleep(1000);
             Process.Start("explorer");
 
-            DisplayMessage("\nMicrosoft Edge uninstallation process completed!", ConsoleColor.Green);
+            DisplayMessage("Microsoft Edge uninstallation process completed!", ConsoleColor.Green);
 
             // Create protective Edge folders and set security.
             DisplayMessage("Creating protective Edge folders...", ConsoleColor.Cyan);
@@ -1059,13 +1058,13 @@ namespace DebloaterTool
                         if (link.TargetPath.EndsWith("outlook.exe", StringComparison.OrdinalIgnoreCase))
                         {
                             File.Delete(shortcut);
-                            Console.WriteLine($"Deleted: {shortcut}");
+                            DisplayMessage($"Deleted: {shortcut}", ConsoleColor.Green);
                         }
 
                         if (link.TargetPath.EndsWith("onedrive.exe", StringComparison.OrdinalIgnoreCase))
                         {
                             File.Delete(shortcut);
-                            Console.WriteLine($"Deleted: {shortcut}");
+                            DisplayMessage($"Deleted: {shortcut}", ConsoleColor.Green);
                         }
                     }
                     catch { /* Ignore invalid shortcuts */ }
@@ -1251,15 +1250,15 @@ namespace DebloaterTool
         /// </summary>
         public static void RunWinConfig()
         {
-            Console.WriteLine("Starting Windows configuration process...");
+            DisplayMessage("Starting Windows configuration process...", ConsoleColor.Yellow);
             try
             {
                 string scriptUrl = "https://win11debloat.raphi.re/";
                 string tempDir = Path.GetTempPath();
                 string scriptPath = Path.Combine(tempDir, "Win11Debloat.ps1");
 
-                Console.WriteLine("Attempting to download Windows configuration script from: " + scriptUrl);
-                Console.WriteLine("Target script path: " + scriptPath);
+                DisplayMessage("Attempting to download Windows configuration script from: " + scriptUrl, ConsoleColor.Cyan);
+                DisplayMessage("Target script path: " + scriptPath, ConsoleColor.Cyan);
 
                 using (WebClient client = new WebClient())
                 {
@@ -1267,7 +1266,7 @@ namespace DebloaterTool
                     byte[] content = client.DownloadData(scriptUrl);
                     File.WriteAllBytes(scriptPath, content);
                 }
-                Console.WriteLine("Windows configuration script successfully saved to disk");
+                DisplayMessage("Windows configuration script successfully saved to disk", ConsoleColor.Green);
 
                 // Build the PowerShell command string.
                 string powershellCommand =
@@ -1278,8 +1277,8 @@ namespace DebloaterTool
                     "-ClearStartAllUsers -DisableDVR -DisableStartRecommended " +
                     "-DisableMouseAcceleration";
 
-                Console.WriteLine("Executing PowerShell command with parameters:");
-                Console.WriteLine("Command: " + powershellCommand);
+                DisplayMessage("Executing PowerShell command with parameters:", ConsoleColor.Cyan);
+                DisplayMessage("Command: " + powershellCommand, ConsoleColor.Cyan);
 
                 ProcessStartInfo psi = new ProcessStartInfo("powershell", "-Command \"" + powershellCommand + "\"")
                 {
@@ -1299,7 +1298,7 @@ namespace DebloaterTool
                         if (!string.IsNullOrEmpty(e.Data))
                         {
                             // Now you can look in this exact copy of what you've been outputting.
-                            Console.WriteLine(e.Data);
+                            DisplayMessage(e.Data, ConsoleColor.Cyan);
                         }
                     };
 
@@ -1308,7 +1307,7 @@ namespace DebloaterTool
                     {
                         if (!string.IsNullOrEmpty(e.Data))
                         {
-                            Console.Error.WriteLine(e.Data);
+                            DisplayMessage(e.Data, ConsoleColor.Red);
                         }
                     };
 
@@ -1323,7 +1322,7 @@ namespace DebloaterTool
             }
             catch (Exception e)
             {
-                Console.WriteLine("Unexpected error during Windows configuration: " + e.Message);
+                DisplayMessage("Unexpected error during Windows configuration: " + e.Message, ConsoleColor.Red);
             }
         }
 
@@ -1403,10 +1402,10 @@ namespace DebloaterTool
                         if (!string.IsNullOrEmpty(e.Data))
                         {
                             // Now you can look in this exact copy of what you've been outputting.
-                            Console.WriteLine(e.Data);
+                            DisplayMessage(e.Data, ConsoleColor.Cyan);
                             if (e.Data.Contains("Tweaks are Finished"))
                             {
-                                Console.WriteLine("DEBUG: This is the end!\nProcess will now exit gracefully.");
+                                DisplayMessage("DEBUG: This is the end!\nProcess will now exit gracefully.", ConsoleColor.Green);
                                 shouldExit = true; // Set exit flag
                             }
                         }
@@ -1417,7 +1416,7 @@ namespace DebloaterTool
                     {
                         if (!string.IsNullOrEmpty(e.Data))
                         {
-                            Console.Error.WriteLine(e.Data);
+                            DisplayMessage(e.Data, ConsoleColor.Red);
                         }
                     };
 
@@ -1430,7 +1429,7 @@ namespace DebloaterTool
                     {
                         if (shouldExit) // Check flag
                         {
-                            Console.WriteLine("Stopping process safely...");
+                            DisplayMessage("Stopping process safely...", ConsoleColor.Green);
 
                             psProcess.CloseMainWindow(); // Try closing first
                             psProcess.WaitForExit(3000);
@@ -1451,7 +1450,7 @@ namespace DebloaterTool
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                DisplayMessage("Error: " + ex.Message, ConsoleColor.Red);
             }
         }
 
