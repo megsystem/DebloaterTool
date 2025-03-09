@@ -4,8 +4,6 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 
 ![DebloaterTool UI](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/1.png)
 
-![Final Result](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/2.png)
-
 ## Features ✅
 - 🗑️ **Remove pre-installed bloatware**
 - 🚫 **Disable unnecessary background services**
@@ -45,6 +43,9 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 4. **Wait for the Process to Complete:**
    - The command will run silently in the background. Once finished, the DebloaterTool should be ready for use.
 
+
+## Final Result 🏆
+![Final Result](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/2.png)
 
 ## Contributing 🤝
 Pull requests are welcome! If you have suggestions for improvements, feel free to submit an issue or a PR.
