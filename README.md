@@ -2,7 +2,9 @@
 
 DebloaterTool is a powerful and lightweight Windows debloater designed to remove unnecessary bloatware, disable unwanted services, and optimize system performance with ease. 💨✨
 
-![DebloaterTool UI](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/GitHub/1.png)
+![DebloaterTool UI](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/1.png)
+
+![Final Result](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/2.png)
 
 ## Features ✅
 - 🗑️ **Remove pre-installed bloatware**
