@@ -43,6 +43,9 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 4. **Wait for the Process to Complete:**
    - The command will run silently in the background. Once finished, the DebloaterTool should be ready for use.
 
+## Screenshots 📷
+![DebloaterTool UI](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/1.png)
+![DebloaterTool Process](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/3.png)
 
 ## Final Result 🏆
 ![Final Result](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/2.png)
