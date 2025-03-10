@@ -45,8 +45,8 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 
 ## Screenshots 📷
 ![DebloaterTool UI](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/1.png)
-![DebloaterTool Process](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/3.png)
-![Final Result](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/2.png)
+![DebloaterTool Process](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/2.png)
+![Final Result](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/3.png)
 
 ## Contributing 🤝
 Pull requests are welcome! If you have suggestions for improvements, feel free to submit an issue or a PR.
