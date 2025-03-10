@@ -28,25 +28,29 @@ namespace DebloaterTool
             // Run the Welcome Screen and EULA
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             Console.Title = $"DebloaterTool V{version.Major}.{version.Minor}.{version.Build}";
-            Console.WriteLine("+=================================================================+");
-            Console.WriteLine("|    ____       _     _             _              ____           |");
-            Console.WriteLine("|   |  _ \\  ___| |__ | | ___   __ _| |_ ___ _ __  | __ ) _   _    |");
-            Console.WriteLine("|   | | | |/ _ \\ '_ \\| |/ _ \\ / _` | __/ _ \\ '__| |  _ \\| | | |   |");
-            Console.WriteLine("|   | |_| |  __/ |_) | | (_) | (_| | ||  __/ |    | |_) | |_| |   |");
-            Console.WriteLine("|   |____/ \\___|_.__/|_|\\___/ \\__,_|\\__\\___|_|    |____/ \\__, |   |");
-            Console.WriteLine("|    _____ ____ _  ______ ___ _____     ___    _   _ _   |___/    |");
-            Console.WriteLine("|   |  ___/ ___| |/ / ___|_ _/ _ \\ \\   / / \\  | \\ | | \\ | |_ _|   |");
-            Console.WriteLine("|   | |_ | |   | ' / |  _ | | | | \\ \\ / / _ \\ |  \\| |  \\| || |    |");
-            Console.WriteLine("|   |  _|| |___| . \\ |_| || | |_| |\\ V / ___ \\| |\\  | |\\  || |    |");
-            Console.WriteLine("|   |_|   \\____|_|\\_\\____|___\\___/  \\_/_/   \\_\\_| \\_|_| \\_|___|   |");
-            Console.WriteLine("|                                                                 |");
-            Console.WriteLine("+=================================================================+");
+            Console.WriteLine("+=================================================================================================================+");
+            Console.WriteLine("|                                                                                                                 |");
+            Console.WriteLine("|   ██████╗ ███████╗██████╗ ██╗     ██████╗  █████╗ ████████╗███████╗██████╗ ████████╗ ██████╗  ██████╗ ██╗       |");
+            Console.WriteLine("|   ██╔══██╗██╔════╝██╔══██╗██║    ██╔═══██╗██╔══██╗╚══██╔══╝██╔════╝██╔══██╗╚══██╔══╝██╔═══██╗██╔═══██╗██║       |");
+            Console.WriteLine("|   ██║  ██║█████╗  ██████╔╝██║    ██║   ██║███████║   ██║   █████╗  ██████╔╝   ██║   ██║   ██║██║   ██║██║       |");
+            Console.WriteLine("|   ██║  ██║██╔══╝  ██╔══██╗██║    ██║   ██║██╔══██║   ██║   ██╔══╝  ██╔══██╗   ██║   ██║   ██║██║   ██║██║       |");
+            Console.WriteLine("|   ██████╔╝███████╗██████╔╝██████╗╚██████╔╝██║  ██║   ██║   ███████╗██║  ██║   ██║   ╚██████╔╝╚██████╔╝██████╗   |");
+            Console.WriteLine("|   ╚═════╝ ╚══════╝╚═════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝   ╚═╝    ╚═════╝  ╚═════╝ ╚═════╝   |");
+            Console.WriteLine("|                                                                                                                 |");
+            Console.WriteLine("|   ██████╗ ██╗   ██╗     ███████╗ ██████╗██╗  ██╗ ██████╗ ██╗ ██████╗ ██╗   ██╗ █████╗ ███╗   ██╗███╗   ██╗██╗   |");
+            Console.WriteLine("|   ██╔══██╗╚██╗ ██╔╝     ██╔════╝██╔════╝██║ ██╔╝██╔════╝ ██║██╔═══██╗██║   ██║██╔══██╗████╗  ██║████╗  ██║██║   |");
+            Console.WriteLine("|   ██████╔╝ ╚████╔╝      █████╗  ██║     █████╔╝ ██║  ███╗██║██║   ██║██║   ██║███████║██╔██╗ ██║██╔██╗ ██║██║   |");
+            Console.WriteLine("|   ██╔══██╗  ╚██╔╝       ██╔══╝  ██║     ██╔═██╗ ██║   ██║██║██║   ██║╚██╗ ██╔╝██╔══██║██║╚██╗██║██║╚██╗██║██║   |");
+            Console.WriteLine("|   ██████╔╝   ██║        ██║     ╚██████╗██║  ██╗╚██████╔╝██║╚██████╔╝ ╚████╔╝ ██║  ██║██║ ╚████║██║ ╚████║██║   |");
+            Console.WriteLine("|   ╚═════╝    ╚═╝        ╚═╝      ╚═════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝ ╚═════╝   ╚═══╝  ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚═╝   |");
+            Console.WriteLine("|                                                                                                                 |");
+            Console.WriteLine("+=================================================================================================================+");
             Console.WriteLine("End User License Agreement (EULA)");
             Console.WriteLine("---------------------------------");
             Console.WriteLine("By using this software, you agree to the following terms:");
             Console.WriteLine("1. You may not distribute this software without permission.");
             Console.WriteLine("2. The developers are not responsible for any damages.");
-            DisplayMessage("3. Please disable your antivirus before proceeding.", ConsoleColor.Red);
+            DisplayMessage("3. Please disable your antivirus before proceeding.", ConsoleColor.DarkYellow);
             Console.WriteLine("---------------------------------");
 
             // EULA Confirmation
@@ -131,7 +135,7 @@ namespace DebloaterTool
             }
             catch (Exception ex)
             {
-                DisplayMessage($"Failed to start as administrator: {ex.Message}", ConsoleColor.Red);
+                Logger.Log($"Failed to start as administrator: {ex.Message}", Logger.Level.ERROR);
             }
             Environment.Exit(0);
         }
@@ -167,13 +171,13 @@ namespace DebloaterTool
                                 {
                                     shortcut.Arguments = (shortcut.Arguments + " " + argToAdd).Trim();
                                     shortcut.Save();
-                                    DisplayMessage("Updated: " + file, ConsoleColor.Green);
+                                    Logger.Log("Updated: " + file, Logger.Level.SUCCESS);
                                 }
                             }
                         }
                         catch (Exception ex)
                         {
-                            DisplayMessage("Error processing shortcut " + file + ": " + ex.Message, ConsoleColor.Red);
+                            Logger.Log("Error processing shortcut " + file + ": " + ex.Message, Logger.Level.ERROR);
                         }
                     }
                     foreach (string sub in Directory.GetDirectories(path))
@@ -181,7 +185,7 @@ namespace DebloaterTool
                 }
                 catch (Exception ex)
                 {
-                    DisplayMessage("Error processing directory " + path + ": " + ex.Message, ConsoleColor.Red);
+                    Logger.Log("Error processing directory " + path + ": " + ex.Message, Logger.Level.ERROR);
                 }
             };
 
@@ -190,14 +194,14 @@ namespace DebloaterTool
                 if (Directory.Exists(dir))
                     ProcessDirectory(dir);
             }
-            DisplayMessage("Shortcut update complete.", ConsoleColor.Green);
+            Logger.Log("Shortcut update complete.", Logger.Level.SUCCESS);
         }
 
         public static void UngoogledInstaller()
         {
             try
             {
-                DisplayMessage("Fetching latest release information...", ConsoleColor.Cyan);
+                Logger.Log("Fetching latest release information...", Logger.Level.INFO);
 
                 string apiUrl = "https://api.github.com/repos/ungoogled-software/ungoogled-chromium-windows/releases/latest";
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiUrl);
@@ -229,15 +233,15 @@ namespace DebloaterTool
 
                     if (downloadUrl == null)
                     {
-                        DisplayMessage("Installer asset not found for pattern: " + searchPattern, ConsoleColor.Red);
+                        Logger.Log("Installer asset not found for pattern: " + searchPattern, Logger.Level.ERROR);
                         return;
                     }
 
-                    DisplayMessage("Latest installer found: " + assetName, ConsoleColor.Cyan);
-                    DisplayMessage("Download URL: " + downloadUrl, ConsoleColor.Cyan);
+                    Logger.Log("Latest installer found: " + assetName, Logger.Level.INFO);
+                    Logger.Log("Download URL: " + downloadUrl, Logger.Level.INFO);
 
                     string tempFile = Path.Combine(Path.GetTempPath(), assetName);
-                    DisplayMessage("Downloading installer to " + tempFile + "...", ConsoleColor.Cyan);
+                    Logger.Log("Downloading installer to " + tempFile + "...", Logger.Level.INFO);
 
                     using (WebClient webClient = new WebClient())
                     {
@@ -247,8 +251,9 @@ namespace DebloaterTool
                         webClient.DownloadProgressChanged += (s, e) =>
                         {
                             int progress = e.ProgressPercentage;
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.Write($"\rDownloading... {progress}%   ");
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+                            string timestamp = $"[{DateTime.Now:yyyy.MM.dd HH:mm:ss}] [DOWNLOADING] - ";
+                            Console.Write($"\r{timestamp}Downloading... {progress}%   ");
                             Console.ResetColor();
                         };
 
@@ -261,19 +266,19 @@ namespace DebloaterTool
                         downloadCompleted.WaitOne(); // Wait until the download completes.
                         Console.WriteLine(); // Move to next line after progress bar.
                     }
-                    DisplayMessage("Download completed.", ConsoleColor.Green);
+                    Logger.Log("Download completed.", Logger.Level.SUCCESS);
 
-                    DisplayMessage("Starting installer...", ConsoleColor.Green);
+                    Logger.Log("Starting installer...", Logger.Level.SUCCESS);
                     Process installerProcess = Process.Start(tempFile);
                     installerProcess.WaitForExit();
-                    DisplayMessage("Installer process completed.", ConsoleColor.Green);
+                    Logger.Log("Installer process completed.", Logger.Level.SUCCESS);
 
                     File.Delete(tempFile);
                 }
             }
             catch (Exception ex)
             {
-                DisplayMessage("An error occurred: " + ex.Message, ConsoleColor.Red);
+                Logger.Log("An error occurred: " + ex.Message, Logger.Level.ERROR);
             }
         }
 
@@ -303,20 +308,20 @@ namespace DebloaterTool
                     if (sc.Status != ServiceControllerStatus.Stopped &&
                         sc.Status != ServiceControllerStatus.StopPending)
                     {
-                        DisplayMessage($"Stopping service {serviceName}...", ConsoleColor.Yellow);
+                        Logger.Log($"Stopping service {serviceName}...", Logger.Level.WARNING);
                         sc.Stop();
                         sc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
-                        DisplayMessage($"{serviceName} stopped successfully.", ConsoleColor.Green);
+                        Logger.Log($"{serviceName} stopped successfully.", Logger.Level.SUCCESS);
                     }
                     else
                     {
-                        DisplayMessage($"{serviceName} is already stopped.", ConsoleColor.Yellow);
+                        Logger.Log($"{serviceName} is already stopped.", Logger.Level.WARNING);
                     }
                 }
             }
             catch (Exception ex)
             {
-                DisplayMessage($"Error stopping service {serviceName}: {ex.Message}", ConsoleColor.Red);
+                Logger.Log($"Error stopping service {serviceName}: {ex.Message}", Logger.Level.ERROR);
             }
         }
 
@@ -333,14 +338,14 @@ namespace DebloaterTool
                     ManagementBaseObject outParams = service.InvokeMethod("ChangeStartMode", inParams, null);
                     uint returnValue = (uint)outParams["ReturnValue"];
                     if (returnValue == 0)
-                        DisplayMessage($"{serviceName} startup type set to {startMode}.", ConsoleColor.Green);
+                        Logger.Log($"{serviceName} startup type set to {startMode}.", Logger.Level.SUCCESS);
                     else
-                        DisplayMessage($"Failed to change startup type for {serviceName}. Error code: {returnValue}", ConsoleColor.Red);
+                        Logger.Log($"Failed to change startup type for {serviceName}. Error code: {returnValue}", Logger.Level.ERROR);
                 }
             }
             catch (Exception ex)
             {
-                DisplayMessage($"Error setting startup type for {serviceName}: {ex.Message}", ConsoleColor.Red);
+                Logger.Log($"Error setting startup type for {serviceName}: {ex.Message}", Logger.Level.ERROR);
             }
         }
 
@@ -379,14 +384,14 @@ namespace DebloaterTool
                             disableProc.StartInfo.CreateNoWindow = true;
                             disableProc.Start();
                             disableProc.WaitForExit();
-                            DisplayMessage($"Disabled scheduled task: {taskName}", ConsoleColor.Green);
+                            Logger.Log($"Disabled scheduled task: {taskName}", Logger.Level.SUCCESS);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                DisplayMessage($"Error disabling scheduled tasks: {ex.Message}", ConsoleColor.Red);
+                Logger.Log($"Error disabling scheduled tasks: {ex.Message}", Logger.Level.ERROR);
             }
         }
 
@@ -440,11 +445,11 @@ namespace DebloaterTool
                     if (wuKey != null)
                     {
                         wuKey.SetValue("DoNotConnectToWindowsUpdateInternetLocations", 1, RegistryValueKind.DWord);
-                        DisplayMessage("Registry updated: DoNotConnectToWindowsUpdateInternetLocations set to 1.", ConsoleColor.Green);
+                        Logger.Log("Registry updated: DoNotConnectToWindowsUpdateInternetLocations set to 1.", Logger.Level.SUCCESS);
                     }
                     else
                     {
-                        DisplayMessage("Failed to open or create the WindowsUpdate registry key.", ConsoleColor.Red);
+                        Logger.Log("Failed to open or create the WindowsUpdate registry key.", Logger.Level.ERROR);
                     }
                 }
 
@@ -456,7 +461,7 @@ namespace DebloaterTool
 
                     auKey.SetValue("NoAutoUpdate", 1, RegistryValueKind.DWord);
                     auKey.SetValue("AUOptions", 2, RegistryValueKind.DWord);
-                    DisplayMessage("Registry updated: Automatic updates disabled (NoAutoUpdate=1, AUOptions=2).", ConsoleColor.Green);
+                    Logger.Log("Registry updated: Automatic updates disabled (NoAutoUpdate=1, AUOptions=2).", Logger.Level.SUCCESS);
                 }
 
                 // 3. Disable Windows Update Delivery Optimization (applies to Windows 10).
@@ -465,11 +470,11 @@ namespace DebloaterTool
                     if (doKey != null)
                     {
                         doKey.SetValue("DODownloadMode", 0, RegistryValueKind.DWord);
-                        DisplayMessage("Registry updated: Delivery Optimization disabled (DODownloadMode=0).", ConsoleColor.Green);
+                        Logger.Log("Registry updated: Delivery Optimization disabled (DODownloadMode=0).", Logger.Level.SUCCESS);
                     }
                     else
                     {
-                        DisplayMessage("Delivery Optimization registry key not found.", ConsoleColor.Red);
+                        Logger.Log("Delivery Optimization registry key not found.", Logger.Level.ERROR);
                     }
                 }
 
@@ -493,13 +498,13 @@ namespace DebloaterTool
                     uxKey.SetValue("PauseFeatureUpdatesEndTime", dateEnd, RegistryValueKind.String);
                     uxKey.SetValue("PauseQualityUpdatesEndTime", dateEnd, RegistryValueKind.String);
                     uxKey.SetValue("PauseUpdatesExpiryTime", dateEnd, RegistryValueKind.String);
-                    DisplayMessage("Registry updated: Update pause settings configured.", ConsoleColor.Green);
+                    Logger.Log("Registry updated: Update pause settings configured.", Logger.Level.SUCCESS);
                 }
             }
             catch (Exception ex)
             {
-                DisplayMessage("Registry configuration error: " + ex.Message, ConsoleColor.Red);
-                DisplayMessage("Registry configuration error stack trace: " + ex.StackTrace, ConsoleColor.Red);
+                Logger.Log("Registry configuration error: " + ex.Message, Logger.Level.ERROR);
+                Logger.Log("Registry configuration error stack trace: " + ex.StackTrace, Logger.Level.ERROR);
             }
         }
 
@@ -514,7 +519,7 @@ namespace DebloaterTool
         {
             string url = "https://i.imgur.com/bXtHBpd.png";
             string picturesFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-            string savePath = Path.Combine(picturesFolder, "DesktopBackgrDisplayMessageDisplayMessageDisplayMessageound.png");
+            string savePath = Path.Combine(picturesFolder, "DesktopBackgrLogger.LogLogger.LogLogger.Logound.png");
 
             DownloadImage(url, savePath);
             SetWallpaper(savePath);
@@ -527,12 +532,12 @@ namespace DebloaterTool
                 using (WebClient webClient = new WebClient())
                 {
                     webClient.DownloadFile(url, savePath);
-                    DisplayMessage($"Desktop background downloaded to: {savePath}", ConsoleColor.Green);
+                    Logger.Log($"Desktop background downloaded to: {savePath}", Logger.Level.SUCCESS);
                 }
             }
             catch (Exception ex)
             {
-                DisplayMessage($"Failed to download desktop background: {ex.Message}", ConsoleColor.Red);
+                Logger.Log($"Failed to download desktop background: {ex.Message}", Logger.Level.ERROR);
             }
         }
 
@@ -543,16 +548,16 @@ namespace DebloaterTool
                 int result = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, imagePath, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
                 if (result != 0)
                 {
-                    DisplayMessage("Task completed.", ConsoleColor.Green);
+                    Logger.Log("Task completed.", Logger.Level.SUCCESS);
                 }
                 else
                 {
-                    DisplayMessage("Task failed.", ConsoleColor.Red);
+                    Logger.Log("Task failed.", Logger.Level.ERROR);
                 }
             }
             catch (Exception ex)
             {
-                DisplayMessage($"Error setting background: {ex.Message}", ConsoleColor.Red);
+                Logger.Log($"Error setting background: {ex.Message}", Logger.Level.ERROR);
             }
         }
 
@@ -586,7 +591,7 @@ namespace DebloaterTool
             }
             catch (Exception ex)
             {
-                DisplayMessage($"Error running command {command} {arguments}: {ex.Message}", ConsoleColor.Red);
+                Logger.Log($"Error running command {command} {arguments}: {ex.Message}", Logger.Level.ERROR);
             }
         }
 
@@ -614,7 +619,7 @@ namespace DebloaterTool
         // ---------------------------
         public static void ApplyRegistryChanges()
         {
-            DisplayMessage("Applying registry changes...", ConsoleColor.Yellow);
+            Logger.Log("Applying registry changes...", Logger.Level.WARNING);
             try
             {
                 RegistryModification[] registryModifications = new RegistryModification[]
@@ -647,20 +652,20 @@ namespace DebloaterTool
                             if (key != null)
                             {
                                 key.SetValue(mod.ValueName, mod.Value, mod.ValueKind);
-                                DisplayMessage($"Applied {mod.ValueName} to {mod.SubKey}", ConsoleColor.Green);
+                                Logger.Log($"Applied {mod.ValueName} to {mod.SubKey}", Logger.Level.SUCCESS);
                             }
                             else
                             {
-                                DisplayMessage($"Failed to open registry key: {mod.SubKey}", ConsoleColor.Red);
+                                Logger.Log($"Failed to open registry key: {mod.SubKey}", Logger.Level.ERROR);
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        DisplayMessage($"Failed to modify {mod.ValueName} in {mod.SubKey}: {ex.Message}", ConsoleColor.Red);
+                        Logger.Log($"Failed to modify {mod.ValueName} in {mod.SubKey}: {ex.Message}", Logger.Level.ERROR);
                     }
                 }
-                DisplayMessage("Registry changes applied successfully.", ConsoleColor.Green);
+                Logger.Log("Registry changes applied successfully.", Logger.Level.SUCCESS);
 
                 // Kill Explorer and restart it.
                 ProcessStartInfo psiKill = new ProcessStartInfo("taskkill", "/F /IM explorer.exe")
@@ -670,11 +675,11 @@ namespace DebloaterTool
                 };
                 Process.Start(psiKill)?.WaitForExit();
                 Process.Start("explorer.exe");
-                DisplayMessage("Explorer restarted to apply registry changes.", ConsoleColor.Green);
+                Logger.Log("Explorer restarted to apply registry changes.", Logger.Level.SUCCESS);
             }
             catch (Exception ex)
             {
-                DisplayMessage($"Error applying registry changes: {ex.Message}", ConsoleColor.Red);
+                Logger.Log($"Error applying registry changes: {ex.Message}", Logger.Level.ERROR);
             }
         }
 
@@ -683,11 +688,11 @@ namespace DebloaterTool
         // -------------------------
         static void UninstallEdge()
         {
-            DisplayMessage("Edge Vanisher started", ConsoleColor.Yellow);
-            DisplayMessage("Starting Microsoft Edge uninstallation process...", ConsoleColor.Yellow);
+            Logger.Log("Edge Vanisher started", Logger.Level.WARNING);
+            Logger.Log("Starting Microsoft Edge uninstallation process...", Logger.Level.WARNING);
 
             // Terminate Edge processes.
-            DisplayMessage("Terminating Edge processes...", ConsoleColor.Cyan);
+            Logger.Log("Terminating Edge processes...", Logger.Level.INFO);
             var edgeProcesses = Process.GetProcesses()
                 .Where(p => p.ProcessName.IndexOf("edge", StringComparison.OrdinalIgnoreCase) >= 0)
                 .ToList();
@@ -697,7 +702,7 @@ namespace DebloaterTool
                 {
                     try
                     {
-                        DisplayMessage($"Terminated process: {proc.ProcessName} (PID: {proc.Id})", ConsoleColor.Cyan);
+                        Logger.Log($"Terminated process: {proc.ProcessName} (PID: {proc.Id})", Logger.Level.INFO);
                         proc.Kill();
                     }
                     catch { }
@@ -705,11 +710,11 @@ namespace DebloaterTool
             }
             else
             {
-                DisplayMessage("No running Edge processes found.", ConsoleColor.Cyan);
+                Logger.Log("No running Edge processes found.", Logger.Level.INFO);
             }
 
             // Uninstall Edge via its setup.exe.
-            DisplayMessage("Uninstalling Edge with setup...", ConsoleColor.Cyan);
+            Logger.Log("Uninstalling Edge with setup...", Logger.Level.INFO);
             string programFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
             try
             {
@@ -752,7 +757,7 @@ namespace DebloaterTool
                         if (link.TargetPath.EndsWith("msedge.exe", StringComparison.OrdinalIgnoreCase))
                         {
                             File.Delete(shortcut);
-                            DisplayMessage($"Deleted: {shortcut}", ConsoleColor.Green);
+                            Logger.Log($"Deleted: {shortcut}", Logger.Level.SUCCESS);
                         }
                     }
                     catch { /* Ignore invalid shortcuts */ }
@@ -760,7 +765,7 @@ namespace DebloaterTool
             }
 
             // Remove Start Menu shortcuts.
-            DisplayMessage("Removing Start Menu shortcuts...", ConsoleColor.Cyan);
+            Logger.Log("Removing Start Menu shortcuts...", Logger.Level.INFO);
             string[] startMenuPaths = new string[]
             {
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu), "Programs", "Microsoft Edge.lnk"),
@@ -771,28 +776,28 @@ namespace DebloaterTool
             {
                 if (File.Exists(shortcut))
                 {
-                    DisplayMessage($"Deleting: {shortcut}", ConsoleColor.Cyan);
+                    Logger.Log($"Deleting: {shortcut}", Logger.Level.INFO);
                     try
                     {
                         File.Delete(shortcut);
                         if (!File.Exists(shortcut))
                         {
-                            DisplayMessage($"Successfully deleted: {shortcut}", ConsoleColor.Green);
+                            Logger.Log($"Successfully deleted: {shortcut}", Logger.Level.SUCCESS);
                         }
                         else
                         {
-                            DisplayMessage($"Failed to delete: {shortcut}", ConsoleColor.Red);
+                            Logger.Log($"Failed to delete: {shortcut}", Logger.Level.ERROR);
                         }
                     }
                     catch (Exception ex)
                     {
-                        DisplayMessage($"Error deleting {shortcut}: {ex.Message}", ConsoleColor.Red);
+                        Logger.Log($"Error deleting {shortcut}: {ex.Message}", Logger.Level.ERROR);
                     }
                 }
             }
 
             // Clean Edge folders.
-            DisplayMessage("Cleaning Edge folders...", ConsoleColor.Cyan);
+            Logger.Log("Cleaning Edge folders...", Logger.Level.INFO);
             string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             string programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
             string[] edgePaths = new string[]
@@ -809,7 +814,7 @@ namespace DebloaterTool
             {
                 if (Directory.Exists(path) || File.Exists(path))
                 {
-                    DisplayMessage($"Cleaning: {path}", ConsoleColor.Cyan);
+                    Logger.Log($"Cleaning: {path}", Logger.Level.INFO);
                     // Use external commands to take ownership and set permissions.
                     RunCommand("takeown", $"/F \"{path}\" /R /D Y");
                     RunCommand("icacls", $"\"{path}\" /grant administrators:F /T");
@@ -826,13 +831,13 @@ namespace DebloaterTool
                     }
                     catch (Exception ex)
                     {
-                        DisplayMessage($"Error deleting {path}: {ex.Message}", ConsoleColor.Red);
+                        Logger.Log($"Error deleting {path}: {ex.Message}", Logger.Level.ERROR);
                     }
                 }
             }
 
             // Clean Edge registry entries.
-            DisplayMessage("Cleaning Edge registry entries...", ConsoleColor.Cyan);
+            Logger.Log("Cleaning Edge registry entries...", Logger.Level.INFO);
             string[] edgeRegKeys = new string[]
             {
                 @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Microsoft Edge",
@@ -877,7 +882,7 @@ namespace DebloaterTool
                 }
                 catch (Exception ex)
                 {
-                    DisplayMessage($"Error handling service {service}: {ex.Message}", ConsoleColor.Red);
+                    Logger.Log($"Error handling service {service}: {ex.Message}", Logger.Level.ERROR);
                 }
             }
 
@@ -904,10 +909,10 @@ namespace DebloaterTool
             Thread.Sleep(1000);
             Process.Start("explorer");
 
-            DisplayMessage("Microsoft Edge uninstallation process completed!", ConsoleColor.Green);
+            Logger.Log("Microsoft Edge uninstallation process completed!", Logger.Level.SUCCESS);
 
             // Create protective Edge folders and set security.
-            DisplayMessage("Creating protective Edge folders...", ConsoleColor.Cyan);
+            Logger.Log("Creating protective Edge folders...", Logger.Level.INFO);
             var protectiveFolders = new[]
             {
                 new { Base = Path.Combine(programFilesX86, "Microsoft", "Edge"), App = Path.Combine(programFilesX86, "Microsoft", "Edge", "Application"), CreateSubFolder = true },
@@ -923,7 +928,7 @@ namespace DebloaterTool
                     {
                         Directory.CreateDirectory(folder.App);
                     }
-                    DisplayMessage($"Processing protective folder: {folder.Base}", ConsoleColor.Cyan);
+                    Logger.Log($"Processing protective folder: {folder.Base}", Logger.Level.INFO);
 
                     string currentUser = WindowsIdentity.GetCurrent().Name;
                     // Set ACL for the folder.
@@ -965,25 +970,25 @@ namespace DebloaterTool
                             try
                             {
                                 Directory.SetAccessControl(subDir, acl);
-                                DisplayMessage($"Success: {subDir}", ConsoleColor.Green);
+                                Logger.Log($"Success: {subDir}", Logger.Level.SUCCESS);
                             }
                             catch (Exception ex)
                             {
-                                DisplayMessage($"Error occurred: {subDir} - {ex.Message}", ConsoleColor.Red);
+                                Logger.Log($"Error occurred: {subDir} - {ex.Message}", Logger.Level.ERROR);
                             }
                         }
                     }
                     else
                     {
-                        DisplayMessage($"Success: {folder.Base}", ConsoleColor.Green);
+                        Logger.Log($"Success: {folder.Base}", Logger.Level.SUCCESS);
                     }
                 }
                 catch (Exception ex)
                 {
-                    DisplayMessage($"Error occurred: {folder.Base} - {ex.Message}", ConsoleColor.Red);
+                    Logger.Log($"Error occurred: {folder.Base} - {ex.Message}", Logger.Level.ERROR);
                 }
             }
-            DisplayMessage("Protective folders created and security settings configured for Edge and EdgeCore.", ConsoleColor.Green);
+            Logger.Log("Protective folders created and security settings configured for Edge and EdgeCore.", Logger.Level.SUCCESS);
         }
 
         // -------------------------------------
@@ -991,7 +996,7 @@ namespace DebloaterTool
         // -------------------------------------
         static void CleanOutlookAndOneDrive()
         {
-            DisplayMessage("Outlook & OneDrive Cleaner started", ConsoleColor.Yellow);
+            Logger.Log("Outlook & OneDrive Cleaner started", Logger.Level.WARNING);
 
             // Close Outlook processes.
             var outlookProcesses = Process.GetProcesses()
@@ -1001,7 +1006,7 @@ namespace DebloaterTool
             {
                 try
                 {
-                    DisplayMessage($"Terminating Outlook process: {proc.ProcessName} (PID: {proc.Id})", ConsoleColor.Cyan);
+                    Logger.Log($"Terminating Outlook process: {proc.ProcessName} (PID: {proc.Id})", Logger.Level.INFO);
                     proc.Kill();
                 }
                 catch { }
@@ -1026,11 +1031,11 @@ namespace DebloaterTool
                         RunCommand("takeown", $"/f \"{folder}\" /r /d Y");
                         RunCommand("icacls", $"\"{folder}\" /grant administrators:F /T");
                         Directory.Delete(folder, true);
-                        DisplayMessage($"Deleted Outlook folder: {folder}", ConsoleColor.Green);
+                        Logger.Log($"Deleted Outlook folder: {folder}", Logger.Level.SUCCESS);
                     }
                     catch (Exception ex)
                     {
-                        DisplayMessage($"Error deleting folder {folder}: {ex.Message}", ConsoleColor.Red);
+                        Logger.Log($"Error deleting folder {folder}: {ex.Message}", Logger.Level.ERROR);
                     }
                 }
             }
@@ -1058,13 +1063,13 @@ namespace DebloaterTool
                         if (link.TargetPath.EndsWith("outlook.exe", StringComparison.OrdinalIgnoreCase))
                         {
                             File.Delete(shortcut);
-                            DisplayMessage($"Deleted: {shortcut}", ConsoleColor.Green);
+                            Logger.Log($"Deleted: {shortcut}", Logger.Level.SUCCESS);
                         }
 
                         if (link.TargetPath.EndsWith("onedrive.exe", StringComparison.OrdinalIgnoreCase))
                         {
                             File.Delete(shortcut);
-                            DisplayMessage($"Deleted: {shortcut}", ConsoleColor.Green);
+                            Logger.Log($"Deleted: {shortcut}", Logger.Level.SUCCESS);
                         }
                     }
                     catch { /* Ignore invalid shortcuts */ }
@@ -1094,11 +1099,11 @@ namespace DebloaterTool
                     try
                     {
                         File.Delete(shortcut);
-                        DisplayMessage($"Deleted shortcut: {shortcut}", ConsoleColor.Green);
+                        Logger.Log($"Deleted shortcut: {shortcut}", Logger.Level.SUCCESS);
                     }
                     catch (Exception ex)
                     {
-                        DisplayMessage($"Error deleting shortcut {shortcut}: {ex.Message}", ConsoleColor.Red);
+                        Logger.Log($"Error deleting shortcut {shortcut}: {ex.Message}", Logger.Level.ERROR);
                     }
                 }
             }
@@ -1129,7 +1134,7 @@ namespace DebloaterTool
                 }
                 catch (Exception ex)
                 {
-                    DisplayMessage($"Error cleaning registry at {regPath}: {ex.Message}", ConsoleColor.Red);
+                    Logger.Log($"Error cleaning registry at {regPath}: {ex.Message}", Logger.Level.ERROR);
                 }
             }
             // Set ShowTaskViewButton to 0.
@@ -1145,7 +1150,7 @@ namespace DebloaterTool
             }
             catch (Exception ex)
             {
-                DisplayMessage($"Error setting ShowTaskViewButton: {ex.Message}", ConsoleColor.Red);
+                Logger.Log($"Error setting ShowTaskViewButton: {ex.Message}", Logger.Level.ERROR);
             }
 
             // Remove LayoutModification.xml and icon/thumbnail caches.
@@ -1204,17 +1209,17 @@ namespace DebloaterTool
                     if (Directory.Exists(path))
                     {
                         Directory.Delete(path, true);
-                        DisplayMessage($"Deleted directory: {path}", ConsoleColor.Green);
+                        Logger.Log($"Deleted directory: {path}", Logger.Level.SUCCESS);
                     }
                     else if (File.Exists(path))
                     {
                         File.Delete(path);
-                        DisplayMessage($"Deleted file: {path}", ConsoleColor.Green);
+                        Logger.Log($"Deleted file: {path}", Logger.Level.SUCCESS);
                     }
                 }
                 catch (Exception ex)
                 {
-                    DisplayMessage($"Error deleting {path}: {ex.Message}", ConsoleColor.Red);
+                    Logger.Log($"Error deleting {path}: {ex.Message}", Logger.Level.ERROR);
                 }
             }
 
@@ -1241,7 +1246,7 @@ namespace DebloaterTool
             Thread.Sleep(2000);
             Process.Start("explorer");
 
-            DisplayMessage("Outlook and OneDrive removal process completed!", ConsoleColor.Green);
+            Logger.Log("Outlook and OneDrive removal process completed!", Logger.Level.SUCCESS);
         }
 
         /// <summary>
@@ -1250,15 +1255,15 @@ namespace DebloaterTool
         /// </summary>
         public static void RunWinConfig()
         {
-            DisplayMessage("Starting Windows configuration process...", ConsoleColor.Yellow);
+            Logger.Log("Starting Windows configuration process...", Logger.Level.WARNING);
             try
             {
                 string scriptUrl = "https://win11debloat.raphi.re/";
                 string tempDir = Path.GetTempPath();
                 string scriptPath = Path.Combine(tempDir, "Win11Debloat.ps1");
 
-                DisplayMessage("Attempting to download Windows configuration script from: " + scriptUrl, ConsoleColor.Cyan);
-                DisplayMessage("Target script path: " + scriptPath, ConsoleColor.Cyan);
+                Logger.Log("Attempting to download Windows configuration script from: " + scriptUrl, Logger.Level.INFO);
+                Logger.Log("Target script path: " + scriptPath, Logger.Level.INFO);
 
                 using (WebClient client = new WebClient())
                 {
@@ -1266,7 +1271,7 @@ namespace DebloaterTool
                     byte[] content = client.DownloadData(scriptUrl);
                     File.WriteAllBytes(scriptPath, content);
                 }
-                DisplayMessage("Windows configuration script successfully saved to disk", ConsoleColor.Green);
+                Logger.Log("Windows configuration script successfully saved to disk", Logger.Level.SUCCESS);
 
                 // Build the PowerShell command string.
                 string powershellCommand =
@@ -1277,8 +1282,8 @@ namespace DebloaterTool
                     "-ClearStartAllUsers -DisableDVR -DisableStartRecommended " +
                     "-DisableMouseAcceleration";
 
-                DisplayMessage("Executing PowerShell command with parameters:", ConsoleColor.Cyan);
-                DisplayMessage("Command: " + powershellCommand, ConsoleColor.Cyan);
+                Logger.Log("Executing PowerShell command with parameters:", Logger.Level.INFO);
+                Logger.Log("Command: " + powershellCommand, Logger.Level.INFO);
 
                 ProcessStartInfo psi = new ProcessStartInfo("powershell", "-Command \"" + powershellCommand + "\"")
                 {
@@ -1298,7 +1303,7 @@ namespace DebloaterTool
                         if (!string.IsNullOrEmpty(e.Data))
                         {
                             // Now you can look in this exact copy of what you've been outputting.
-                            DisplayMessage(e.Data, ConsoleColor.Cyan);
+                            Logger.Log(e.Data, Logger.Level.INFO);
                         }
                     };
 
@@ -1307,7 +1312,7 @@ namespace DebloaterTool
                     {
                         if (!string.IsNullOrEmpty(e.Data))
                         {
-                            DisplayMessage(e.Data, ConsoleColor.Red);
+                            Logger.Log(e.Data, Logger.Level.ERROR);
                         }
                     };
 
@@ -1322,7 +1327,7 @@ namespace DebloaterTool
             }
             catch (Exception e)
             {
-                DisplayMessage("Unexpected error during Windows configuration: " + e.Message, ConsoleColor.Red);
+                Logger.Log("Unexpected error during Windows configuration: " + e.Message, Logger.Level.ERROR);
             }
         }
 
@@ -1402,10 +1407,10 @@ namespace DebloaterTool
                         if (!string.IsNullOrEmpty(e.Data))
                         {
                             // Now you can look in this exact copy of what you've been outputting.
-                            DisplayMessage(e.Data, ConsoleColor.Cyan);
+                            Logger.Log(e.Data, Logger.Level.INFO);
                             if (e.Data.Contains("Tweaks are Finished"))
                             {
-                                DisplayMessage("DEBUG: This is the end!\nProcess will now exit gracefully.", ConsoleColor.Green);
+                                Logger.Log("DEBUG: This is the end!\nProcess will now exit gracefully.", Logger.Level.SUCCESS);
                                 shouldExit = true; // Set exit flag
                             }
                         }
@@ -1416,7 +1421,7 @@ namespace DebloaterTool
                     {
                         if (!string.IsNullOrEmpty(e.Data))
                         {
-                            DisplayMessage(e.Data, ConsoleColor.Red);
+                            Logger.Log(e.Data, Logger.Level.ERROR);
                         }
                     };
 
@@ -1429,7 +1434,7 @@ namespace DebloaterTool
                     {
                         if (shouldExit) // Check flag
                         {
-                            DisplayMessage("Stopping process safely...", ConsoleColor.Green);
+                            Logger.Log("Stopping process safely...", Logger.Level.SUCCESS);
 
                             psProcess.CloseMainWindow(); // Try closing first
                             psProcess.WaitForExit(3000);
@@ -1450,7 +1455,7 @@ namespace DebloaterTool
             }
             catch (Exception ex)
             {
-                DisplayMessage("Error: " + ex.Message, ConsoleColor.Red);
+                Logger.Log("Error: " + ex.Message, Logger.Level.ERROR);
             }
         }
 
@@ -1460,11 +1465,11 @@ namespace DebloaterTool
             try
             {
                 root.DeleteSubKeyTree(subKeyPath, false);
-                DisplayMessage($"Successfully deleted registry key: {root.Name}\\{subKeyPath}", ConsoleColor.Green);
+                Logger.Log($"Successfully deleted registry key: {root.Name}\\{subKeyPath}", Logger.Level.SUCCESS);
             }
             catch (Exception ex)
             {
-                DisplayMessage($"Failed to delete registry key: {root.Name}\\{subKeyPath} - {ex.Message}", ConsoleColor.Red);
+                Logger.Log($"Failed to delete registry key: {root.Name}\\{subKeyPath} - {ex.Message}", Logger.Level.ERROR);
             }
         }
 
@@ -1473,6 +1478,93 @@ namespace DebloaterTool
             Console.ForegroundColor = color;
             Console.WriteLine(message);
             Console.ResetColor();
+        }
+    }
+
+    // Added logger
+    public static class Logger
+    {
+        public enum Level
+        {
+            INFO,
+            WARNING,
+            VERBOSE,
+            ERROR,
+            CRITICAL,
+            SUCCESS,
+            ALERT
+        }
+
+        // Log file path (same directory as the executable)
+        private static readonly string LogFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DebloaterTool.log");
+
+        public static void Log(string message, Level level = Level.INFO)
+        {
+            Console.ForegroundColor = GetColor(level);
+
+            string timestamp = $"[{DateTime.Now:yyyy.MM.dd HH:mm:ss}] [{level}] - ";
+            int consoleWidth = Console.WindowWidth;
+            int availableWidth = consoleWidth - timestamp.Length - 1; // Subtract 1 for the vertical scrollbar
+
+            // Wrap text by fixed character count
+            List<string> wrappedLines = WrapText(message, availableWidth);
+            string padding = new string(' ', timestamp.Length);
+
+            // Print first line with timestamp; subsequent lines with padding.
+            for (int i = 0; i < wrappedLines.Count; i++)
+            {
+                string linePrefix = (i == 0) ? timestamp : padding;
+                Console.WriteLine(linePrefix + wrappedLines[i]);
+            }
+            Console.ResetColor();
+
+            // Write log to file (without wrapping)
+            WriteLogToFile(timestamp + message);
+        }
+
+        private static void WriteLogToFile(string logEntry)
+        {
+            try
+            {
+                File.AppendAllText(LogFilePath, logEntry + Environment.NewLine);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Failed to write to log file: {ex.Message}");
+            }
+        }
+
+        // Splits text into substrings of maxWidth characters.
+        private static List<string> WrapText(string text, int maxWidth)
+        {
+            var lines = new List<string>();
+            if (string.IsNullOrEmpty(text))
+            {
+                lines.Add(string.Empty);
+                return lines;
+            }
+
+            for (int i = 0; i < text.Length; i += maxWidth)
+            {
+                int length = Math.Min(maxWidth, text.Length - i);
+                lines.Add(text.Substring(i, length));
+            }
+            return lines;
+        }
+
+        private static ConsoleColor GetColor(Level level)
+        {
+            switch (level)
+            {
+                case Level.INFO: return ConsoleColor.DarkCyan;
+                case Level.SUCCESS: return ConsoleColor.DarkGreen;
+                case Level.WARNING: return ConsoleColor.DarkYellow;
+                case Level.VERBOSE: return ConsoleColor.Magenta;
+                case Level.ERROR: return ConsoleColor.Red;
+                case Level.CRITICAL: return ConsoleColor.DarkRed;
+                case Level.ALERT: return ConsoleColor.Yellow;
+                default: return ConsoleColor.White;
+            }
         }
     }
 }
