@@ -70,15 +70,23 @@ namespace DebloaterTool
             // Restart Confirmation
             bool restart = RequestYesOrNo("Do you want to restart after the process?");
 
-            // Run debloater
+            // Run DebloaterTools
             DebloaterTools.RunTweaks();
             DebloaterTools.RunWinConfig();
+
+            // Run RemoveUnnecessary
             RemoveUnnecessary.ApplyRegistryChanges();
             RemoveUnnecessary.UninstallEdge();
             RemoveUnnecessary.CleanOutlookAndOneDrive();
+
+            // Run WinUpdate
             WinUpdate.DisableWindowsUpdate();
+
+            // Run Ungoogled
             Ungoogled.UngoogledInstaller();
             Ungoogled.ChangeUngoogledHomePage();
+
+            // Run Wallpaper
             Wallpaper.SetCustomWallpaper();
 
             // Process completed

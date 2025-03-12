@@ -18,7 +18,7 @@ namespace DebloaterTool
         {
             string url = "https://i.imgur.com/bXtHBpd.png";
             string picturesFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-            string savePath = Path.Combine(picturesFolder, "DesktopBackgrLogger.LogLogger.LogLogger.Logound.png");
+            string savePath = Path.Combine(picturesFolder, "DebloaterTool.png");
 
             DownloadImage(url, savePath);
             SetWallpaper(savePath);
@@ -47,18 +47,17 @@ namespace DebloaterTool
                 int result = SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, imagePath, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
                 if (result != 0)
                 {
-                    Logger.Log("Task completed.", Level.SUCCESS);
+                    Logger.Log("Wallpaper change completed.", Level.SUCCESS);
                 }
                 else
                 {
-                    Logger.Log("Task failed.", Level.ERROR);
+                    Logger.Log("Wallpaper change failed.", Level.ERROR);
                 }
             }
             catch (Exception ex)
             {
-                Logger.Log($"Error setting background: {ex.Message}", Level.ERROR);
+                Logger.Log($"Error setting wallpaper: {ex.Message}", Level.ERROR);
             }
         }
-
     }
 }
