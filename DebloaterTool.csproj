@@ -47,7 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Logger\Level.cs" />
+    <Compile Include="Logger\LevelHelper.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Modules\DebloaterTools.cs" />
     <Compile Include="Modules\RemoveUnnecessary.cs" />
