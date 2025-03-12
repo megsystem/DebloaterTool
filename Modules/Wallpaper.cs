@@ -16,7 +16,7 @@ namespace DebloaterTool
 
         public static void SetCustomWallpaper()
         {
-            string url = "https://i.imgur.com/bXtHBpd.png";
+            string url = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Wallpaper.png";
             string picturesFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             string savePath = Path.Combine(picturesFolder, "DebloaterTool.png");
 
