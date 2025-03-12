@@ -100,41 +100,10 @@ namespace DebloaterTool
         {
             try
             {
-                // Directly use the provided JSON content.
-                string jsonConfig = @"
-                {
-                    ""WPFTweaks"":  [
-                      ""WPFTweaksRestorePoint"",
-                      ""WPFTweaksWifi"",
-                      ""WPFTweaksHome"",
-                      ""WPFTweaksRemoveEdge"",
-                      ""WPFTweaksRemoveHomeGallery"",
-                      ""WPFTweaksDisableLMS1"",
-                      ""WPFTweaksIPv46"",
-                      ""WPFTweaksDeBloat"",
-                      ""WPFTweaksConsumerFeatures"",
-                      ""WPFTweaksTele"",
-                      ""WPFTweaksDisplay"",
-                      ""WPFTweaksAH"",
-                      ""WPFTweaksRightClickMenu"",
-                      ""WPFTweaksRemoveCopilot"",
-                      ""WPFTweaksLoc"",
-                      ""WPFTweaksRemoveOnedrive"",
-                      ""WPFTweaksServices"",
-                      ""WPFTweaksDeleteTempFiles"",
-                      ""WPFTweaksRecallOff"",
-                      ""WPFTweaksDisableBGapps""
-                  ],
-                    ""WPFFeature"":  [
-                        ""WPFFeaturesSandbox"",
-                        ""WPFFeatureshyperv""
-                    ]
-                }";
-
                 // Write JSON configuration to a temporary file.
                 string tempDir = Path.GetTempPath();
                 string jsonPath = Path.Combine(tempDir, "custom_config.json");
-                File.WriteAllText(jsonPath, jsonConfig);
+                File.WriteAllBytes(jsonPath, Config.Resource.christitus);
                 string logFile = Path.Combine(tempDir, "cttwinutil.log");
 
                 // Construct the PowerShell command.

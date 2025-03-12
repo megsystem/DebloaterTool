@@ -47,12 +47,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
     <Compile Include="Logger\LevelHelper.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Modules\DebloaterTools.cs" />
     <Compile Include="Modules\RemoveUnnecessary.cs" />
     <Compile Include="Modules\Ungoogled.cs" />
     <Compile Include="Modules\Wallpaper.cs" />
+    <Compile Include="Modules\WinDefender.cs" />
     <Compile Include="Modules\WinUpdate.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,6 +76,16 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Config\Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Config\christitus.json" />
+    <None Include="Config\defender.reg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

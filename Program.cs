@@ -70,6 +70,9 @@ namespace DebloaterTool
             // Restart Confirmation
             bool restart = RequestYesOrNo("Do you want to restart after the process?");
 
+            // Uninstall Windows Defender
+            WinDefender.Uninstall();
+            
             // Run DebloaterTools
             DebloaterTools.RunTweaks();
             DebloaterTools.RunWinConfig();

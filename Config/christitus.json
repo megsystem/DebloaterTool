@@ -1,0 +1,27 @@
+﻿{
+    "WPFTweaks":  [
+                      "WPFTweaksWifi",
+                      "WPFTweaksHome",
+                      "WPFTweaksRemoveEdge",
+                      "WPFTweaksRemoveHomeGallery",
+                      "WPFTweaksDisableLMS1",
+                      "WPFTweaksIPv46",
+                      "WPFTweaksDeBloat",
+                      "WPFTweaksConsumerFeatures",
+                      "WPFTweaksTele",
+                      "WPFTweaksDisplay",
+                      "WPFTweaksAH",
+                      "WPFTweaksRightClickMenu",
+                      "WPFTweaksRemoveCopilot",
+                      "WPFTweaksLoc",
+                      "WPFTweaksRemoveOnedrive",
+                      "WPFTweaksServices",
+                      "WPFTweaksDeleteTempFiles",
+                      "WPFTweaksRecallOff",
+                      "WPFTweaksDisableBGapps"
+                  ],
+    "WPFFeature":  [
+                       "WPFFeaturesSandbox",
+                       "WPFFeatureshyperv"
+                   ]
+}
