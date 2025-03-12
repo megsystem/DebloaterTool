@@ -47,6 +47,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logger\Level.cs" />
+    <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Modules\DebloaterTools.cs" />
+    <Compile Include="Modules\RemoveUnnecessary.cs" />
+    <Compile Include="Modules\Ungoogled.cs" />
+    <Compile Include="Modules\Wallpaper.cs" />
+    <Compile Include="Modules\WinUpdate.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
