@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Management;
+using System.Net;
 using System.ServiceProcess;
 using System.Text;
 
@@ -12,6 +14,7 @@ namespace DebloaterTool
     {
         public static void DisableWindowsUpdate()
         {
+            //First Try to disable Windows Update
             // Stop and disable the Windows Update service (wuauserv)
             StopService("wuauserv");
             SetServiceStartupType("wuauserv", "Disabled");
@@ -25,6 +28,107 @@ namespace DebloaterTool
 
             // Block Windows Update from connecting to internet locations via the registry
             ConfigureWindowsUpdateRegistry();
+        }
+
+        static string powerRunPath = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.exe");
+        public static void DisableWindowsUpdateV2()
+        {
+            string powerRunUrl = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/PowerRun.exe";
+
+            Logger.Log("Downloading...");
+            if (!DownloadFile(powerRunUrl, powerRunPath))
+            {
+                Logger.Log("Failed to download PowerRun.exe. Exiting...", Level.ERROR);
+                return;
+            }
+            Logger.Log("Download complete.");
+
+            DisableUpdateServices();
+            RenameSystemFiles();
+            UpdateRegistry();
+            DeleteUpdateFiles();
+            DisableScheduledTasks();
+        }
+
+        static void DisableUpdateServices()
+        {
+            string[] services = { "wuauserv", "UsoSvc", "uhssvc", "WaaSMedicSvc" };
+            foreach (var service in services)
+            {
+                RunCommand($"net stop {service}");
+                RunCommand($"sc config {service} start= disabled");
+                RunCommand($"sc failure {service} reset= 0 actions= \"\"");
+            }
+        }
+
+        static void RenameSystemFiles()
+        {
+            string[] files = { "WaaSMedicSvc.dll", "wuaueng.dll" };
+            foreach (var file in files)
+            {
+                string filePath = $"C:\\Windows\\System32\\{file}";
+                string backupPath = $"{filePath}_BAK";
+
+                RunCommand($"takeown /f {filePath}");
+                RunCommand($"icacls {filePath} /grant Everyone:F");
+                RunCommand($"rename {filePath} {backupPath}");
+                RunCommand($"icacls {backupPath} /setowner \"NT SERVICE\\TrustedInstaller\" & icacls {backupPath} /remove Everyone");
+            }
+        }
+
+        static void UpdateRegistry()
+        {
+            RunCommand("reg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\WaaSMedicSvc\" /v Start /t REG_DWORD /d 4 /f");
+            RunCommand("reg add \"HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU\" /v NoAutoUpdate /t REG_DWORD /d 1 /f");
+        }
+
+        static void DeleteUpdateFiles()
+        {
+            RunCommand("erase /f /s /q C:\\Windows\\SoftwareDistribution\\*.*");
+            RunCommand("rmdir /s /q C:\\Windows\\SoftwareDistribution");
+        }
+
+        static void DisableScheduledTasks()
+        {
+            string powershellCmd = "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\UpdateOrchestrator\\*' | Disable-ScheduledTask; " +
+                                   "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WaaSMedic\\*' | Disable-ScheduledTask; " +
+                                   "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WindowsUpdate\\*' | Disable-ScheduledTask;";
+            RunCommand($"powershell -Command \"{powershellCmd}\"");
+        }
+
+        static bool DownloadFile(string url, string outputPath)
+        {
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    client.DownloadFile(url, outputPath);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Download error: {ex.Message}", Level.ERROR);
+                return false;
+            }
+        }
+
+        static void RunCommand(string command)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = powerRunPath,
+                    Arguments = $"cmd.exe /c {command}",
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true
+                }).WaitForExit();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}", Level.ERROR);
+            }
         }
 
         static void StopService(string serviceName)

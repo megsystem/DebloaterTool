@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Security.Principal;
 using System.Net;
+using System.Linq;
 
 // Created by @_giovannigiannone and ChatGPT
 // Inspired from the Talon's Project!
@@ -42,12 +43,33 @@ namespace DebloaterTool
             DisplayMessage("3. Please disable your antivirus before proceeding.", ConsoleColor.DarkYellow);
             Console.WriteLine("---------------------------------");
 
-            // EULA Confirmation
-            if (!RequestYesOrNo("Do you accept the EULA?"))
+            // Parse arguments to decide which elements to skip.
+            bool skipEULA = args.Contains("--skipEULA");
+            bool autoRestart = args.Contains("--autoRestart");
+
+            // Optionally, you can also provide an argument for selecting the debloating mode.
+            char choice = '\0';
+            var modeArg = args.FirstOrDefault(a => a.StartsWith("--mode="));
+            if (modeArg != null)
             {
-                Console.WriteLine("EULA declined. Press ENTER to close.");
-                Console.ReadKey();
-                Environment.Exit(0);
+                // Expecting something like --mode=A, --mode=M, or --mode=C
+                var modeValue = modeArg.Split('=')[1].ToUpper();
+                if (modeValue.Length > 0 && "AMC".Contains(modeValue))
+                {
+                    choice = modeValue[0];
+                    Console.WriteLine("Debloating mode selected via args: " + choice);
+                }
+            }
+
+            // EULA Confirmation (skipped if --skipEULA is provided)
+            if (!skipEULA)
+            {
+                if (!RequestYesOrNo("Do you accept the EULA?"))
+                {
+                    Console.WriteLine("EULA declined. Press ENTER to close.");
+                    Console.ReadKey();
+                    Environment.Exit(0);
+                }
             }
 
             // Check if the program is runned with administrator rights!
@@ -67,32 +89,111 @@ namespace DebloaterTool
                 }
             }
 
-            // Restart Confirmation
-            bool restart = RequestYesOrNo("Do you want to restart after the process?");
+            // Restart Confirmation (if --autoRestart is not provided, ask the user)
+            bool restart = autoRestart || RequestYesOrNo("Do you want to restart after the process?");
 
-            // Uninstall Windows Defender
-            WinDefender.Uninstall();
-            
-            // Run DebloaterTools
-            DebloaterTools.RunTweaks();
-            DebloaterTools.RunWinConfig();
+            // If the mode wasn't set via arguments, ask the user interactively.
+            if (choice != 'A' && choice != 'M' && choice != 'C')
+            {
+                do
+                {
+                    Console.WriteLine("Select the type of debloating:");
+                    Console.WriteLine("[A] Complete - Removes all unnecessary apps and services.");
+                    Console.WriteLine("[M] Minimal - Removes only bloatware while keeping essential apps.");
+                    Console.WriteLine("[C] Custom - Choose what to remove manually.");
+                    Console.Write("Enter your choice (A/M/C): ");
 
-            // Run RemoveUnnecessary
-            RemoveUnnecessary.ApplyRegistryChanges();
-            RemoveUnnecessary.UninstallEdge();
-            RemoveUnnecessary.CleanOutlookAndOneDrive();
+                    choice = char.ToUpper(Console.ReadKey(true).KeyChar); // Read a single key, convert to uppercase
+                    Console.WriteLine(choice); // Display the selected key
 
-            // Run WinUpdate
-            WinUpdate.DisableWindowsUpdate();
+                    if (choice != 'A' && choice != 'M' && choice != 'C')
+                    {
+                        Console.WriteLine("Invalid choice. Please enter A, M, or C.");
+                    }
 
-            // Run Ungoogled
-            Ungoogled.UngoogledInstaller();
-            Ungoogled.ChangeUngoogledHomePage();
+                } while (choice != 'A' && choice != 'M' && choice != 'C');
+            }
+
+            // Execute based on selection
+            switch (choice)
+            {
+                case 'A': // Complete
+                    Console.WriteLine("Running Complete Debloating...");
+                    Console.WriteLine("---------------------------------");
+                    WinDefender.Uninstall();
+                    WinUpdate.DisableWindowsUpdate();
+                    WinUpdate.DisableWindowsUpdateV2();
+                    DebloaterTools.RunTweaks();
+                    DebloaterTools.RunWinConfig();
+                    RemoveUnnecessary.ApplyRegistryChanges();
+                    RemoveUnnecessary.UninstallEdge();
+                    RemoveUnnecessary.CleanOutlookAndOneDrive();
+                    Ungoogled.UngoogledInstaller();
+                    Ungoogled.ChangeUngoogledHomePage();
+                    break;
+
+                case 'M': // Minimal
+                    Console.WriteLine("Running Minimal Debloating...");
+                    Console.WriteLine("---------------------------------");
+                    WinUpdate.DisableWindowsUpdate();
+                    DebloaterTools.RunTweaks();
+                    DebloaterTools.RunWinConfig();
+                    RemoveUnnecessary.ApplyRegistryChanges();
+                    RemoveUnnecessary.UninstallEdge();
+                    RemoveUnnecessary.CleanOutlookAndOneDrive();
+                    Ungoogled.UngoogledInstaller();
+                    Ungoogled.ChangeUngoogledHomePage();
+                    break;
+
+                case 'C': // Custom
+                    bool runDefender = RequestYesOrNo("Do you want to disable Windows Defender?");
+                    bool runWindowsUpdate = RequestYesOrNo("Do you want to disable Windows Update?");
+                    bool runDebloater = RequestYesOrNo("Do you want to run Debloater Tools?");
+                    bool runRemoveUnnecessary = RequestYesOrNo("Do you want to remove unnecessary components?");
+                    bool runUngoogled = RequestYesOrNo("Do you want to install Ungoogled Chrome?");
+                    Console.WriteLine("Running Custom Debloating...");
+                    Console.WriteLine("---------------------------------");
+
+                    // Uninstall Windows Defender
+                    if (runDefender) WinDefender.Uninstall();
+
+                    // Run WinUpdate
+                    if (runWindowsUpdate)
+                    {
+                        WinUpdate.DisableWindowsUpdate();
+                        WinUpdate.DisableWindowsUpdateV2();
+                    }
+
+                    // Run DebloaterTools
+                    if (runDebloater)
+                    {
+                        DebloaterTools.RunTweaks();
+                        DebloaterTools.RunWinConfig();
+                    }
+
+                    // Run RemoveUnnecessary
+                    if (runRemoveUnnecessary)
+                    {
+                        RemoveUnnecessary.ApplyRegistryChanges();
+                        RemoveUnnecessary.UninstallEdge();
+                        RemoveUnnecessary.CleanOutlookAndOneDrive();
+                    }
+
+                    // Run Ungoogled
+                    if (runUngoogled)
+                    {
+                        Ungoogled.UngoogledInstaller();
+                        Ungoogled.ChangeUngoogledHomePage();
+                    }
+                    break;
+            }
 
             // Run Wallpaper
             Wallpaper.SetCustomWallpaper();
 
             // Process completed
+            Logger.Log($"Debloating successfull successed (SUCC)", Level.SUCCESS);
+            Logger.Log($"[Debloater by @_giovannigiannone/@fckgiovanni]", Level.WARNING);
             if (restart)
             {
                 Process.Start("shutdown.exe", "-r -t 0"); // Restart the computer
