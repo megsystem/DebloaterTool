@@ -101,10 +101,10 @@ namespace DebloaterTool
             try
             {
                 // Write JSON configuration to a temporary file.
-                string tempDir = Path.GetTempPath();
-                string jsonPath = Path.Combine(tempDir, "custom_config.json");
+                string appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                string jsonPath = Path.Combine(appdata, "christitus.json");
                 File.WriteAllBytes(jsonPath, Config.Resource.christitus);
-                string logFile = Path.Combine(tempDir, "cttwinutil.log");
+                string logFile = Path.Combine(appdata, "cttwinutil.log");
 
                 // Construct the PowerShell command.
                 string command = "$ErrorActionPreference = 'SilentlyContinue'; " +

@@ -1,5 +1,12 @@
 ﻿{
     "WPFTweaks":  [
+                      "WPFTweaksDiskCleanup",
+                      "WPFToggleSnapWindow",
+                      "WPFToggleSnapFlyout",
+                      "WPFToggleSnapSuggestion",
+                      "WPFTweaksDebloatAdobe",
+                      "WPFAddUltPerf",
+                      "WPFOOSUbutton",
                       "WPFTweaksWifi",
                       "WPFTweaksHome",
                       "WPFTweaksRemoveEdge",
