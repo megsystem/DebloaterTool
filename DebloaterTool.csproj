@@ -52,6 +52,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\ComFunction.cs" />
     <Compile Include="Logger\LevelHelper.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Modules\DebloaterTools.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Modules\Wallpaper.cs" />
     <Compile Include="Modules\WinCostumization.cs" />
     <Compile Include="Modules\WinDefender.cs" />
+    <Compile Include="Modules\WinStore.cs" />
     <Compile Include="Modules\WinUpdate.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

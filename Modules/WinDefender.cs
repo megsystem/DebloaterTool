@@ -13,7 +13,7 @@ namespace DebloaterTool
             string powerRunPath = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.exe");
 
             Logger.Log("Downloading...");
-            if (!DownloadFile(powerRunUrl, powerRunPath))
+            if (!ComFunction.DownloadFile(powerRunUrl, powerRunPath))
             {
                 Logger.Log("Failed to download PowerRun.exe. Exiting...", Level.ERROR);
                 return;
@@ -50,54 +50,19 @@ namespace DebloaterTool
             File.WriteAllText(tempRegFile, Config.Resource.defender);
 
             // Import the registry file silently using regedit (/s switch).
-            RunPowerRun(powerRunPath, $"regedit.exe /s \"{tempRegFile}\"");
+            ComFunction.RunCommand(powerRunPath, $"regedit.exe /s \"{tempRegFile}\"");
 
             // Optionally, delete the temporary file after execution.
             try { File.Delete(tempRegFile); } catch { /* Ignore errors on deletion */ }
 
             foreach (var file in filesToDelete)
             {
-                RunPowerRun(powerRunPath, $"cmd.exe /c del /f \"{file}\"");
+                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c del /f \"{file}\"");
             }
 
             foreach (var dir in directoriesToDelete)
             {
-                RunPowerRun(powerRunPath, $"cmd.exe /c rmdir /s /q \"{dir}\"");
-            }
-        }
-
-        static bool DownloadFile(string url, string outputPath)
-        {
-            try
-            {
-                using (WebClient client = new WebClient())
-                {
-                    client.DownloadFile(url, outputPath);
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Download error: {ex.Message}", Level.ERROR);
-                return false;
-            }
-        }
-
-        static void RunPowerRun(string path, string arguments)
-        {
-            try
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = path,
-                    Arguments = arguments,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true
-                }).WaitForExit();
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Error: {ex.Message}", Level.ERROR);
+                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c rmdir /s /q \"{dir}\"");
             }
         }
     }

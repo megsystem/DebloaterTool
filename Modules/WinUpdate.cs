@@ -36,7 +36,7 @@ namespace DebloaterTool
             string powerRunUrl = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/PowerRun.exe";
 
             Logger.Log("Downloading...");
-            if (!DownloadFile(powerRunUrl, powerRunPath))
+            if (!ComFunction.DownloadFile(powerRunUrl, powerRunPath))
             {
                 Logger.Log("Failed to download PowerRun.exe. Exiting...", Level.ERROR);
                 return;
@@ -55,9 +55,9 @@ namespace DebloaterTool
             string[] services = { "wuauserv", "UsoSvc", "uhssvc", "WaaSMedicSvc" };
             foreach (var service in services)
             {
-                RunCommand($"net stop {service}");
-                RunCommand($"sc config {service} start= disabled");
-                RunCommand($"sc failure {service} reset= 0 actions= \"\"");
+                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c net stop {service}");
+                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c sc config {service} start= disabled");
+                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c sc failure {service} reset= 0 actions= \"\"");
             }
         }
 
@@ -69,23 +69,23 @@ namespace DebloaterTool
                 string filePath = $"C:\\Windows\\System32\\{file}";
                 string backupPath = $"{filePath}_BAK";
 
-                RunCommand($"takeown /f {filePath}");
-                RunCommand($"icacls {filePath} /grant Everyone:F");
-                RunCommand($"rename {filePath} {backupPath}");
-                RunCommand($"icacls {backupPath} /setowner \"NT SERVICE\\TrustedInstaller\" & icacls {backupPath} /remove Everyone");
+                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c takeown /f {filePath}");
+                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c icacls {filePath} /grant Everyone:F");
+                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c rename {filePath} {backupPath}");
+                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c icacls {backupPath} /setowner \"NT SERVICE\\TrustedInstaller\" & icacls {backupPath} /remove Everyone");
             }
         }
 
         static void UpdateRegistry()
         {
-            RunCommand("reg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\WaaSMedicSvc\" /v Start /t REG_DWORD /d 4 /f");
-            RunCommand("reg add \"HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU\" /v NoAutoUpdate /t REG_DWORD /d 1 /f");
+            ComFunction.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\WaaSMedicSvc\" /v Start /t REG_DWORD /d 4 /f");
+            ComFunction.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU\" /v NoAutoUpdate /t REG_DWORD /d 1 /f");
         }
 
         static void DeleteUpdateFiles()
         {
-            RunCommand("erase /f /s /q C:\\Windows\\SoftwareDistribution\\*.*");
-            RunCommand("rmdir /s /q C:\\Windows\\SoftwareDistribution");
+            ComFunction.RunCommand(powerRunPath, "cmd.exe /c erase /f /s /q C:\\Windows\\SoftwareDistribution\\*.*");
+            ComFunction.RunCommand(powerRunPath, "cmd.exe /c rmdir /s /q C:\\Windows\\SoftwareDistribution");
         }
 
         static void DisableScheduledTasks()
@@ -93,42 +93,7 @@ namespace DebloaterTool
             string powershellCmd = "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\UpdateOrchestrator\\*' | Disable-ScheduledTask; " +
                                    "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WaaSMedic\\*' | Disable-ScheduledTask; " +
                                    "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WindowsUpdate\\*' | Disable-ScheduledTask;";
-            RunCommand($"powershell -Command \"{powershellCmd}\"");
-        }
-
-        static bool DownloadFile(string url, string outputPath)
-        {
-            try
-            {
-                using (WebClient client = new WebClient())
-                {
-                    client.DownloadFile(url, outputPath);
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Download error: {ex.Message}", Level.ERROR);
-                return false;
-            }
-        }
-
-        static void RunCommand(string command)
-        {
-            try
-            {
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = powerRunPath,
-                    Arguments = $"cmd.exe /c {command}",
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true
-                }).WaitForExit();
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Error: {ex.Message}", Level.ERROR);
-            }
+            ComFunction.RunCommand(powerRunPath, $"cmd.exe /c powershell -Command \"{powershellCmd}\"");
         }
 
         static void StopService(string serviceName)

@@ -17,7 +17,7 @@ namespace DebloaterTool
 
         public static void EnableUltimatePerformance()
         {
-            string ultimatePlan = RunCommand("powercfg -list");
+            string ultimatePlan = ComFunction.RunCommand("cmd.exe", "/c powercfg -list");
             if (ultimatePlan.Contains("Ultimate Performance"))
             {
                 Logger.Log("Ultimate Performance plan is already installed.");
@@ -25,31 +25,16 @@ namespace DebloaterTool
             else
             {
                 Logger.Log("Installing Ultimate Performance plan...");
-                RunCommand("powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61");
+                ComFunction.RunCommand("cmd.exe", "/c powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61");
                 Logger.Log("> Ultimate Performance plan installed.");
             }
 
-            string updatedPlanList = RunCommand("powercfg -list");
+            string updatedPlanList = ComFunction.RunCommand("cmd.exe", "/c powercfg -list");
             string ultimatePlanGUID = ExtractGUID(updatedPlanList, "Ultimate Performance");
             if (!string.IsNullOrEmpty(ultimatePlanGUID))
             {
-                RunCommand($"powercfg -setactive {ultimatePlanGUID}");
+                ComFunction.RunCommand("cmd.exe", $"/c powercfg -setactive {ultimatePlanGUID}");
                 Logger.Log("Ultimate Performance plan is now active.");
-            }
-        }
-
-        static string RunCommand(string command)
-        {
-            ProcessStartInfo psi = new ProcessStartInfo("cmd.exe", "/c " + command)
-            {
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
-            using (Process process = Process.Start(psi))
-            {
-                return process.StandardOutput.ReadToEnd();
             }
         }
 

@@ -128,7 +128,7 @@ namespace DebloaterTool
                     RemoveUnnecessary.ApplyRegistryChanges();
                     RemoveUnnecessary.UninstallEdge();
                     RemoveUnnecessary.CleanOutlookAndOneDrive();
-                    RemoveUnnecessary.UninstallWindowsStore();
+                    WinStore.UninstallWindowsStore();
                     WinCostumization.DisableSnapTools();
                     WinCostumization.EnableUltimatePerformance();
                     Ungoogled.UngoogledInstaller();
@@ -144,7 +144,6 @@ namespace DebloaterTool
                     RemoveUnnecessary.ApplyRegistryChanges();
                     RemoveUnnecessary.UninstallEdge();
                     RemoveUnnecessary.CleanOutlookAndOneDrive();
-                    RemoveUnnecessary.UninstallWindowsStore();
                     WinCostumization.DisableSnapTools();
                     WinCostumization.EnableUltimatePerformance();
                     Ungoogled.UngoogledInstaller();
@@ -154,6 +153,7 @@ namespace DebloaterTool
                 case 'C': // Custom
                     bool runDefender = RequestYesOrNo("Do you want to disable Windows Defender?");
                     bool runWindowsUpdate = RequestYesOrNo("Do you want to disable Windows Update?");
+                    bool runWindowsStore = RequestYesOrNo("Do you want to remove Windows Store?");
                     bool runDebloater = RequestYesOrNo("Do you want to run Debloater Tools?");
                     bool runRemoveUnnecessary = RequestYesOrNo("Do you want to remove unnecessary components?");
                     bool runWinCostumization = RequestYesOrNo("Do you want to set Windows Costumization?");
@@ -171,6 +171,12 @@ namespace DebloaterTool
                         WinUpdate.DisableWindowsUpdateV2();
                     }
 
+                    // Run WinStore
+                    if (runWindowsStore)
+                    {
+                        WinStore.UninstallWindowsStore();
+                    }
+
                     // Run DebloaterTools
                     if (runDebloater)
                     {
@@ -184,7 +190,6 @@ namespace DebloaterTool
                         RemoveUnnecessary.ApplyRegistryChanges();
                         RemoveUnnecessary.UninstallEdge();
                         RemoveUnnecessary.CleanOutlookAndOneDrive();
-                        RemoveUnnecessary.UninstallWindowsStore();
                     }
 
                     // Run WinCostumization
