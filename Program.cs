@@ -128,6 +128,8 @@ namespace DebloaterTool
                     RemoveUnnecessary.ApplyRegistryChanges();
                     RemoveUnnecessary.UninstallEdge();
                     RemoveUnnecessary.CleanOutlookAndOneDrive();
+                    WinCostumization.DisableSnapTools();
+                    WinCostumization.EnableUltimatePerformance();
                     Ungoogled.UngoogledInstaller();
                     Ungoogled.ChangeUngoogledHomePage();
                     break;
@@ -141,6 +143,8 @@ namespace DebloaterTool
                     RemoveUnnecessary.ApplyRegistryChanges();
                     RemoveUnnecessary.UninstallEdge();
                     RemoveUnnecessary.CleanOutlookAndOneDrive();
+                    WinCostumization.DisableSnapTools();
+                    WinCostumization.EnableUltimatePerformance();
                     Ungoogled.UngoogledInstaller();
                     Ungoogled.ChangeUngoogledHomePage();
                     break;
@@ -177,6 +181,8 @@ namespace DebloaterTool
                         RemoveUnnecessary.ApplyRegistryChanges();
                         RemoveUnnecessary.UninstallEdge();
                         RemoveUnnecessary.CleanOutlookAndOneDrive();
+                        WinCostumization.DisableSnapTools();
+                        WinCostumization.EnableUltimatePerformance();
                     }
 
                     // Run Ungoogled
