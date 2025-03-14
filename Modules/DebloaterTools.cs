@@ -139,7 +139,8 @@ namespace DebloaterTool
                             Logger.Log(e.Data, Level.INFO);
                             if (e.Data.Contains("Tweaks are Finished"))
                             {
-                                Logger.Log("DEBUG: This is the end!\nProcess will now exit gracefully.", Level.SUCCESS);
+                                Logger.Log("DEBUG: This is the end!", Level.SUCCESS);
+                                Logger.Log("Process will now exit gracefully.", Level.WARNING); 
                                 shouldExit = true; // Set exit flag
                             }
                         }
