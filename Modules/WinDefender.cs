@@ -85,28 +85,19 @@ namespace DebloaterTool
 
         static void RunPowerRun(string path, string arguments)
         {
-            ProcessStartInfo psi = new ProcessStartInfo
+            try
             {
-                FileName = path,
-                Arguments = arguments,
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true
-            };
-
-            using (Process process = new Process { StartInfo = psi })
-            {
-                process.Start();
-                string output = process.StandardOutput.ReadToEnd();
-                string error = process.StandardError.ReadToEnd();
-                process.WaitForExit();
-
-                Logger.Log(output);
-                if (!string.IsNullOrWhiteSpace(error))
+                Process.Start(new ProcessStartInfo
                 {
-                    Logger.Log("Error: " + error, Level.ERROR);
-                }
+                    FileName = path,
+                    Arguments = arguments,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true
+                }).WaitForExit();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}", Level.ERROR);
             }
         }
     }
