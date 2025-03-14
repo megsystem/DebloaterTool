@@ -154,6 +154,7 @@ namespace DebloaterTool
                     bool runWindowsUpdate = RequestYesOrNo("Do you want to disable Windows Update?");
                     bool runDebloater = RequestYesOrNo("Do you want to run Debloater Tools?");
                     bool runRemoveUnnecessary = RequestYesOrNo("Do you want to remove unnecessary components?");
+                    bool runWinCostumization = RequestYesOrNo("Do you want to set Windows Costumization?");
                     bool runUngoogled = RequestYesOrNo("Do you want to install Ungoogled Chrome?");
                     Console.WriteLine("Running Custom Debloating...");
                     Console.WriteLine("---------------------------------");
@@ -181,6 +182,11 @@ namespace DebloaterTool
                         RemoveUnnecessary.ApplyRegistryChanges();
                         RemoveUnnecessary.UninstallEdge();
                         RemoveUnnecessary.CleanOutlookAndOneDrive();
+                    }
+
+                    // Run WinCostumization
+                    if (runRemoveUnnecessary)
+                    {
                         WinCostumization.DisableSnapTools();
                         WinCostumization.EnableUltimatePerformance();
                     }
