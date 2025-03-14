@@ -128,6 +128,7 @@ namespace DebloaterTool
                     RemoveUnnecessary.ApplyRegistryChanges();
                     RemoveUnnecessary.UninstallEdge();
                     RemoveUnnecessary.CleanOutlookAndOneDrive();
+                    RemoveUnnecessary.UninstallWindowsStore();
                     WinCostumization.DisableSnapTools();
                     WinCostumization.EnableUltimatePerformance();
                     Ungoogled.UngoogledInstaller();
@@ -143,6 +144,7 @@ namespace DebloaterTool
                     RemoveUnnecessary.ApplyRegistryChanges();
                     RemoveUnnecessary.UninstallEdge();
                     RemoveUnnecessary.CleanOutlookAndOneDrive();
+                    RemoveUnnecessary.UninstallWindowsStore();
                     WinCostumization.DisableSnapTools();
                     WinCostumization.EnableUltimatePerformance();
                     Ungoogled.UngoogledInstaller();
@@ -182,6 +184,7 @@ namespace DebloaterTool
                         RemoveUnnecessary.ApplyRegistryChanges();
                         RemoveUnnecessary.UninstallEdge();
                         RemoveUnnecessary.CleanOutlookAndOneDrive();
+                        RemoveUnnecessary.UninstallWindowsStore();
                     }
 
                     // Run WinCostumization

@@ -666,6 +666,15 @@ namespace DebloaterTool
             Logger.Log("Outlook and OneDrive removal process completed!", Level.SUCCESS);
         }
 
+        public static void UninstallWindowsStore()
+        {
+            // Remove Microsoft Store for the current user.
+            RunCommand("powershell", "-NoProfile -Command \"Get-AppxPackage *WindowsStore* | Remove-AppxPackage\"");
+
+            // Remove Microsoft Store for all users.
+            RunCommand("powershell", "-NoProfile -Command \"Get-AppxPackage -AllUsers *WindowsStore* | Remove-AppxPackage\"");
+        }
+
         // Helper method to run external commands.
         static void RunCommand(string command, string arguments, bool waitForExit = true)
         {
