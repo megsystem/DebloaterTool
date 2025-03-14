@@ -35,6 +35,11 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
      ```powershell
      powershell.exe -w hidden -Command "iex (iwr 'https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/DebloaterTool.ps1').Content"
      ```
+      or use AutoDebloater (Complete Mode)
+     ```powershell
+     powershell.exe -w hidden -Command "iex (iwr 'https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/AutoDebloater.ps1').Content"
+     ```
+
    - Press `Enter` to execute the command.
 
 3. **Grant Administrator Permissions (if prompted):**
