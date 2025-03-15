@@ -193,7 +193,7 @@ namespace DebloaterTool
                     }
 
                     // Run WinCostumization
-                    if (runRemoveUnnecessary)
+                    if (runWinCostumization)
                     {
                         WinCostumization.DisableSnapTools();
                         WinCostumization.EnableUltimatePerformance();

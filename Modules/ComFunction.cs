@@ -23,7 +23,7 @@ namespace DebloaterTool
             }
         }
 
-        public static string RunCommand(string path, string arguments)
+        public static string RunCommand(string path, string arguments, bool redirect = false)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace DebloaterTool
                     FileName = path,
                     Arguments = arguments,
                     WindowStyle = ProcessWindowStyle.Hidden,
-                    RedirectStandardOutput = true,
+                    RedirectStandardOutput = redirect,
                     CreateNoWindow = true,
                     UseShellExecute = false // required for redirection
                 };
@@ -40,7 +40,7 @@ namespace DebloaterTool
                 using (Process process = Process.Start(psi))
                 {
                     process.WaitForExit();
-                    return process.StandardOutput.ReadToEnd();
+                    return (redirect) ? process.StandardOutput.ReadToEnd() : null;
                 }
             }
             catch (Exception ex)

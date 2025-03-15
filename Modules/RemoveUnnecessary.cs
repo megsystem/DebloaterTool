@@ -143,7 +143,7 @@ namespace DebloaterTool
                         string setupPath = Path.Combine(dir, "Installer", "setup.exe");
                         if (File.Exists(setupPath))
                         {
-                            RunCommand(setupPath, "--uninstall --system-level --verbose-logging --force-uninstall");
+                            ComFunction.RunCommand(setupPath, "--uninstall --system-level --verbose-logging --force-uninstall");
                             break;
                         }
                     }
@@ -233,8 +233,8 @@ namespace DebloaterTool
                 {
                     Logger.Log($"Cleaning: {path}", Level.INFO);
                     // Use external commands to take ownership and set permissions.
-                    RunCommand("takeown", $"/F \"{path}\" /R /D Y");
-                    RunCommand("icacls", $"\"{path}\" /grant administrators:F /T");
+                    ComFunction.RunCommand("takeown", $"/F \"{path}\" /R /D Y");
+                    ComFunction.RunCommand("icacls", $"\"{path}\" /grant administrators:F /T");
                     try
                     {
                         if (Directory.Exists(path))
@@ -280,7 +280,7 @@ namespace DebloaterTool
             string edgeUpdatePath = Path.Combine(programFilesX86, "Microsoft", "EdgeUpdate", "MicrosoftEdgeUpdate.exe");
             if (File.Exists(edgeUpdatePath))
             {
-                RunCommand(edgeUpdatePath, "/uninstall");
+                ComFunction.RunCommand(edgeUpdatePath, "/uninstall");
             }
 
             // Remove EdgeUpdate services.
@@ -294,8 +294,8 @@ namespace DebloaterTool
             {
                 try
                 {
-                    RunCommand("sc", $"stop {service}");
-                    RunCommand("sc", $"delete {service}");
+                    ComFunction.RunCommand("sc", $"stop {service}");
+                    ComFunction.RunCommand("sc", $"delete {service}");
                 }
                 catch (Exception ex)
                 {
@@ -309,7 +309,7 @@ namespace DebloaterTool
                 var edgeSetupFiles = Directory.GetFiles(Path.Combine(programFilesX86, "Microsoft", "Edge", "Application"), "setup.exe", SearchOption.AllDirectories);
                 if (edgeSetupFiles.Length > 0)
                 {
-                    RunCommand(edgeSetupFiles[0], "--uninstall --system-level --verbose-logging --force-uninstall");
+                    ComFunction.RunCommand(edgeSetupFiles[0], "--uninstall --system-level --verbose-logging --force-uninstall");
                 }
             }
             catch { }
@@ -431,10 +431,10 @@ namespace DebloaterTool
             Thread.Sleep(2000);
 
             // Remove Outlook apps (using PowerShell commands).
-            RunCommand("powershell", "-Command \"Get-AppxPackage *Microsoft.Office.Outlook* | Remove-AppxPackage\"");
-            RunCommand("powershell", "-Command \"Get-AppxProvisionedPackage -Online | Where-Object {$_.PackageName -like '*Microsoft.Office.Outlook*'} | Remove-AppxProvisionedPackage -Online\"");
-            RunCommand("powershell", "-Command \"Get-AppxPackage *Microsoft.OutlookForWindows* | Remove-AppxPackage\"");
-            RunCommand("powershell", "-Command \"Get-AppxProvisionedPackage -Online | Where-Object {$_.PackageName -like '*Microsoft.OutlookForWindows*'} | Remove-AppxProvisionedPackage -Online\"");
+            ComFunction.RunCommand("powershell", "-Command \"Get-AppxPackage *Microsoft.Office.Outlook* | Remove-AppxPackage\"");
+            ComFunction.RunCommand("powershell", "-Command \"Get-AppxProvisionedPackage -Online | Where-Object {$_.PackageName -like '*Microsoft.Office.Outlook*'} | Remove-AppxProvisionedPackage -Online\"");
+            ComFunction.RunCommand("powershell", "-Command \"Get-AppxPackage *Microsoft.OutlookForWindows* | Remove-AppxPackage\"");
+            ComFunction.RunCommand("powershell", "-Command \"Get-AppxProvisionedPackage -Online | Where-Object {$_.PackageName -like '*Microsoft.OutlookForWindows*'} | Remove-AppxProvisionedPackage -Online\"");
 
             // Remove Outlook folders.
             string windowsAppsPath = @"C:\Program Files\WindowsApps";
@@ -445,8 +445,8 @@ namespace DebloaterTool
                 {
                     try
                     {
-                        RunCommand("takeown", $"/f \"{folder}\" /r /d Y");
-                        RunCommand("icacls", $"\"{folder}\" /grant administrators:F /T");
+                        ComFunction.RunCommand("takeown", $"/f \"{folder}\" /r /d Y");
+                        ComFunction.RunCommand("icacls", $"\"{folder}\" /grant administrators:F /T", redirect:false);
                         Directory.Delete(folder, true);
                         Logger.Log($"Deleted Outlook folder: {folder}", Level.SUCCESS);
                     }
@@ -605,7 +605,7 @@ namespace DebloaterTool
             }
             if (File.Exists(oneDriveSetupPath))
             {
-                RunCommand(oneDriveSetupPath, "/uninstall");
+                ComFunction.RunCommand(oneDriveSetupPath, "/uninstall");
             }
 
             string[] oneDrivePaths = new string[]
@@ -664,29 +664,6 @@ namespace DebloaterTool
             Process.Start("explorer");
 
             Logger.Log("Outlook and OneDrive removal process completed!", Level.SUCCESS);
-        }
-
-        // Helper method to run external commands.
-        static void RunCommand(string command, string arguments)
-        {
-            try
-            {
-                ProcessStartInfo psi = new ProcessStartInfo
-                {
-                    FileName = command,
-                    Arguments = arguments,
-                    CreateNoWindow = true,
-                    UseShellExecute = false
-                };
-                using (Process proc = Process.Start(psi))
-                {
-                    proc.WaitForExit();
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Error running command {command} {arguments}: {ex.Message}", Level.ERROR);
-            }
         }
 
         // Helper to delete registry keys recursively.

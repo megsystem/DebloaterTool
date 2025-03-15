@@ -17,7 +17,7 @@ namespace DebloaterTool
 
         public static void EnableUltimatePerformance()
         {
-            string ultimatePlan = ComFunction.RunCommand("cmd.exe", "/c powercfg -list");
+            string ultimatePlan = ComFunction.RunCommand("cmd.exe", "/c powercfg -list", redirect: true);
             if (ultimatePlan.Contains("Ultimate Performance"))
             {
                 Logger.Log("Ultimate Performance plan is already installed.");
@@ -29,7 +29,7 @@ namespace DebloaterTool
                 Logger.Log("> Ultimate Performance plan installed.");
             }
 
-            string updatedPlanList = ComFunction.RunCommand("cmd.exe", "/c powercfg -list");
+            string updatedPlanList = ComFunction.RunCommand("cmd.exe", "/c powercfg -list", redirect: true);
             string ultimatePlanGUID = ExtractGUID(updatedPlanList, "Ultimate Performance");
             if (!string.IsNullOrEmpty(ultimatePlanGUID))
             {
