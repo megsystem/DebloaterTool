@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using System;
 
 namespace DebloaterTool
 {
@@ -7,11 +6,16 @@ namespace DebloaterTool
     {
         public static void DisableSnapTools()
         {
-            SetRegistryValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "WindowArrangementActive", "0", RegistryValueKind.String);
-            SetRegistryValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "JointResize", 0, RegistryValueKind.DWord);
-            SetRegistryValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "SnapAssist", 0, RegistryValueKind.DWord);
-            SetRegistryValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "SnapFill", 0, RegistryValueKind.DWord);
-            SetRegistryValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "EnableSnapAssistFlyout", 0, RegistryValueKind.DWord);
+            RegistryModification[] registryModifications = new RegistryModification[]
+            {
+                new RegistryModification(Registry.CurrentUser, @"Control Panel\Desktop", "WindowArrangementActive", RegistryValueKind.String, "0"),
+                new RegistryModification(Registry.CurrentUser, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "JointResize", RegistryValueKind.DWord, 0),
+                new RegistryModification(Registry.CurrentUser, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "SnapAssist", RegistryValueKind.DWord, 0),
+                new RegistryModification(Registry.CurrentUser, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "SnapFill", RegistryValueKind.DWord, 0),
+                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "EnableSnapAssistFlyout", RegistryValueKind.DWord, 0)
+            };
+
+            ComRegedit.InstallRegModification(registryModifications);
         }
 
         public static void EnableUltimatePerformance()
@@ -54,55 +58,6 @@ namespace DebloaterTool
                 }
             }
             return string.Empty;
-        }
-
-        static void SetRegistryValue(string path, string name, object value, RegistryValueKind valueKind)
-        {
-            try
-            {
-                var parts = path.Split(new[] { '\\' }, 2);
-                var rootKey = parts[0];
-                var subKey = parts.Length > 1 ? parts[1].TrimStart('\\') : string.Empty;
-
-                Logger.Log($"Attempting to set registry value at RootKey: {rootKey}, SubKey: {subKey}");
-
-                RegistryKey baseKey;
-                switch (rootKey)
-                {
-                    case "HKEY_LOCAL_MACHINE":
-                        baseKey = Registry.LocalMachine;
-                        break;
-                    case "HKEY_CURRENT_USER":
-                        baseKey = Registry.CurrentUser;
-                        break;
-                    case "HKEY_CLASSES_ROOT":
-                        baseKey = Registry.ClassesRoot;
-                        break;
-                    case "HKEY_USERS":
-                        baseKey = Registry.Users;
-                        break;
-                    case "HKEY_CURRENT_CONFIG":
-                        baseKey = Registry.CurrentConfig;
-                        break;
-                    default:
-                        throw new ArgumentException("Unknown registry root key: " + rootKey);
-                }
-
-                using (var key = baseKey.OpenSubKey(subKey, true) ?? baseKey.CreateSubKey(subKey))
-                {
-                    if (key == null)
-                    {
-                        Logger.Log($"Failed to create or open registry key: {path}", Level.ERROR);
-                        return;
-                    }
-                    key.SetValue(name, value, valueKind);
-                    Logger.Log($"Updated {path} -> {name} = {value}", Level.SUCCESS);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log("Error: " + ex.Message, Level.ERROR);
-            }
         }
     }
 }

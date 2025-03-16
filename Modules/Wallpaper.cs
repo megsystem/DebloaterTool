@@ -19,24 +19,8 @@ namespace DebloaterTool
             string picturesFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             string savePath = Path.Combine(picturesFolder, "DebloaterTool.png");
 
-            DownloadImage(ExternalLinks.wallpaper, savePath);
+            ComFunction.DownloadFile(ExternalLinks.wallpaper, savePath);
             SetWallpaper(savePath);
-        }
-
-        static void DownloadImage(string url, string savePath)
-        {
-            try
-            {
-                using (WebClient webClient = new WebClient())
-                {
-                    webClient.DownloadFile(url, savePath);
-                    Logger.Log($"Desktop background downloaded to: {savePath}", Level.SUCCESS);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Failed to download desktop background: {ex.Message}", Level.ERROR);
-            }
         }
 
         static void SetWallpaper(string imagePath)

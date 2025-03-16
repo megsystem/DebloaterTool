@@ -11,35 +11,13 @@ namespace DebloaterTool
 {
     internal class RemoveUnnecessary
     {
-        // Private nested class to encapsulate a registry modification.
-        private class RegistryModification
-        {
-            public RegistryKey Root { get; }
-            public string SubKey { get; }
-            public string ValueName { get; }
-            public RegistryValueKind ValueKind { get; }
-            public object Value { get; }
-
-            public RegistryModification(RegistryKey root, string subKey, string valueName, RegistryValueKind valueKind, object value)
-            {
-                Root = root;
-                SubKey = subKey;
-                ValueName = valueName;
-                ValueKind = valueKind;
-                Value = value;
-            }
-        }
-
         // ---------------------------
         // Script 1: Registry Tweaker
         // ---------------------------
         public static void ApplyRegistryChanges()
         {
-            Logger.Log("Applying registry changes...", Level.WARNING);
-            try
+            RegistryModification[] registryModifications = new RegistryModification[]
             {
-                RegistryModification[] registryModifications = new RegistryModification[]
-                {
                     // Visual changes
                     new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "TaskbarAl", RegistryValueKind.DWord, 0), // Align taskbar to the left
                     new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme", RegistryValueKind.DWord, 0), // Set Windows to dark theme
@@ -56,47 +34,10 @@ namespace DebloaterTool
                     new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "HideFileExt", RegistryValueKind.DWord, 0), // Show file extensions
                     new RegistryModification(Registry.CurrentUser, @"Control Panel\Colors", "Hilight", RegistryValueKind.String, "0 0 0"), // Sets highlight color to black
                     new RegistryModification(Registry.CurrentUser, @"Control Panel\Colors", "HotTrackingColor", RegistryValueKind.String, "0 0 0") // Sets click-and-drag box color to black
-                };
+            };
 
-                // Apply each registry modification.
-                foreach (RegistryModification mod in registryModifications)
-                {
-                    try
-                    {
-                        using (RegistryKey key = mod.Root.CreateSubKey(mod.SubKey, RegistryKeyPermissionCheck.ReadWriteSubTree))
-                        {
-                            if (key != null)
-                            {
-                                key.SetValue(mod.ValueName, mod.Value, mod.ValueKind);
-                                Logger.Log($"Applied {mod.ValueName} to {mod.SubKey}", Level.SUCCESS);
-                            }
-                            else
-                            {
-                                Logger.Log($"Failed to open registry key: {mod.SubKey}", Level.ERROR);
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log($"Failed to modify {mod.ValueName} in {mod.SubKey}: {ex.Message}", Level.ERROR);
-                    }
-                }
-                Logger.Log("Registry changes applied successfully.", Level.SUCCESS);
-
-                // Kill Explorer and restart it.
-                ProcessStartInfo psiKill = new ProcessStartInfo("taskkill", "/F /IM explorer.exe")
-                {
-                    CreateNoWindow = true,
-                    UseShellExecute = false
-                };
-                Process.Start(psiKill)?.WaitForExit();
-                Process.Start("explorer.exe");
-                Logger.Log("Explorer restarted to apply registry changes.", Level.SUCCESS);
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Error applying registry changes: {ex.Message}", Level.ERROR);
-            }
+            // Install Regedit Modification
+            ComRegedit.InstallRegModification(registryModifications);
         }
 
         // -------------------------
@@ -271,10 +212,10 @@ namespace DebloaterTool
             };
             foreach (var regKey in edgeRegKeys)
             {
-                DeleteRegistryKey(Registry.LocalMachine, regKey);
+                ComRegedit.DeleteRegistryKey(Registry.LocalMachine, regKey);
             }
             // Delete the HKCU key for Edge.
-            DeleteRegistryKey(Registry.CurrentUser, @"Software\Microsoft\Edge");
+            ComRegedit.DeleteRegistryKey(Registry.CurrentUser, @"Software\Microsoft\Edge");
 
             // Force uninstall EdgeUpdate.
             string edgeUpdatePath = Path.Combine(programFilesX86, "Microsoft", "EdgeUpdate", "MicrosoftEdgeUpdate.exe");
@@ -350,7 +291,7 @@ namespace DebloaterTool
                     string currentUser = WindowsIdentity.GetCurrent().Name;
                     // Set ACL for the folder.
                     DirectorySecurity acl = new DirectorySecurity();
-                    acl.SetOwner(new System.Security.Principal.NTAccount(currentUser));
+                    acl.SetOwner(new NTAccount(currentUser));
                     acl.SetAccessRuleProtection(true, false);
                     acl.AddAccessRule(new FileSystemAccessRule(
                         currentUser,
@@ -648,7 +589,7 @@ namespace DebloaterTool
             };
             foreach (var regKey in oneDriveRegKeys)
             {
-                DeleteRegistryKey(Registry.ClassesRoot, regKey);
+                ComRegedit.DeleteRegistryKey(Registry.ClassesRoot, regKey);
             }
 
             // Restart Explorer.
@@ -664,20 +605,6 @@ namespace DebloaterTool
             Process.Start("explorer");
 
             Logger.Log("Outlook and OneDrive removal process completed!", Level.SUCCESS);
-        }
-
-        // Helper to delete registry keys recursively.
-        static void DeleteRegistryKey(RegistryKey root, string subKeyPath)
-        {
-            try
-            {
-                root.DeleteSubKeyTree(subKeyPath, false);
-                Logger.Log($"Successfully deleted registry key: {root.Name}\\{subKeyPath}", Level.SUCCESS);
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Failed to delete registry key: {root.Name}\\{subKeyPath} - {ex.Message}", Level.ERROR);
-            }
         }
     }
 }
