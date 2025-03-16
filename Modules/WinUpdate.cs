@@ -1,12 +1,8 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Management;
-using System.Net;
 using System.ServiceProcess;
-using System.Text;
 
 namespace DebloaterTool
 {
