@@ -13,7 +13,7 @@ namespace DebloaterTool
         /// Downloads a PowerShell script from a URL, saves it to 
         /// the temp directory, runs it with specific parameters.
         /// </summary>
-        public static void RunWinConfig()
+        public static void RunRaphiTool()
         {
             Logger.Log("Starting Windows configuration process...", Level.WARNING);
             try
@@ -96,7 +96,7 @@ namespace DebloaterTool
         /// It monitors the process output for a completion message.
         /// </summary>
         static bool shouldExit = false; // Flag to track exit condition
-        public static void RunTweaks()
+        public static void RunChrisTool()
         {
             try
             {

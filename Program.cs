@@ -123,8 +123,8 @@ namespace DebloaterTool
                     WinDefender.Uninstall();
                     WinUpdate.DisableWindowsUpdate();
                     WinUpdate.DisableWindowsUpdateV2();
-                    DebloaterTools.RunTweaks();
-                    DebloaterTools.RunWinConfig();
+                    DebloaterTools.RunChrisTool();
+                    DebloaterTools.RunRaphiTool();
                     RemoveUnnecessary.ApplyRegistryChanges();
                     RemoveUnnecessary.UninstallEdge();
                     RemoveUnnecessary.CleanOutlookAndOneDrive();
@@ -139,8 +139,8 @@ namespace DebloaterTool
                     Console.WriteLine("Running Minimal Debloating...");
                     Console.WriteLine("---------------------------------");
                     WinUpdate.DisableWindowsUpdate();
-                    DebloaterTools.RunTweaks();
-                    DebloaterTools.RunWinConfig();
+                    DebloaterTools.RunChrisTool();
+                    DebloaterTools.RunRaphiTool();
                     RemoveUnnecessary.ApplyRegistryChanges();
                     RemoveUnnecessary.UninstallEdge();
                     RemoveUnnecessary.CleanOutlookAndOneDrive();
@@ -180,8 +180,8 @@ namespace DebloaterTool
                     // Run DebloaterTools
                     if (runDebloater)
                     {
-                        DebloaterTools.RunTweaks();
-                        DebloaterTools.RunWinConfig();
+                        DebloaterTools.RunChrisTool();
+                        DebloaterTools.RunRaphiTool();
                     }
 
                     // Run RemoveUnnecessary
