@@ -33,11 +33,11 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 2. **Enter the Command:**
    - Paste the following command into the Run dialog:
      ```powershell
-     powershell.exe -w hidden -Command "iex (iwr 'https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/DebloaterTool.ps1').Content"
+     powershell.exe -w hidden -Command "iex (iwr 'https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/DebloaterTool.ps1')"
      ```
       or use AutoDebloater `(Complete Mode)`
      ```powershell
-     powershell.exe -w hidden -Command "iex (iwr 'https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/AutoDebloater.ps1').Content"
+     powershell.exe -w hidden -Command "iex (iwr 'https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/AutoDebloater.ps1')"
      ```
 
    - Press `Enter` to execute the command.
