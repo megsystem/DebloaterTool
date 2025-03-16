@@ -121,7 +121,7 @@ namespace DebloaterTool
                     Console.WriteLine("Running Complete Debloating...");
                     Console.WriteLine("---------------------------------");
                     WinDefender.Uninstall();
-                    WinUpdate.DisableWindowsUpdate();
+                    WinUpdate.DisableWindowsUpdateV1();
                     WinUpdate.DisableWindowsUpdateV2();
                     DebloaterTools.RunChrisTool();
                     DebloaterTools.RunRaphiTool();
@@ -138,7 +138,7 @@ namespace DebloaterTool
                 case 'M': // Minimal
                     Console.WriteLine("Running Minimal Debloating...");
                     Console.WriteLine("---------------------------------");
-                    WinUpdate.DisableWindowsUpdate();
+                    WinUpdate.DisableWindowsUpdateV1();
                     DebloaterTools.RunChrisTool();
                     DebloaterTools.RunRaphiTool();
                     RemoveUnnecessary.ApplyRegistryChanges();
@@ -167,7 +167,7 @@ namespace DebloaterTool
                     // Run WinUpdate
                     if (runWindowsUpdate)
                     {
-                        WinUpdate.DisableWindowsUpdate();
+                        WinUpdate.DisableWindowsUpdateV1();
                         WinUpdate.DisableWindowsUpdateV2();
                     }
 

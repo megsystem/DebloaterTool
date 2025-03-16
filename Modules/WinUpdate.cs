@@ -7,12 +7,11 @@ namespace DebloaterTool
     internal class WinUpdate
     {
         /// <summary>
-        /// Disables Windows Update by modifying relevant registry keys.
-        /// 1. Blocks Windows Update from connecting to the internet.
-        /// 2. Disables automatic updates.
-        /// 3. Disables Windows Update Delivery Optimization.
-        /// 4. Pauses updates indefinitely.
-        public static void DisableWindowsUpdate()
+        /// Disables Windows Update by modifying registry settings to block update connections, 
+        /// disable automatic updates, and prevent peer-to-peer update distribution. 
+        /// Additionally, it enforces an indefinite pause on updates through registry configurations.
+        /// </summary>
+        public static void DisableWindowsUpdateV1()
         {
             try
             {
