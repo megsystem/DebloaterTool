@@ -9,11 +9,10 @@ namespace DebloaterTool
     {
         public static void Uninstall()
         {
-            string powerRunUrl = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/PowerRun.exe";
             string powerRunPath = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.exe");
 
             Logger.Log("Downloading...");
-            if (!ComFunction.DownloadFile(powerRunUrl, powerRunPath))
+            if (!ComFunction.DownloadFile(ExternalLinks.powerRun, powerRunPath))
             {
                 Logger.Log("Failed to download PowerRun.exe. Exiting...", Level.ERROR);
                 return;

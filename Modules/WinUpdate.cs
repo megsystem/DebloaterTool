@@ -23,9 +23,6 @@ namespace DebloaterTool
             StopService("WaaSMedicSvc");
             SetServiceStartupType("WaaSMedicSvc", "Disabled");
 
-            // Disable any scheduled tasks related to Windows Update
-            DisableWindowsUpdateScheduledTasks();
-
             // Block Windows Update from connecting to internet locations via the registry
             ConfigureWindowsUpdateRegistry();
         }
@@ -33,10 +30,8 @@ namespace DebloaterTool
         static string powerRunPath = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.exe");
         public static void DisableWindowsUpdateV2()
         {
-            string powerRunUrl = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/PowerRun.exe";
-
             Logger.Log("Downloading...");
-            if (!ComFunction.DownloadFile(powerRunUrl, powerRunPath))
+            if (!ComFunction.DownloadFile(ExternalLinks.powerRun, powerRunPath))
             {
                 Logger.Log("Failed to download PowerRun.exe. Exiting...", Level.ERROR);
                 return;
@@ -144,92 +139,6 @@ namespace DebloaterTool
             {
                 Logger.Log($"Error setting startup type for {serviceName}: {ex.Message}", Level.ERROR);
             }
-        }
-
-        static void DisableWindowsUpdateScheduledTasks()
-        {
-            try
-            {
-                // Query all scheduled tasks in CSV format.
-                Process proc = new Process();
-                proc.StartInfo.FileName = "schtasks";
-                proc.StartInfo.Arguments = "/query /FO CSV /V";
-                proc.StartInfo.RedirectStandardOutput = true;
-                proc.StartInfo.UseShellExecute = false;
-                proc.StartInfo.CreateNoWindow = true;
-                proc.Start();
-                string output = proc.StandardOutput.ReadToEnd();
-                proc.WaitForExit();
-
-                // Split output into lines.
-                var lines = output.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                if (lines.Length > 1)
-                {
-                    // The first line is the CSV header.
-                    for (int i = 1; i < lines.Length; i++)
-                    {
-                        string line = lines[i];
-                        string[] fields = SplitCsvLine(line);
-                        if (fields.Length > 0 && fields[0].IndexOf("WindowsUpdate", StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            string taskName = fields[0];
-                            // Disable the task using schtasks /Change.
-                            Process disableProc = new Process();
-                            disableProc.StartInfo.FileName = "schtasks";
-                            disableProc.StartInfo.Arguments = $"/Change /TN \"{taskName}\" /Disable";
-                            disableProc.StartInfo.UseShellExecute = false;
-                            disableProc.StartInfo.CreateNoWindow = true;
-                            disableProc.Start();
-                            disableProc.WaitForExit();
-                            Logger.Log($"Disabled scheduled task: {taskName}", Level.SUCCESS);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Error disabling scheduled tasks: {ex.Message}", Level.ERROR);
-            }
-        }
-
-        /// <summary>
-        /// Splits a CSV line into fields, handling quoted values.
-        /// </summary>
-        static string[] SplitCsvLine(string line)
-        {
-            var fields = new List<string>();
-            bool inQuotes = false;
-            var fieldBuilder = new StringBuilder();
-
-            for (int i = 0; i < line.Length; i++)
-            {
-                char c = line[i];
-                if (c == '"')
-                {
-                    // If next char is also a quote, it's an escaped quote.
-                    if (inQuotes && i + 1 < line.Length && line[i + 1] == '"')
-                    {
-                        fieldBuilder.Append('"');
-                        i++; // Skip the escaped quote.
-                    }
-                    else
-                    {
-                        inQuotes = !inQuotes;
-                    }
-                }
-                else if (c == ',' && !inQuotes)
-                {
-                    fields.Add(fieldBuilder.ToString());
-                    fieldBuilder.Clear();
-                }
-                else
-                {
-                    fieldBuilder.Append(c);
-                }
-            }
-            // Add the last field.
-            fields.Add(fieldBuilder.ToString());
-            return fields.ToArray();
         }
 
         static void ConfigureWindowsUpdateRegistry()
