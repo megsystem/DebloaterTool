@@ -9,7 +9,7 @@ namespace DebloaterTool
             string powerRunPath = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.exe");
 
             Logger.Log("Downloading...");
-            if (!ComFunction.DownloadFile(ExternalLinks.powerRun, powerRunPath))
+            if (!ComGlobal.DownloadFile(ExternalLinks.powerRun, powerRunPath))
             {
                 Logger.Log("Failed to download PowerRun.exe. Exiting...", Level.ERROR);
                 return;
@@ -46,19 +46,19 @@ namespace DebloaterTool
             File.WriteAllText(tempRegFile, Config.Resource.defender);
 
             // Import the registry file silently using regedit (/s switch).
-            ComFunction.RunCommand(powerRunPath, $"regedit.exe /s \"{tempRegFile}\"");
+            ComGlobal.RunCommand(powerRunPath, $"regedit.exe /s \"{tempRegFile}\"");
 
             // Optionally, delete the temporary file after execution.
             try { File.Delete(tempRegFile); } catch { /* Ignore errors on deletion */ }
 
             foreach (var file in filesToDelete)
             {
-                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c del /f \"{file}\"");
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c del /f \"{file}\"");
             }
 
             foreach (var dir in directoriesToDelete)
             {
-                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c rmdir /s /q \"{dir}\"");
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c rmdir /s /q \"{dir}\"");
             }
         }
     }

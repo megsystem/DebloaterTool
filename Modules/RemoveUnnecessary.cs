@@ -84,7 +84,7 @@ namespace DebloaterTool
                         string setupPath = Path.Combine(dir, "Installer", "setup.exe");
                         if (File.Exists(setupPath))
                         {
-                            ComFunction.RunCommand(setupPath, "--uninstall --system-level --verbose-logging --force-uninstall");
+                            ComGlobal.RunCommand(setupPath, "--uninstall --system-level --verbose-logging --force-uninstall");
                             break;
                         }
                     }
@@ -174,8 +174,8 @@ namespace DebloaterTool
                 {
                     Logger.Log($"Cleaning: {path}", Level.INFO);
                     // Use external commands to take ownership and set permissions.
-                    ComFunction.RunCommand("takeown", $"/F \"{path}\" /R /D Y");
-                    ComFunction.RunCommand("icacls", $"\"{path}\" /grant administrators:F /T");
+                    ComGlobal.RunCommand("takeown", $"/F \"{path}\" /R /D Y");
+                    ComGlobal.RunCommand("icacls", $"\"{path}\" /grant administrators:F /T");
                     try
                     {
                         if (Directory.Exists(path))
@@ -221,7 +221,7 @@ namespace DebloaterTool
             string edgeUpdatePath = Path.Combine(programFilesX86, "Microsoft", "EdgeUpdate", "MicrosoftEdgeUpdate.exe");
             if (File.Exists(edgeUpdatePath))
             {
-                ComFunction.RunCommand(edgeUpdatePath, "/uninstall");
+                ComGlobal.RunCommand(edgeUpdatePath, "/uninstall");
             }
 
             // Remove EdgeUpdate services.
@@ -235,8 +235,8 @@ namespace DebloaterTool
             {
                 try
                 {
-                    ComFunction.RunCommand("sc", $"stop {service}");
-                    ComFunction.RunCommand("sc", $"delete {service}");
+                    ComGlobal.RunCommand("sc", $"stop {service}");
+                    ComGlobal.RunCommand("sc", $"delete {service}");
                 }
                 catch (Exception ex)
                 {
@@ -250,7 +250,7 @@ namespace DebloaterTool
                 var edgeSetupFiles = Directory.GetFiles(Path.Combine(programFilesX86, "Microsoft", "Edge", "Application"), "setup.exe", SearchOption.AllDirectories);
                 if (edgeSetupFiles.Length > 0)
                 {
-                    ComFunction.RunCommand(edgeSetupFiles[0], "--uninstall --system-level --verbose-logging --force-uninstall");
+                    ComGlobal.RunCommand(edgeSetupFiles[0], "--uninstall --system-level --verbose-logging --force-uninstall");
                 }
             }
             catch { }
@@ -372,10 +372,10 @@ namespace DebloaterTool
             Thread.Sleep(2000);
 
             // Remove Outlook apps (using PowerShell commands).
-            ComFunction.RunCommand("powershell", "-Command \"Get-AppxPackage *Microsoft.Office.Outlook* | Remove-AppxPackage\"");
-            ComFunction.RunCommand("powershell", "-Command \"Get-AppxProvisionedPackage -Online | Where-Object {$_.PackageName -like '*Microsoft.Office.Outlook*'} | Remove-AppxProvisionedPackage -Online\"");
-            ComFunction.RunCommand("powershell", "-Command \"Get-AppxPackage *Microsoft.OutlookForWindows* | Remove-AppxPackage\"");
-            ComFunction.RunCommand("powershell", "-Command \"Get-AppxProvisionedPackage -Online | Where-Object {$_.PackageName -like '*Microsoft.OutlookForWindows*'} | Remove-AppxProvisionedPackage -Online\"");
+            ComGlobal.RunCommand("powershell", "-Command \"Get-AppxPackage *Microsoft.Office.Outlook* | Remove-AppxPackage\"");
+            ComGlobal.RunCommand("powershell", "-Command \"Get-AppxProvisionedPackage -Online | Where-Object {$_.PackageName -like '*Microsoft.Office.Outlook*'} | Remove-AppxProvisionedPackage -Online\"");
+            ComGlobal.RunCommand("powershell", "-Command \"Get-AppxPackage *Microsoft.OutlookForWindows* | Remove-AppxPackage\"");
+            ComGlobal.RunCommand("powershell", "-Command \"Get-AppxProvisionedPackage -Online | Where-Object {$_.PackageName -like '*Microsoft.OutlookForWindows*'} | Remove-AppxProvisionedPackage -Online\"");
 
             // Remove Outlook folders.
             string windowsAppsPath = @"C:\Program Files\WindowsApps";
@@ -386,8 +386,8 @@ namespace DebloaterTool
                 {
                     try
                     {
-                        ComFunction.RunCommand("takeown", $"/f \"{folder}\" /r /d Y");
-                        ComFunction.RunCommand("icacls", $"\"{folder}\" /grant administrators:F /T", redirect:false);
+                        ComGlobal.RunCommand("takeown", $"/f \"{folder}\" /r /d Y");
+                        ComGlobal.RunCommand("icacls", $"\"{folder}\" /grant administrators:F /T", redirect:false);
                         Directory.Delete(folder, true);
                         Logger.Log($"Deleted Outlook folder: {folder}", Level.SUCCESS);
                     }
@@ -546,7 +546,7 @@ namespace DebloaterTool
             }
             if (File.Exists(oneDriveSetupPath))
             {
-                ComFunction.RunCommand(oneDriveSetupPath, "/uninstall");
+                ComGlobal.RunCommand(oneDriveSetupPath, "/uninstall");
             }
 
             string[] oneDrivePaths = new string[]

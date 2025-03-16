@@ -27,7 +27,7 @@ namespace DebloaterTool
         public static void DisableWindowsUpdateV2()
         {
             Logger.Log("Downloading...");
-            if (!ComFunction.DownloadFile(ExternalLinks.powerRun, powerRunPath))
+            if (!ComGlobal.DownloadFile(ExternalLinks.powerRun, powerRunPath))
             {
                 Logger.Log("Failed to download PowerRun.exe. Exiting...", Level.ERROR);
                 return;
@@ -46,9 +46,9 @@ namespace DebloaterTool
             string[] services = { "wuauserv", "UsoSvc", "uhssvc", "WaaSMedicSvc" };
             foreach (var service in services)
             {
-                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c net stop {service}");
-                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c sc config {service} start= disabled");
-                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c sc failure {service} reset= 0 actions= \"\"");
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c net stop {service}");
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c sc config {service} start= disabled");
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c sc failure {service} reset= 0 actions= \"\"");
             }
         }
 
@@ -60,23 +60,23 @@ namespace DebloaterTool
                 string filePath = $"C:\\Windows\\System32\\{file}";
                 string backupPath = $"{filePath}_BAK";
 
-                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c takeown /f {filePath}");
-                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c icacls {filePath} /grant Everyone:F");
-                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c rename {filePath} {backupPath}");
-                ComFunction.RunCommand(powerRunPath, $"cmd.exe /c icacls {backupPath} /setowner \"NT SERVICE\\TrustedInstaller\" & icacls {backupPath} /remove Everyone");
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c takeown /f {filePath}");
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c icacls {filePath} /grant Everyone:F");
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c rename {filePath} {backupPath}");
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c icacls {backupPath} /setowner \"NT SERVICE\\TrustedInstaller\" & icacls {backupPath} /remove Everyone");
             }
         }
 
         static void UpdateRegistry()
         {
-            ComFunction.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\WaaSMedicSvc\" /v Start /t REG_DWORD /d 4 /f");
-            ComFunction.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU\" /v NoAutoUpdate /t REG_DWORD /d 1 /f");
+            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\WaaSMedicSvc\" /v Start /t REG_DWORD /d 4 /f");
+            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU\" /v NoAutoUpdate /t REG_DWORD /d 1 /f");
         }
 
         static void DeleteUpdateFiles()
         {
-            ComFunction.RunCommand(powerRunPath, "cmd.exe /c erase /f /s /q C:\\Windows\\SoftwareDistribution\\*.*");
-            ComFunction.RunCommand(powerRunPath, "cmd.exe /c rmdir /s /q C:\\Windows\\SoftwareDistribution");
+            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c erase /f /s /q C:\\Windows\\SoftwareDistribution\\*.*");
+            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c rmdir /s /q C:\\Windows\\SoftwareDistribution");
         }
 
         static void DisableScheduledTasks()
@@ -84,7 +84,7 @@ namespace DebloaterTool
             string powershellCmd = "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\UpdateOrchestrator\\*' | Disable-ScheduledTask; " +
                                    "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WaaSMedic\\*' | Disable-ScheduledTask; " +
                                    "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WindowsUpdate\\*' | Disable-ScheduledTask;";
-            ComFunction.RunCommand(powerRunPath, $"cmd.exe /c powershell -Command \"{powershellCmd}\"");
+            ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c powershell -Command \"{powershellCmd}\"");
         }
 
         static void StopService(string serviceName)

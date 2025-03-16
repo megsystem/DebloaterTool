@@ -19,7 +19,7 @@ namespace DebloaterTool
             string picturesFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             string savePath = Path.Combine(picturesFolder, "DebloaterTool.png");
 
-            ComFunction.DownloadFile(ExternalLinks.wallpaper, savePath);
+            ComGlobal.DownloadFile(ExternalLinks.wallpaper, savePath);
             SetWallpaper(savePath);
         }
 

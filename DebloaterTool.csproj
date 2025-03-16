@@ -53,10 +53,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <Compile Include="Modules\ComFunction.cs" />
+    <Compile Include="Modules\ComFunction\ComGlobal.cs" />
     <Compile Include="Logger\LevelHelper.cs" />
     <Compile Include="Logger\Logger.cs" />
-    <Compile Include="Modules\ComRegedit.cs" />
+    <Compile Include="Modules\ComFunction\ComRegedit.cs" />
     <Compile Include="Modules\DebloaterTools.cs" />
     <Compile Include="Modules\RemoveUnnecessary.cs" />
     <Compile Include="Modules\Ungoogled.cs" />

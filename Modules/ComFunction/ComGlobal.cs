@@ -4,7 +4,7 @@ using System.Net;
 
 namespace DebloaterTool
 {
-    internal class ComFunction
+    internal class ComGlobal
     {
         public static bool DownloadFile(string url, string outputPath)
         {
