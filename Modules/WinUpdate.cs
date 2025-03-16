@@ -1,143 +1,18 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.IO;
-using System.Management;
-using System.ServiceProcess;
 
 namespace DebloaterTool
 {
     internal class WinUpdate
     {
+        /// <summary>
+        /// Disables Windows Update by modifying relevant registry keys.
+        /// 1. Blocks Windows Update from connecting to the internet.
+        /// 2. Disables automatic updates.
+        /// 3. Disables Windows Update Delivery Optimization.
+        /// 4. Pauses updates indefinitely.
         public static void DisableWindowsUpdate()
-        {
-            //First Try to disable Windows Update
-            // Stop and disable the Windows Update service (wuauserv)
-            StopService("wuauserv");
-            SetServiceStartupType("wuauserv", "Disabled");
-
-            // Stop and disable the Windows Update Medic Service (WaaSMedicSvc)
-            StopService("WaaSMedicSvc");
-            SetServiceStartupType("WaaSMedicSvc", "Disabled");
-
-            // Block Windows Update from connecting to internet locations via the registry
-            ConfigureWindowsUpdateRegistry();
-        }
-
-        static string powerRunPath = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.exe");
-        public static void DisableWindowsUpdateV2()
-        {
-            Logger.Log("Downloading...");
-            if (!ComGlobal.DownloadFile(ExternalLinks.powerRun, powerRunPath))
-            {
-                Logger.Log("Failed to download PowerRun.exe. Exiting...", Level.ERROR);
-                return;
-            }
-            Logger.Log("Download complete.");
-
-            DisableUpdateServices();
-            RenameSystemFiles();
-            UpdateRegistry();
-            DeleteUpdateFiles();
-            DisableScheduledTasks();
-        }
-
-        static void DisableUpdateServices()
-        {
-            string[] services = { "wuauserv", "UsoSvc", "uhssvc", "WaaSMedicSvc" };
-            foreach (var service in services)
-            {
-                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c net stop {service}");
-                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c sc config {service} start= disabled");
-                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c sc failure {service} reset= 0 actions= \"\"");
-            }
-        }
-
-        static void RenameSystemFiles()
-        {
-            string[] files = { "WaaSMedicSvc.dll", "wuaueng.dll" };
-            foreach (var file in files)
-            {
-                string filePath = $"C:\\Windows\\System32\\{file}";
-                string backupPath = $"{filePath}_BAK";
-
-                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c takeown /f {filePath}");
-                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c icacls {filePath} /grant Everyone:F");
-                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c rename {filePath} {backupPath}");
-                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c icacls {backupPath} /setowner \"NT SERVICE\\TrustedInstaller\" & icacls {backupPath} /remove Everyone");
-            }
-        }
-
-        static void UpdateRegistry()
-        {
-            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\WaaSMedicSvc\" /v Start /t REG_DWORD /d 4 /f");
-            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU\" /v NoAutoUpdate /t REG_DWORD /d 1 /f");
-        }
-
-        static void DeleteUpdateFiles()
-        {
-            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c erase /f /s /q C:\\Windows\\SoftwareDistribution\\*.*");
-            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c rmdir /s /q C:\\Windows\\SoftwareDistribution");
-        }
-
-        static void DisableScheduledTasks()
-        {
-            string powershellCmd = "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\UpdateOrchestrator\\*' | Disable-ScheduledTask; " +
-                                   "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WaaSMedic\\*' | Disable-ScheduledTask; " +
-                                   "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WindowsUpdate\\*' | Disable-ScheduledTask;";
-            ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c powershell -Command \"{powershellCmd}\"");
-        }
-
-        static void StopService(string serviceName)
-        {
-            try
-            {
-                using (ServiceController sc = new ServiceController(serviceName))
-                {
-                    if (sc.Status != ServiceControllerStatus.Stopped &&
-                        sc.Status != ServiceControllerStatus.StopPending)
-                    {
-                        Logger.Log($"Stopping service {serviceName}...", Level.WARNING);
-                        sc.Stop();
-                        sc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
-                        Logger.Log($"{serviceName} stopped successfully.", Level.SUCCESS);
-                    }
-                    else
-                    {
-                        Logger.Log($"{serviceName} is already stopped.", Level.WARNING);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Error stopping service {serviceName}: {ex.Message}", Level.ERROR);
-            }
-        }
-
-        static void SetServiceStartupType(string serviceName, string startMode)
-        {
-            try
-            {
-                // Use WMI to change the service startup type
-                string query = $"Win32_Service.Name='{serviceName}'";
-                using (ManagementObject service = new ManagementObject(query))
-                {
-                    ManagementBaseObject inParams = service.GetMethodParameters("ChangeStartMode");
-                    inParams["StartMode"] = startMode;
-                    ManagementBaseObject outParams = service.InvokeMethod("ChangeStartMode", inParams, null);
-                    uint returnValue = (uint)outParams["ReturnValue"];
-                    if (returnValue == 0)
-                        Logger.Log($"{serviceName} startup type set to {startMode}.", Level.SUCCESS);
-                    else
-                        Logger.Log($"Failed to change startup type for {serviceName}. Error code: {returnValue}", Level.ERROR);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Error setting startup type for {serviceName}: {ex.Message}", Level.ERROR);
-            }
-        }
-
-        static void ConfigureWindowsUpdateRegistry()
         {
             try
             {
@@ -208,6 +83,54 @@ namespace DebloaterTool
                 Logger.Log("Registry configuration error: " + ex.Message, Level.ERROR);
                 Logger.Log("Registry configuration error stack trace: " + ex.StackTrace, Level.ERROR);
             }
+        }
+
+        /// <summary>
+        /// Disables Windows Update using an alternative approach:
+        /// downloads a supporting executable (PowerRun.exe), then disables update services,
+        /// renames system files, updates the registry, deletes update files, and disables scheduled tasks.
+        /// </summary>
+        public static void DisableWindowsUpdateV2()
+        {
+            Logger.Log("Downloading...");
+            string powerRunPath = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.exe");
+            if (!ComGlobal.DownloadFile(ExternalLinks.powerRun, powerRunPath))
+            {
+                Logger.Log("Failed to download PowerRun.exe. Exiting...", Level.ERROR);
+                return;
+            }
+            Logger.Log("Download complete.");
+
+            string[] services = { "wuauserv", "UsoSvc", "uhssvc", "WaaSMedicSvc" };
+            foreach (var service in services)
+            {
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c net stop {service}");
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c sc config {service} start= disabled");
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c sc failure {service} reset= 0 actions= \"\"");
+            }
+
+            string[] files = { "WaaSMedicSvc.dll", "wuaueng.dll" };
+            foreach (var file in files)
+            {
+                string filePath = $"C:\\Windows\\System32\\{file}";
+                string backupPath = $"{filePath}_BAK";
+
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c takeown /f {filePath}");
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c icacls {filePath} /grant Everyone:F");
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c rename {filePath} {backupPath}");
+                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c icacls {backupPath} /setowner \"NT SERVICE\\TrustedInstaller\" & icacls {backupPath} /remove Everyone");
+            }
+
+            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\WaaSMedicSvc\" /v Start /t REG_DWORD /d 4 /f");
+            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU\" /v NoAutoUpdate /t REG_DWORD /d 1 /f");
+
+            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c erase /f /s /q C:\\Windows\\SoftwareDistribution\\*.*");
+            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c rmdir /s /q C:\\Windows\\SoftwareDistribution");
+
+            string powershellCmd = "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\UpdateOrchestrator\\*' | Disable-ScheduledTask; " +
+                       "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WaaSMedic\\*' | Disable-ScheduledTask; " +
+                       "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WindowsUpdate\\*' | Disable-ScheduledTask;";
+            ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c powershell -Command \"{powershellCmd}\"");
         }
     }
 }

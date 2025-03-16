@@ -4,6 +4,11 @@ namespace DebloaterTool
 {
     internal class WinCostumization
     {
+        /// <summary>
+        /// Disables various Windows snap tools by modifying registry settings for the current user.
+        /// This function turns off window arrangement, joint resizing, Snap Assist, Snap Fill,
+        /// and the Snap Assist flyout.
+        /// </summary>
         public static void DisableSnapTools()
         {
             RegistryModification[] registryModifications = new RegistryModification[]
@@ -18,8 +23,14 @@ namespace DebloaterTool
             ComRegedit.InstallRegModification(registryModifications);
         }
 
+        /// <summary>
+        /// Enables the Ultimate Performance power plan by checking if it is installed,
+        /// installing it if necessary, extracting its GUID from the updated plan list, 
+        /// and then setting it as the active power plan.
+        /// </summary>
         public static void EnableUltimatePerformance()
         {
+            // Retrieve the current list of power plans.
             string ultimatePlan = ComGlobal.RunCommand("cmd.exe", "/c powercfg -list", redirect: true);
             if (ultimatePlan.Contains("Ultimate Performance"))
             {
@@ -32,32 +43,37 @@ namespace DebloaterTool
                 Logger.Log("> Ultimate Performance plan installed.");
             }
 
+            // Retrieve the updated list of power plans.
             string updatedPlanList = ComGlobal.RunCommand("cmd.exe", "/c powercfg -list", redirect: true);
-            string ultimatePlanGUID = ExtractGUID(updatedPlanList, "Ultimate Performance");
-            if (!string.IsNullOrEmpty(ultimatePlanGUID))
-            {
-                ComGlobal.RunCommand("cmd.exe", $"/c powercfg -setactive {ultimatePlanGUID}");
-                Logger.Log("Ultimate Performance plan is now active.");
-            }
-        }
 
-        static string ExtractGUID(string powercfgOutput, string planName)
-        {
-            foreach (string line in powercfgOutput.Split('\n'))
+            // Inline logic to extract the GUID for the Ultimate Performance plan.
+            string ultimatePlanGUID = string.Empty;
+            foreach (string line in updatedPlanList.Split('\n'))
             {
-                if (line.Contains(planName))
+                if (line.Contains("Ultimate Performance"))
                 {
                     string[] parts = line.Split(' ');
                     foreach (string part in parts)
                     {
                         if (part.Contains("-"))
                         {
-                            return part.Trim();
+                            ultimatePlanGUID = part.Trim();
+                            break;
                         }
+                    }
+                    if (!string.IsNullOrEmpty(ultimatePlanGUID))
+                    {
+                        break;
                     }
                 }
             }
-            return string.Empty;
+
+            // Set the Ultimate Performance plan as the active power plan if its GUID was found.
+            if (!string.IsNullOrEmpty(ultimatePlanGUID))
+            {
+                ComGlobal.RunCommand("cmd.exe", $"/c powercfg -setactive {ultimatePlanGUID}");
+                Logger.Log("Ultimate Performance plan is now active.");
+            }
         }
     }
 }

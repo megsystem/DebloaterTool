@@ -37,8 +37,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -56,6 +54,7 @@
     <Compile Include="Modules\ComFunction\ComGlobal.cs" />
     <Compile Include="Logger\LevelHelper.cs" />
     <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Modules\ComFunction\ComImports.cs" />
     <Compile Include="Modules\ComFunction\ComRegedit.cs" />
     <Compile Include="Modules\DebloaterTools.cs" />
     <Compile Include="Modules\RemoveUnnecessary.cs" />

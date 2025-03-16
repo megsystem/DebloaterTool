@@ -2,6 +2,10 @@
 {
     internal class WinStore
     {
+        /// <summary>
+        /// Uninstalls Microsoft Store by executing PowerShell commands to remove the Windows Store
+        /// package for the current user as well as for all users on the system.
+        /// </summary>
         public static void UninstallWindowsStore()
         {
             // Remove Microsoft Store for the current user.

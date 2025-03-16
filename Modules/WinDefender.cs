@@ -4,6 +4,12 @@ namespace DebloaterTool
 {
     internal class WinDefender
     {
+        /// <summary>
+        /// Uninstalls Windows Defender components by:
+        /// - Downloading a helper executable (PowerRun.exe) to elevate commands.
+        /// - Importing a registry file to apply Defender-related configuration changes.
+        /// - Deleting specific files and directories associated with Windows Defender.
+        /// </summary>
         public static void Uninstall()
         {
             string powerRunPath = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.exe");
@@ -42,7 +48,7 @@ namespace DebloaterTool
                 "C:\\Windows\\System32\\WebThreatDefSvc"
             };
 
-            string tempRegFile = Path.Combine(Path.GetTempPath(), "temp_reg_file.reg");
+            string tempRegFile = Path.Combine(Path.GetTempPath(), "defenderkiller.reg");
             File.WriteAllText(tempRegFile, Config.Resource.defender);
 
             // Import the registry file silently using regedit (/s switch).

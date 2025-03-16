@@ -9,6 +9,9 @@ namespace DebloaterTool
 {
     internal class Ungoogled
     {
+        /// <summary>
+        /// Changes the homepage setting for the ungoogled browser to a custom URL.
+        /// </summary>
         public static void ChangeUngoogledHomePage()
         {
             string argToAdd = $"--custom-ntp={ExternalLinks.tabLink}";
@@ -66,6 +69,9 @@ namespace DebloaterTool
             Logger.Log("Shortcut update complete.", Level.SUCCESS);
         }
 
+        /// <summary>
+        /// Installs or reinstalls the ungoogled browser by downloading its installer and executing it.
+        /// </summary>
         public static void UngoogledInstaller()
         {
             try
