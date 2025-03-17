@@ -2,9 +2,11 @@
     "WPFTweaks":  [
                       "WPFTweaksDiskCleanup",
                       "WPFTweaksDebloatAdobe",
+                      "WPFTweaksBlockAdobeNet",
                       "WPFTweaksDisableNotifications",
                       "WPFTweaksWifi",
                       "WPFTweaksHome",
+                      "WPFTweaksDVR",
                       "WPFTweaksRemoveEdge",
                       "WPFTweaksRemoveHomeGallery",
                       "WPFTweaksDisableLMS1",
@@ -21,7 +23,9 @@
                       "WPFTweaksServices",
                       "WPFTweaksDeleteTempFiles",
                       "WPFTweaksRecallOff",
-                      "WPFTweaksDisableBGapps"
+                      "WPFTweaksDisableBGapps",
+                      "WPFTweaksEndTaskOnTaskbar",
+                      "WPFTweaksStorage"
                   ],
     "WPFFeature":  [
                        "WPFFeaturesSandbox",
