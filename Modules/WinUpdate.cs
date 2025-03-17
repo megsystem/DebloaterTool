@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using System;
 using System.IO;
 
 namespace DebloaterTool
@@ -13,75 +12,24 @@ namespace DebloaterTool
         /// </summary>
         public static void DisableWindowsUpdateV1()
         {
-            try
+            RegistryModification[] modifications = new RegistryModification[]
             {
                 // 1. Block Windows Update from connecting to the internet.
-                using (RegistryKey wuKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"))
-                {
-                    if (wuKey != null)
-                    {
-                        wuKey.SetValue("DoNotConnectToWindowsUpdateInternetLocations", 1, RegistryValueKind.DWord);
-                        Logger.Log("Registry updated: DoNotConnectToWindowsUpdateInternetLocations set to 1.", Level.SUCCESS);
-                    }
-                    else
-                    {
-                        Logger.Log("Failed to open or create the WindowsUpdate registry key.", Level.ERROR);
-                    }
-                }
+                new RegistryModification(Registry.LocalMachine, "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate", "DoNotConnectToWindowsUpdateInternetLocations", RegistryValueKind.DWord, 1),
+                // 2. Disable Automatic Updates.
+                new RegistryModification(Registry.LocalMachine, "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU", "NoAutoUpdate", RegistryValueKind.DWord, 1),
+                new RegistryModification(Registry.LocalMachine, "SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU", "AUOptions", RegistryValueKind.DWord, 2),
+                // 3. Disable Windows Update Delivery Optimization (Windows 10 feature).
+                new RegistryModification(Registry.LocalMachine, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\DeliveryOptimization\\Config", "DODownloadMode", RegistryValueKind.DWord, 0),
+                // 4. Pause Windows Updates indefinitely.
+                new RegistryModification(Registry.LocalMachine, "SOFTWARE\\Microsoft\\WindowsUpdate\\UX\\Settings", "PauseFeatureUpdatesStartTime", RegistryValueKind.String, "2000-01-01T00:00:00Z"),
+                new RegistryModification(Registry.LocalMachine, "SOFTWARE\\Microsoft\\WindowsUpdate\\UX\\Settings", "PauseQualityUpdatesStartTime", RegistryValueKind.String, "2000-01-01T00:00:00Z"),
+                new RegistryModification(Registry.LocalMachine, "SOFTWARE\\Microsoft\\WindowsUpdate\\UX\\Settings", "PauseFeatureUpdatesEndTime", RegistryValueKind.String, "3000-12-31T11:59:59Z"),
+                new RegistryModification(Registry.LocalMachine, "SOFTWARE\\Microsoft\\WindowsUpdate\\UX\\Settings", "PauseQualityUpdatesEndTime", RegistryValueKind.String, "3000-12-31T11:59:59Z"),
+                new RegistryModification(Registry.LocalMachine, "SOFTWARE\\Microsoft\\WindowsUpdate\\UX\\Settings", "PauseUpdatesExpiryTime", RegistryValueKind.String, "3000-12-31T11:59:59Z")
+            };
 
-                // 2. Disable Automatic Updates by modifying Windows Update policies.
-                using (RegistryKey auKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"))
-                {
-                    if (auKey == null)
-                        throw new Exception("Failed to open or create the WindowsUpdate\\AU registry key.");
-
-                    auKey.SetValue("NoAutoUpdate", 1, RegistryValueKind.DWord);
-                    auKey.SetValue("AUOptions", 2, RegistryValueKind.DWord);
-                    Logger.Log("Registry updated: Automatic updates disabled (NoAutoUpdate=1, AUOptions=2).", Level.SUCCESS);
-                }
-
-                // 3. Disable Windows Update Delivery Optimization (applies to Windows 10).
-                using (RegistryKey doKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config", writable: true))
-                {
-                    if (doKey != null)
-                    {
-                        doKey.SetValue("DODownloadMode", 0, RegistryValueKind.DWord);
-                        Logger.Log("Registry updated: Delivery Optimization disabled (DODownloadMode=0).", Level.SUCCESS);
-                    }
-                    else
-                    {
-                        Logger.Log("Delivery Optimization registry key not found.", Level.ERROR);
-                    }
-                }
-
-                // 4. Set registry values to pause updates.
-                using (RegistryKey uxKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\WindowsUpdate\UX\Settings"))
-                {
-                    if (uxKey == null)
-                        throw new Exception("Failed to open or create the WindowsUpdate\\UX\\Settings registry key.");
-
-                    string dateStart = "2000-01-01T00:00:00Z";
-                    string dateEnd = "3000-12-31T11:59:59Z";
-
-                    uxKey.SetValue("PauseFeatureUpdatesStartTime", dateStart, RegistryValueKind.String);
-                    uxKey.SetValue("PauseQualityUpdatesStartTime", dateStart, RegistryValueKind.String);
-                    // Attempt to set PauseUpdatesStartTime; ignore errors if they occur.
-                    try
-                    {
-                        uxKey.SetValue("PauseUpdatesStartTime", dateStart, RegistryValueKind.String);
-                    }
-                    catch { /* Silently ignore errors */ }
-                    uxKey.SetValue("PauseFeatureUpdatesEndTime", dateEnd, RegistryValueKind.String);
-                    uxKey.SetValue("PauseQualityUpdatesEndTime", dateEnd, RegistryValueKind.String);
-                    uxKey.SetValue("PauseUpdatesExpiryTime", dateEnd, RegistryValueKind.String);
-                    Logger.Log("Registry updated: Update pause settings configured.", Level.SUCCESS);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log("Registry configuration error: " + ex.Message, Level.ERROR);
-                Logger.Log("Registry configuration error stack trace: " + ex.StackTrace, Level.ERROR);
-            }
+            ComRegedit.InstallRegModification(modifications);
         }
 
         /// <summary>
