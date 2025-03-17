@@ -17,7 +17,7 @@ namespace DebloaterTool
 
             // Run the Welcome Screen and EULA
             var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            Console.Title = $"DebloaterTool V{version.Major}.{version.Minor}.{version.Build}";
+            Console.Title = $"{(IsAdministrator() ? "[Administrator]: " : "")}DebloaterTool V{version.Major}.{version.Minor}.{version.Build}";
             Console.WriteLine("+=================================================================================================================+");
             Console.WriteLine("|                                                                                                                 |");
             Console.WriteLine("|   ██████╗ ███████╗██████╗ ██╗     ██████╗  █████╗ ████████╗███████╗██████╗ ████████╗ ██████╗  ██████╗ ██╗       |");
