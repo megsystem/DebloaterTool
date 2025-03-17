@@ -128,7 +128,7 @@ namespace DebloaterTool
                     RemoveUnnecessary.ApplyRegistryChanges();
                     RemoveUnnecessary.UninstallEdge();
                     RemoveUnnecessary.CleanOutlookAndOneDrive();
-                    WinStore.UninstallWindowsStore();
+                    WinStore.Uninstall();
                     WinCostumization.DisableSnapTools();
                     WinCostumization.EnableUltimatePerformance();
                     Ungoogled.UngoogledInstaller();
@@ -162,7 +162,7 @@ namespace DebloaterTool
                     Console.WriteLine("---------------------------------");
 
                     // Uninstall Windows Defender
-                    if (runDefender) WinDefender.Uninstall();
+                    if (runDefender) { WinDefender.Uninstall(); }
 
                     // Run WinUpdate
                     if (runWindowsUpdate)
@@ -172,10 +172,7 @@ namespace DebloaterTool
                     }
 
                     // Run WinStore
-                    if (runWindowsStore)
-                    {
-                        WinStore.UninstallWindowsStore();
-                    }
+                    if (runWindowsStore) { WinStore.Uninstall(); }
 
                     // Run DebloaterTools
                     if (runDebloater)
