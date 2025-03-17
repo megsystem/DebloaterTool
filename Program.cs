@@ -66,7 +66,8 @@ namespace DebloaterTool
             {
                 if (!RequestYesOrNo("Do you accept the EULA?"))
                 {
-                    Console.WriteLine("EULA declined. Press ENTER to close.");
+                    Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
+                    Logger.Log("EULA declined!", Level.CRITICAL);
                     Console.ReadKey();
                     Environment.Exit(0);
                 }
@@ -75,7 +76,8 @@ namespace DebloaterTool
             // Check if the program is runned with administrator rights!
             if (!IsAdministrator())
             {
-                DisplayMessage("This application must be run with administrator rights!", ConsoleColor.Red);
+                Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
+                Logger.Log("Not runned as administrator!", Level.CRITICAL);
 
                 if (RequestYesOrNo("Do you want to run as administrator?"))
                 {
@@ -83,8 +85,6 @@ namespace DebloaterTool
                 }
                 else
                 {
-                    DisplayMessage("Please restart the program with administrator rights to continue!", ConsoleColor.Red);
-                    Console.ReadKey();
                     Environment.Exit(0);
                 }
             }
@@ -120,6 +120,7 @@ namespace DebloaterTool
                 case 'A': // Complete
                     Console.WriteLine("Running Complete Debloating...");
                     Console.WriteLine("---------------------------------");
+                    Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
                     WinDefender.Uninstall();
                     WinUpdate.DisableWindowsUpdateV1();
                     WinUpdate.DisableWindowsUpdateV2();
@@ -138,6 +139,7 @@ namespace DebloaterTool
                 case 'M': // Minimal
                     Console.WriteLine("Running Minimal Debloating...");
                     Console.WriteLine("---------------------------------");
+                    Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
                     WinUpdate.DisableWindowsUpdateV1();
                     DebloaterTools.RunChrisTool();
                     DebloaterTools.RunRaphiTool();
@@ -160,6 +162,7 @@ namespace DebloaterTool
                     bool runUngoogled = RequestYesOrNo("Do you want to install Ungoogled Chrome?");
                     Console.WriteLine("Running Custom Debloating...");
                     Console.WriteLine("---------------------------------");
+                    Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
 
                     // Uninstall Windows Defender
                     if (runDefender) { WinDefender.Uninstall(); }
@@ -210,14 +213,14 @@ namespace DebloaterTool
 
             // Process completed
             Logger.Log($"Debloating successfull successed (SUCC)", Level.SUCCESS);
-            Logger.Log($"[Debloater by @_giovannigiannone/@fckgiovanni]", Level.WARNING);
+            Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
             if (restart)
             {
                 Process.Start("shutdown.exe", "-r -t 0"); // Restart the computer
             }
             else
             {
-                DisplayMessage("Restart skipped. Process completed. Press ENTER to close.", ConsoleColor.Green);
+                Logger.Log("Restart skipped. Process completed. Press ENTER to close.", Level.ALERT);
                 Console.ReadLine(); // Wait for user to press Enter
             }
 

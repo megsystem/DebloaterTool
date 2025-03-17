@@ -39,14 +39,14 @@ namespace DebloaterTool
         /// </summary>
         public static void DisableWindowsUpdateV2()
         {
-            Logger.Log("Downloading...");
+            Logger.Log($"Downloading from {ExternalLinks.powerRun}...");
             string powerRunPath = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.exe");
             if (!ComGlobal.DownloadFile(ExternalLinks.powerRun, powerRunPath))
             {
-                Logger.Log("Failed to download PowerRun.exe. Exiting...", Level.ERROR);
+                Logger.Log($"Failed to download {ExternalLinks.powerRun}. Skipping...", Level.ERROR);
                 return;
             }
-            Logger.Log("Download complete.");
+            Logger.Log($"Download complete to {powerRunPath}");
 
             string[] services = { "wuauserv", "UsoSvc", "uhssvc", "WaaSMedicSvc" };
             foreach (var service in services)

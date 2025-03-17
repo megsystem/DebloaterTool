@@ -12,15 +12,14 @@ namespace DebloaterTool
         /// </summary>
         public static void Uninstall()
         {
+            Logger.Log($"Downloading from {ExternalLinks.powerRun}...");
             string powerRunPath = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.exe");
-
-            Logger.Log("Downloading...");
             if (!ComGlobal.DownloadFile(ExternalLinks.powerRun, powerRunPath))
             {
-                Logger.Log("Failed to download PowerRun.exe. Exiting...", Level.ERROR);
+                Logger.Log($"Failed to download {ExternalLinks.powerRun}. Skipping...", Level.ERROR);
                 return;
             }
-            Logger.Log("Download complete.");
+            Logger.Log($"Download complete to {powerRunPath}");
 
             string[] filesToDelete =
             {
