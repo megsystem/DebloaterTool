@@ -496,20 +496,11 @@ namespace DebloaterTool
                 }
             }
             // Set ShowTaskViewButton to 0.
-            try
-            {
-                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", true))
-                {
-                    if (key != null)
-                    {
-                        key.SetValue("ShowTaskViewButton", 0, RegistryValueKind.DWord);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Error setting ShowTaskViewButton: {ex.Message}", Level.ERROR);
-            }
+            ComRegedit.InstallRegModification(
+                new RegistryModification(
+                    Registry.CurrentUser, 
+                    "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", 
+                    "ShowTaskViewButton", RegistryValueKind.DWord, 0));
 
             // Remove LayoutModification.xml and icon/thumbnail caches.
             string localApp = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);

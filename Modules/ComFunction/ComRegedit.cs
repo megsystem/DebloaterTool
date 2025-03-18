@@ -26,47 +26,69 @@ namespace DebloaterTool
     {
         public static void InstallRegModification(RegistryModification[] registryModifications)
         {
+            if (registryModifications == null || registryModifications.Length == 0)
+            {
+                Logger.Log("No registry modifications to apply.", Level.WARNING);
+                return;
+            }
+
             Logger.Log("Applying registry changes...", Level.WARNING);
+
+            foreach (var mod in registryModifications)
+            {
+                ApplyModification(mod);
+            }
+
+            Logger.Log("Registry changes applied successfully.", Level.SUCCESS);
+            RestartExplorer();
+        }
+
+        public static void InstallRegModification(RegistryModification mod)
+        {
+            // Delegate single modification call to the array-based method.
+            InstallRegModification(new[] { mod });
+        }
+
+        private static void ApplyModification(RegistryModification mod)
+        {
             try
             {
-                // Apply each registry modification.
-                foreach (RegistryModification mod in registryModifications)
+                using (RegistryKey key = mod.Root.CreateSubKey(mod.SubKey, RegistryKeyPermissionCheck.ReadWriteSubTree))
                 {
-                    try
+                    if (key != null)
                     {
-                        using (RegistryKey key = mod.Root.CreateSubKey(mod.SubKey, RegistryKeyPermissionCheck.ReadWriteSubTree))
-                        {
-                            if (key != null)
-                            {
-                                key.SetValue(mod.ValueName, mod.Value, mod.ValueKind);
-                                Logger.Log($"Updated {mod.Root}\\{mod.SubKey} -> {mod.ValueName} = {mod.Value}", Level.INFO);
-                            }
-                            else
-                            {
-                                Logger.Log($"Failed to open registry key: {mod.SubKey}", Level.ERROR);
-                            }
-                        }
+                        key.SetValue(mod.ValueName, mod.Value, mod.ValueKind);
+                        Logger.Log($"Updated {mod.Root}\\{mod.SubKey} -> {mod.ValueName} = {mod.Value}", Level.INFO);
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        Logger.Log($"Failed to modify {mod.ValueName} in {mod.SubKey}: {ex.Message}", Level.ERROR);
+                        Logger.Log($"Failed to open registry key: {mod.SubKey}", Level.ERROR);
                     }
                 }
-                Logger.Log("Registry changes applied successfully.", Level.SUCCESS);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Failed to modify {mod.ValueName} in {mod.SubKey}: {ex.Message}", Level.ERROR);
+            }
+        }
 
-                // Kill Explorer and restart it.
+        private static void RestartExplorer()
+        {
+            try
+            {
                 ProcessStartInfo psiKill = new ProcessStartInfo("taskkill", "/F /IM explorer.exe")
                 {
                     CreateNoWindow = true,
                     UseShellExecute = false
                 };
+
                 Process.Start(psiKill)?.WaitForExit();
                 Process.Start("explorer.exe");
                 Logger.Log("Explorer restarted to apply registry changes.", Level.SUCCESS);
             }
             catch (Exception ex)
             {
-                Logger.Log($"Error applying registry changes: {ex.Message}", Level.ERROR);
+                Logger.Log($"Error restarting explorer: {ex.Message}", Level.ERROR);
             }
         }
 
