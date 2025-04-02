@@ -40,7 +40,7 @@ namespace DebloaterTool
             Console.WriteLine("By using this software, you agree to the following terms:");
             Console.WriteLine("1. You may not distribute this software without permission.");
             Console.WriteLine("2. The developers are not responsible for any damages.");
-            DisplayMessage("3. Please disable your antivirus before proceeding.", ConsoleColor.DarkYellow);
+            ComDisplay.DisplayMessage("3. Please disable your antivirus before proceeding.", ConsoleColor.DarkYellow);
             Console.WriteLine("---------------------------------");
 
             // Parse arguments to decide which elements to skip.
@@ -52,9 +52,9 @@ namespace DebloaterTool
             var modeArg = args.FirstOrDefault(a => a.StartsWith("--mode="));
             if (modeArg != null)
             {
-                // Expecting something like --mode=A, --mode=M, or --mode=C
+                // Expecting something like --mode=A, --mode=M, --mode=C, or --mode=D
                 var modeValue = modeArg.Split('=')[1].ToUpper();
-                if (modeValue.Length > 0 && "AMC".Contains(modeValue))
+                if (modeValue.Length > 0 && "AMCD".Contains(modeValue))
                 {
                     choice = modeValue[0];
                     Console.WriteLine("Debloating mode selected via args: " + choice);
@@ -64,7 +64,7 @@ namespace DebloaterTool
             // EULA Confirmation (skipped if --skipEULA is provided)
             if (!skipEULA)
             {
-                if (!RequestYesOrNo("Do you accept the EULA?"))
+                if (!ComDisplay.RequestYesOrNo("Do you accept the EULA?"))
                 {
                     Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
                     Logger.Log("EULA declined!", Level.CRITICAL);
@@ -79,7 +79,7 @@ namespace DebloaterTool
                 Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
                 Logger.Log("Not runned as administrator!", Level.CRITICAL);
 
-                if (RequestYesOrNo("Do you want to run as administrator?"))
+                if (ComDisplay.RequestYesOrNo("Do you want to run as administrator?"))
                 {
                     RestartAsAdmin();
                 }
@@ -90,10 +90,10 @@ namespace DebloaterTool
             }
 
             // Restart Confirmation (if --autoRestart is not provided, ask the user)
-            bool restart = autoRestart || RequestYesOrNo("Do you want to restart after the process?");
+            bool restart = autoRestart || ComDisplay.RequestYesOrNo("Do you want to restart after the process?");
 
             // If the mode wasn't set via arguments, ask the user interactively.
-            if (choice != 'A' && choice != 'M' && choice != 'C')
+            if (choice != 'A' && choice != 'M' && choice != 'C' && choice != 'D')
             {
                 do
                 {
@@ -101,17 +101,18 @@ namespace DebloaterTool
                     Console.WriteLine("[A] Complete - Removes all unnecessary apps and services.");
                     Console.WriteLine("[M] Minimal - Removes only bloatware while keeping essential apps.");
                     Console.WriteLine("[C] Custom - Choose what to remove manually.");
-                    Console.Write("Enter your choice (A/M/C): ");
+                    Console.WriteLine("[D] Debug - Enter the name of the module you want to run.");
+                    Console.Write("Enter your choice (A/M/C/D): ");
 
                     choice = char.ToUpper(Console.ReadKey(true).KeyChar); // Read a single key, convert to uppercase
                     Console.WriteLine(choice); // Display the selected key
 
-                    if (choice != 'A' && choice != 'M' && choice != 'C')
+                    if (choice != 'A' && choice != 'M' && choice != 'C' && choice != 'D')
                     {
-                        Console.WriteLine("Invalid choice. Please enter A, M, or C.");
+                        Console.WriteLine("Invalid choice. Please enter A, M, C, or D.");
                     }
 
-                } while (choice != 'A' && choice != 'M' && choice != 'C');
+                } while (choice != 'A' && choice != 'M' && choice != 'C' && choice != 'D');
             }
 
             // Execute based on selection
@@ -153,13 +154,13 @@ namespace DebloaterTool
                     break;
 
                 case 'C': // Custom
-                    bool runDefender = RequestYesOrNo("Do you want to disable Windows Defender?");
-                    bool runWindowsUpdate = RequestYesOrNo("Do you want to disable Windows Update?");
-                    bool runWindowsStore = RequestYesOrNo("Do you want to remove Windows Store?");
-                    bool runDebloater = RequestYesOrNo("Do you want to run Debloater Tools?");
-                    bool runRemoveUnnecessary = RequestYesOrNo("Do you want to remove unnecessary components?");
-                    bool runWinCostumization = RequestYesOrNo("Do you want to set Windows Costumization?");
-                    bool runUngoogled = RequestYesOrNo("Do you want to install Ungoogled Chrome?");
+                    bool runDefender = ComDisplay.RequestYesOrNo("Do you want to disable Windows Defender?");
+                    bool runWindowsUpdate = ComDisplay.RequestYesOrNo("Do you want to disable Windows Update?");
+                    bool runWindowsStore = ComDisplay.RequestYesOrNo("Do you want to remove Windows Store?");
+                    bool runDebloater = ComDisplay.RequestYesOrNo("Do you want to run Debloater Tools?");
+                    bool runRemoveUnnecessary = ComDisplay.RequestYesOrNo("Do you want to remove unnecessary components?");
+                    bool runWinCostumization = ComDisplay.RequestYesOrNo("Do you want to set Windows Costumization?");
+                    bool runUngoogled = ComDisplay.RequestYesOrNo("Do you want to install Ungoogled Chrome?");
                     Console.WriteLine("Running Custom Debloating...");
                     Console.WriteLine("---------------------------------");
                     Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
@@ -206,6 +207,17 @@ namespace DebloaterTool
                         Ungoogled.ChangeUngoogledHomePage();
                     }
                     break;
+
+                case 'D': // Tropical
+                    ComModule.ListModule();
+                    Console.Write("Enter method to execute (e.g. WinDefender.Uninstall): ");
+                    string input = Console.ReadLine();
+                    Console.WriteLine("Running DebugMode Debloating...");
+                    Console.WriteLine("---------------------------------");
+                    Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
+                    ComModule.RunModule(input);
+
+                    break;
             }
 
             // Run Wallpaper
@@ -221,25 +233,11 @@ namespace DebloaterTool
             else
             {
                 Logger.Log("Restart skipped. Process completed. Press ENTER to close.", Level.ALERT);
-                Console.ReadLine(); // Wait for user to press Enter
+                Console.ReadKey(); // Wait for user to press Enter
             }
 
             // End
             return;
-        }
-
-        static bool RequestYesOrNo(string message)
-        {
-            while (true)
-            {
-                Console.Write($"{message} (yes/no): ");
-                string response = Console.ReadLine()?.Trim().ToLower();
-
-                if (response == "yes") return true;
-                if (response == "no") return false;
-
-                Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
-            }
         }
 
         static void RestartAsAdmin()
@@ -267,13 +265,6 @@ namespace DebloaterTool
             var identity = WindowsIdentity.GetCurrent();
             var principal = new WindowsPrincipal(identity);
             return principal.IsInRole(WindowsBuiltInRole.Administrator);
-        }
-
-        static void DisplayMessage(string message, ConsoleColor color)
-        {
-            Console.ForegroundColor = color;
-            Console.WriteLine(message);
-            Console.ResetColor();
         }
     }
 }
