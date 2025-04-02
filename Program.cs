@@ -216,7 +216,6 @@ namespace DebloaterTool
                     Console.WriteLine("---------------------------------");
                     Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
                     ComModule.RunModule(input);
-
                     break;
             }
 
