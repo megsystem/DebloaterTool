@@ -130,6 +130,11 @@ namespace DebloaterTool
                     RemoveUnnecessary.ApplyRegistryChanges();
                     RemoveUnnecessary.UninstallEdge();
                     RemoveUnnecessary.CleanOutlookAndOneDrive();
+                    SecurityPerformance.DisableRemAssistAndRemDesk();
+                    SecurityPerformance.DisableSpectreAndMeltdown();
+                    SecurityPerformance.DisableWinErrorReporting();
+                    SecurityPerformance.DisableTelAndDiagnost();
+                    SecurityPerformance.DisableSMBv1();
                     WinStore.Uninstall();
                     WinCostumization.DisableSnapTools();
                     WinCostumization.EnableUltimatePerformance();
@@ -147,6 +152,10 @@ namespace DebloaterTool
                     RemoveUnnecessary.ApplyRegistryChanges();
                     RemoveUnnecessary.UninstallEdge();
                     RemoveUnnecessary.CleanOutlookAndOneDrive();
+                    SecurityPerformance.DisableRemAssistAndRemDesk();
+                    SecurityPerformance.DisableWinErrorReporting();
+                    SecurityPerformance.DisableTelAndDiagnost();
+                    SecurityPerformance.DisableSMBv1();
                     WinCostumization.DisableSnapTools();
                     WinCostumization.EnableUltimatePerformance();
                     Ungoogled.UngoogledInstaller();
@@ -159,6 +168,7 @@ namespace DebloaterTool
                     bool runWindowsStore = ComDisplay.RequestYesOrNo("Do you want to remove Windows Store?");
                     bool runDebloater = ComDisplay.RequestYesOrNo("Do you want to run Debloater Tools?");
                     bool runRemoveUnnecessary = ComDisplay.RequestYesOrNo("Do you want to remove unnecessary components?");
+                    bool runSecurityPerformance = ComDisplay.RequestYesOrNo("Do you want to run Security Performance?");
                     bool runWinCostumization = ComDisplay.RequestYesOrNo("Do you want to set Windows Costumization?");
                     bool runUngoogled = ComDisplay.RequestYesOrNo("Do you want to install Ungoogled Chrome?");
                     Console.WriteLine("Running Custom Debloating...");
@@ -191,6 +201,16 @@ namespace DebloaterTool
                         RemoveUnnecessary.ApplyRegistryChanges();
                         RemoveUnnecessary.UninstallEdge();
                         RemoveUnnecessary.CleanOutlookAndOneDrive();
+                    }
+
+                    // Run SecurityPerformance
+                    if (runSecurityPerformance)
+                    {
+                        SecurityPerformance.DisableRemAssistAndRemDesk();
+                        SecurityPerformance.DisableSpectreAndMeltdown();
+                        SecurityPerformance.DisableWinErrorReporting();
+                        SecurityPerformance.DisableTelAndDiagnost();
+                        SecurityPerformance.DisableSMBv1();
                     }
 
                     // Run WinCostumization

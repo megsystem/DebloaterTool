@@ -60,6 +60,7 @@
     <Compile Include="Modules\ComFunction\ComModule.cs" />
     <Compile Include="Modules\DebloaterTools.cs" />
     <Compile Include="Modules\RemoveUnnecessary.cs" />
+    <Compile Include="Modules\SecurityPerformance.cs" />
     <Compile Include="Modules\Ungoogled.cs" />
     <Compile Include="Modules\Wallpaper.cs" />
     <Compile Include="Modules\WinCostumization.cs" />
