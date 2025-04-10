@@ -140,6 +140,7 @@ namespace DebloaterTool
                     WinCostumization.EnableUltimatePerformance();
                     Ungoogled.UngoogledInstaller();
                     Ungoogled.ChangeUngoogledHomePage();
+                    BootLogo.Install();
                     break;
 
                 case 'M': // Minimal
@@ -160,6 +161,7 @@ namespace DebloaterTool
                     WinCostumization.EnableUltimatePerformance();
                     Ungoogled.UngoogledInstaller();
                     Ungoogled.ChangeUngoogledHomePage();
+                    BootLogo.Install();
                     break;
 
                 case 'C': // Custom
@@ -171,6 +173,7 @@ namespace DebloaterTool
                     bool runSecurityPerformance = ComDisplay.RequestYesOrNo("Do you want to run Security Performance?");
                     bool runWinCostumization = ComDisplay.RequestYesOrNo("Do you want to set Windows Costumization?");
                     bool runUngoogled = ComDisplay.RequestYesOrNo("Do you want to install Ungoogled Chrome?");
+                    bool runBootLogo = ComDisplay.RequestYesOrNo("Do you want to install custom Boot Logo?");
                     Console.WriteLine("Running Custom Debloating...");
                     Console.WriteLine("---------------------------------");
                     Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
@@ -226,6 +229,9 @@ namespace DebloaterTool
                         Ungoogled.UngoogledInstaller();
                         Ungoogled.ChangeUngoogledHomePage();
                     }
+
+                    // Run BootLogo
+                    if (runBootLogo) { BootLogo.Install(); }
                     break;
 
                 case 'D': // Tropical
