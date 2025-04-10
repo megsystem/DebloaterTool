@@ -43,6 +43,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="External\ExternalLinks.cs" />
@@ -51,6 +52,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\BootLogo.cs" />
     <Compile Include="Modules\ComFunction\ComDisplay.cs" />
     <Compile Include="Modules\ComFunction\ComGlobal.cs" />
     <Compile Include="Logger\LevelHelper.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="Modules\ComFunction\ComImports.cs" />
     <Compile Include="Modules\ComFunction\ComRegedit.cs" />
     <Compile Include="Modules\ComFunction\ComModule.cs" />
+    <Compile Include="Modules\ComFunction\ComZip.cs" />
     <Compile Include="Modules\DebloaterTools.cs" />
     <Compile Include="Modules\RemoveUnnecessary.cs" />
     <Compile Include="Modules\SecurityPerformance.cs" />
@@ -96,6 +99,7 @@
     <None Include="Config\christitus.json" />
     <None Include="Config\defender.reg" />
     <None Include="External\AutoDebloater.ps1" />
+    <None Include="External\bootlogo.zip" />
     <None Include="External\DebloaterTool.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
