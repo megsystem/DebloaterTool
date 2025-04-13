@@ -29,13 +29,39 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 <a id="features"></a>
 ## Features ✅
 
-- 🗑️ **Remove pre-installed bloatware**
-- 🚫 **Disable unnecessary background services**
-- ⚡ **Improve system speed & responsiveness**
+- 🗑️ **Remove pre-installed bloatware**  
+  Get rid of unnecessary apps that come with Windows.
+
+- 🚫 **Disable unnecessary background services**  
+  Free up system resources by stopping unused services.
+
+- ⚡ **Improve system speed & responsiveness**  
+  Optimize settings for faster boot times and better performance.
+
+- 🌐 **Install Ungoogled Chromium Browser**  
+  A lightweight, privacy-focused alternative to Google Chrome.
+
+- 🖼️ **Change the wallpaper**  
+  Refresh your desktop with a new look — a custom wallpaper included with the tool.
+
+- 🔧 **Modify the boot logo**  
+  Replace the default Windows boot logo with a custom one provided by the tool.
+
+- 🛡️ **Disable Windows Defender**  
+  Turn off real-time protection for performance (use with caution).
+
+- 📡 **Disable Windows Update**  
+  Stop automatic updates that can interrupt your workflow.
+
+- 🧬 **Disable Spectre and Meltdown mitigations**  
+  Boost performance on older CPUs by disabling certain security patches.
+
+- 🛠️ **Disable select unnecessary security features**  
+  Improve speed by turning off non-essential security layers.
 
 > [!WARNING]  
 > * ⚠️ *Disabling essential services may cause system instability. Use with caution!* ⚠️<br>
-> * 🛑 *Some features may disable Windows Updater, affecting system security.* 🛑<br>
+> * 🛑 *Some features disable Windows Update and Defender, affecting system security.* 🛑<br>
 > * 🛟 *It is recommended to create a system restore point before running the tool.* 🛟<br>
 
 <a id="installation"></a>
