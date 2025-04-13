@@ -13,14 +13,14 @@ namespace DebloaterTool
             string bootlogozip = Path.Combine(tempPath, "bootlogo.zip");
 
             // Attempt to download the bootlogo file
-            if (!ComGlobal.DownloadFile(ExternalLinks.bootlogo, bootlogozip))
+            if (!HelperGlobal.DownloadFile(ExternalLinks.bootlogo, bootlogozip))
             {
                 Logger.Log("Failed to download bootlogo. Exiting...", Level.ERROR);
                 return;
             }
 
             Logger.Log("Extracting bootlogo...", Level.INFO);
-            ComZip.ExtractZipFile(bootlogozip, tempPath);
+            HelperZip.ExtractZipFile(bootlogozip, tempPath);
 
             string installCmdPath = Path.Combine(tempPath, "install.cmd");
 

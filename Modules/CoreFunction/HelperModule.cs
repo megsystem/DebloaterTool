@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace DebloaterTool
 {
-    internal class ComModule
+    internal class HelperModule
     {
         public static void ListModule(bool dontshowinmodule = true)
         {
@@ -17,12 +17,12 @@ namespace DebloaterTool
                 if (methods.Any())
                 {
                     // Display the class name without the namespace in a custom color (e.g., Cyan)
-                    ComDisplay.DisplayMessage($"Class: {type.Name}", ConsoleColor.Cyan);
+                    HelperDisplay.DisplayMessage($"Class: {type.Name}", ConsoleColor.Cyan);
 
                     foreach (var method in methods)
                     {
                         // Display the method name with the color Green
-                        ComDisplay.DisplayMessage($"  - Method: {method.Name}()", ConsoleColor.Green);
+                        HelperDisplay.DisplayMessage($"  - Method: {method.Name}()", ConsoleColor.Green);
                     }
                 }
             }

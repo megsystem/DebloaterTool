@@ -2,7 +2,7 @@
 
 namespace DebloaterTool
 {
-    internal class ComDisplay
+    internal class HelperDisplay
     {
         public static void DisplayMessage(string message, ConsoleColor color)
         {

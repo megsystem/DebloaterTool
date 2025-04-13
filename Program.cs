@@ -40,7 +40,7 @@ namespace DebloaterTool
             Console.WriteLine("By using this software, you agree to the following terms:");
             Console.WriteLine("1. You may not distribute this software without permission.");
             Console.WriteLine("2. The developers are not responsible for any damages.");
-            ComDisplay.DisplayMessage("3. Please disable your antivirus before proceeding.", ConsoleColor.DarkYellow);
+            HelperDisplay.DisplayMessage("3. Please disable your antivirus before proceeding.", ConsoleColor.DarkYellow);
             Console.WriteLine("---------------------------------");
 
             // Parse arguments to decide which elements to skip.
@@ -64,7 +64,7 @@ namespace DebloaterTool
             // EULA Confirmation (skipped if --skipEULA is provided)
             if (!skipEULA)
             {
-                if (!ComDisplay.RequestYesOrNo("Do you accept the EULA?"))
+                if (!HelperDisplay.RequestYesOrNo("Do you accept the EULA?"))
                 {
                     Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
                     Logger.Log("EULA declined!", Level.CRITICAL);
@@ -79,7 +79,7 @@ namespace DebloaterTool
                 Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
                 Logger.Log("Not runned as administrator!", Level.CRITICAL);
 
-                if (ComDisplay.RequestYesOrNo("Do you want to run as administrator?"))
+                if (HelperDisplay.RequestYesOrNo("Do you want to run as administrator?"))
                 {
                     RestartAsAdmin();
                 }
@@ -90,7 +90,7 @@ namespace DebloaterTool
             }
 
             // Restart Confirmation (if --autoRestart is not provided, ask the user)
-            bool restart = autoRestart || ComDisplay.RequestYesOrNo("Do you want to restart after the process?");
+            bool restart = autoRestart || HelperDisplay.RequestYesOrNo("Do you want to restart after the process?");
 
             // If the mode wasn't set via arguments, ask the user interactively.
             if (choice != 'A' && choice != 'M' && choice != 'C' && choice != 'D')
@@ -165,15 +165,15 @@ namespace DebloaterTool
                     break;
 
                 case 'C': // Custom
-                    bool runDefender = ComDisplay.RequestYesOrNo("Do you want to disable Windows Defender?");
-                    bool runWindowsUpdate = ComDisplay.RequestYesOrNo("Do you want to disable Windows Update?");
-                    bool runWindowsStore = ComDisplay.RequestYesOrNo("Do you want to remove Windows Store?");
-                    bool runDebloater = ComDisplay.RequestYesOrNo("Do you want to run Debloater Tools?");
-                    bool runRemoveUnnecessary = ComDisplay.RequestYesOrNo("Do you want to remove unnecessary components?");
-                    bool runSecurityPerformance = ComDisplay.RequestYesOrNo("Do you want to run Security Performance?");
-                    bool runWinCostumization = ComDisplay.RequestYesOrNo("Do you want to set Windows Costumization?");
-                    bool runUngoogled = ComDisplay.RequestYesOrNo("Do you want to install Ungoogled Chrome?");
-                    bool runBootLogo = ComDisplay.RequestYesOrNo("Do you want to install custom Boot Logo?");
+                    bool runDefender = HelperDisplay.RequestYesOrNo("Do you want to disable Windows Defender?");
+                    bool runWindowsUpdate = HelperDisplay.RequestYesOrNo("Do you want to disable Windows Update?");
+                    bool runWindowsStore = HelperDisplay.RequestYesOrNo("Do you want to remove Windows Store?");
+                    bool runDebloater = HelperDisplay.RequestYesOrNo("Do you want to run Debloater Tools?");
+                    bool runRemoveUnnecessary = HelperDisplay.RequestYesOrNo("Do you want to remove unnecessary components?");
+                    bool runSecurityPerformance = HelperDisplay.RequestYesOrNo("Do you want to run Security Performance?");
+                    bool runWinCostumization = HelperDisplay.RequestYesOrNo("Do you want to set Windows Costumization?");
+                    bool runUngoogled = HelperDisplay.RequestYesOrNo("Do you want to install Ungoogled Chrome?");
+                    bool runBootLogo = HelperDisplay.RequestYesOrNo("Do you want to install custom Boot Logo?");
                     Console.WriteLine("Running Custom Debloating...");
                     Console.WriteLine("---------------------------------");
                     Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
@@ -235,13 +235,13 @@ namespace DebloaterTool
                     break;
 
                 case 'D': // Tropical
-                    ComModule.ListModule();
+                    HelperModule.ListModule();
                     Console.Write("Enter method to execute (e.g. WinDefender.Uninstall): ");
                     string input = Console.ReadLine();
                     Console.WriteLine("Running DebugMode Debloating...");
                     Console.WriteLine("---------------------------------");
                     Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
-                    ComModule.RunModule(input);
+                    HelperModule.RunModule(input);
                     break;
             }
 

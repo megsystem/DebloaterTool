@@ -2,7 +2,7 @@
 
 namespace DebloaterTool
 {
-    internal class ComImports
+    internal class HelperImports
     {
         // Import SystemParametersInfo from user32.dll to change the desktop wallpaper
         [DllImport("user32.dll", CharSet = CharSet.Auto)]

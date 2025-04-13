@@ -37,7 +37,7 @@ namespace DebloaterTool
             };
 
             // Install Regedit Modification
-            ComRegedit.InstallRegModification(registryModifications);
+            HelperRegedit.InstallRegModification(registryModifications);
         }
 
         // -------------------------
@@ -84,7 +84,7 @@ namespace DebloaterTool
                         string setupPath = Path.Combine(dir, "Installer", "setup.exe");
                         if (File.Exists(setupPath))
                         {
-                            ComGlobal.RunCommand(setupPath, "--uninstall --system-level --verbose-logging --force-uninstall");
+                            HelperGlobal.RunCommand(setupPath, "--uninstall --system-level --verbose-logging --force-uninstall");
                             break;
                         }
                     }
@@ -174,8 +174,8 @@ namespace DebloaterTool
                 {
                     Logger.Log($"Cleaning: {path}", Level.INFO);
                     // Use external commands to take ownership and set permissions.
-                    ComGlobal.RunCommand("takeown", $"/F \"{path}\" /R /D Y");
-                    ComGlobal.RunCommand("icacls", $"\"{path}\" /grant administrators:F /T");
+                    HelperGlobal.RunCommand("takeown", $"/F \"{path}\" /R /D Y");
+                    HelperGlobal.RunCommand("icacls", $"\"{path}\" /grant administrators:F /T");
                     try
                     {
                         if (Directory.Exists(path))
@@ -212,16 +212,16 @@ namespace DebloaterTool
             };
             foreach (var regKey in edgeRegKeys)
             {
-                ComRegedit.DeleteRegistryKey(Registry.LocalMachine, regKey);
+                HelperRegedit.DeleteRegistryKey(Registry.LocalMachine, regKey);
             }
             // Delete the HKCU key for Edge.
-            ComRegedit.DeleteRegistryKey(Registry.CurrentUser, @"Software\Microsoft\Edge");
+            HelperRegedit.DeleteRegistryKey(Registry.CurrentUser, @"Software\Microsoft\Edge");
 
             // Force uninstall EdgeUpdate.
             string edgeUpdatePath = Path.Combine(programFilesX86, "Microsoft", "EdgeUpdate", "MicrosoftEdgeUpdate.exe");
             if (File.Exists(edgeUpdatePath))
             {
-                ComGlobal.RunCommand(edgeUpdatePath, "/uninstall");
+                HelperGlobal.RunCommand(edgeUpdatePath, "/uninstall");
             }
 
             // Remove EdgeUpdate services.
@@ -235,8 +235,8 @@ namespace DebloaterTool
             {
                 try
                 {
-                    ComGlobal.RunCommand("sc", $"stop {service}");
-                    ComGlobal.RunCommand("sc", $"delete {service}");
+                    HelperGlobal.RunCommand("sc", $"stop {service}");
+                    HelperGlobal.RunCommand("sc", $"delete {service}");
                 }
                 catch (Exception ex)
                 {
@@ -250,7 +250,7 @@ namespace DebloaterTool
                 var edgeSetupFiles = Directory.GetFiles(Path.Combine(programFilesX86, "Microsoft", "Edge", "Application"), "setup.exe", SearchOption.AllDirectories);
                 if (edgeSetupFiles.Length > 0)
                 {
-                    ComGlobal.RunCommand(edgeSetupFiles[0], "--uninstall --system-level --verbose-logging --force-uninstall");
+                    HelperGlobal.RunCommand(edgeSetupFiles[0], "--uninstall --system-level --verbose-logging --force-uninstall");
                 }
             }
             catch { }
@@ -372,10 +372,10 @@ namespace DebloaterTool
             Thread.Sleep(2000);
 
             // Remove Outlook apps (using PowerShell commands).
-            ComGlobal.RunCommand("powershell", "-Command \"Get-AppxPackage *Microsoft.Office.Outlook* | Remove-AppxPackage\"");
-            ComGlobal.RunCommand("powershell", "-Command \"Get-AppxProvisionedPackage -Online | Where-Object {$_.PackageName -like '*Microsoft.Office.Outlook*'} | Remove-AppxProvisionedPackage -Online\"");
-            ComGlobal.RunCommand("powershell", "-Command \"Get-AppxPackage *Microsoft.OutlookForWindows* | Remove-AppxPackage\"");
-            ComGlobal.RunCommand("powershell", "-Command \"Get-AppxProvisionedPackage -Online | Where-Object {$_.PackageName -like '*Microsoft.OutlookForWindows*'} | Remove-AppxProvisionedPackage -Online\"");
+            HelperGlobal.RunCommand("powershell", "-Command \"Get-AppxPackage *Microsoft.Office.Outlook* | Remove-AppxPackage\"");
+            HelperGlobal.RunCommand("powershell", "-Command \"Get-AppxProvisionedPackage -Online | Where-Object {$_.PackageName -like '*Microsoft.Office.Outlook*'} | Remove-AppxProvisionedPackage -Online\"");
+            HelperGlobal.RunCommand("powershell", "-Command \"Get-AppxPackage *Microsoft.OutlookForWindows* | Remove-AppxPackage\"");
+            HelperGlobal.RunCommand("powershell", "-Command \"Get-AppxProvisionedPackage -Online | Where-Object {$_.PackageName -like '*Microsoft.OutlookForWindows*'} | Remove-AppxProvisionedPackage -Online\"");
 
             // Remove Outlook folders.
             string windowsAppsPath = @"C:\Program Files\WindowsApps";
@@ -386,8 +386,8 @@ namespace DebloaterTool
                 {
                     try
                     {
-                        ComGlobal.RunCommand("takeown", $"/f \"{folder}\" /r /d Y");
-                        ComGlobal.RunCommand("icacls", $"\"{folder}\" /grant administrators:F /T", redirect:false);
+                        HelperGlobal.RunCommand("takeown", $"/f \"{folder}\" /r /d Y");
+                        HelperGlobal.RunCommand("icacls", $"\"{folder}\" /grant administrators:F /T", redirect:false);
                         Directory.Delete(folder, true);
                         Logger.Log($"Deleted Outlook folder: {folder}", Level.SUCCESS);
                     }
@@ -496,7 +496,7 @@ namespace DebloaterTool
                 }
             }
             // Set ShowTaskViewButton to 0.
-            ComRegedit.InstallRegModification(
+            HelperRegedit.InstallRegModification(
                 new RegistryModification(
                     Registry.CurrentUser, 
                     "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", 
@@ -537,7 +537,7 @@ namespace DebloaterTool
             }
             if (File.Exists(oneDriveSetupPath))
             {
-                ComGlobal.RunCommand(oneDriveSetupPath, "/uninstall");
+                HelperGlobal.RunCommand(oneDriveSetupPath, "/uninstall");
             }
 
             string[] oneDrivePaths = new string[]
@@ -580,7 +580,7 @@ namespace DebloaterTool
             };
             foreach (var regKey in oneDriveRegKeys)
             {
-                ComRegedit.DeleteRegistryKey(Registry.ClassesRoot, regKey);
+                HelperRegedit.DeleteRegistryKey(Registry.ClassesRoot, regKey);
             }
 
             // Restart Explorer.

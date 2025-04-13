@@ -22,7 +22,7 @@ namespace DebloaterTool
         }
     }
 
-    internal class ComRegedit
+    internal class HelperRegedit
     {
         public static void InstallRegModification(RegistryModification[] registryModifications)
         {

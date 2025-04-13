@@ -3,7 +3,7 @@ using System.IO;
 
 namespace DebloaterTool
 {
-    internal class ComZip
+    internal class HelperZip
     {
         // Make sure that any method calling this runs on an STA thread.
         public static void ExtractZipFile(string zipFilePath, string extractPath)

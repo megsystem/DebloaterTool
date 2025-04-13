@@ -29,7 +29,7 @@ namespace DebloaterTool
                 new RegistryModification(Registry.LocalMachine, "SOFTWARE\\Microsoft\\WindowsUpdate\\UX\\Settings", "PauseUpdatesExpiryTime", RegistryValueKind.String, "3000-12-31T11:59:59Z")
             };
 
-            ComRegedit.InstallRegModification(modifications);
+            HelperRegedit.InstallRegModification(modifications);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace DebloaterTool
         {
             Logger.Log($"Downloading from {ExternalLinks.powerRun}...");
             string powerRunPath = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.exe");
-            if (!ComGlobal.DownloadFile(ExternalLinks.powerRun, powerRunPath))
+            if (!HelperGlobal.DownloadFile(ExternalLinks.powerRun, powerRunPath))
             {
                 Logger.Log($"Failed to download {ExternalLinks.powerRun}. Skipping...", Level.ERROR);
                 return;
@@ -51,9 +51,9 @@ namespace DebloaterTool
             string[] services = { "wuauserv", "UsoSvc", "uhssvc", "WaaSMedicSvc" };
             foreach (var service in services)
             {
-                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c net stop {service}");
-                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c sc config {service} start= disabled");
-                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c sc failure {service} reset= 0 actions= \"\"");
+                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c net stop {service}");
+                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c sc config {service} start= disabled");
+                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c sc failure {service} reset= 0 actions= \"\"");
             }
 
             string[] files = { "WaaSMedicSvc.dll", "wuaueng.dll" };
@@ -62,22 +62,22 @@ namespace DebloaterTool
                 string filePath = $"C:\\Windows\\System32\\{file}";
                 string backupPath = $"{filePath}_BAK";
 
-                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c takeown /f {filePath}");
-                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c icacls {filePath} /grant Everyone:F");
-                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c rename {filePath} {backupPath}");
-                ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c icacls {backupPath} /setowner \"NT SERVICE\\TrustedInstaller\" & icacls {backupPath} /remove Everyone");
+                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c takeown /f {filePath}");
+                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c icacls {filePath} /grant Everyone:F");
+                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c rename {filePath} {backupPath}");
+                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c icacls {backupPath} /setowner \"NT SERVICE\\TrustedInstaller\" & icacls {backupPath} /remove Everyone");
             }
 
-            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\WaaSMedicSvc\" /v Start /t REG_DWORD /d 4 /f");
-            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU\" /v NoAutoUpdate /t REG_DWORD /d 1 /f");
+            HelperGlobal.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\WaaSMedicSvc\" /v Start /t REG_DWORD /d 4 /f");
+            HelperGlobal.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU\" /v NoAutoUpdate /t REG_DWORD /d 1 /f");
 
-            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c erase /f /s /q C:\\Windows\\SoftwareDistribution\\*.*");
-            ComGlobal.RunCommand(powerRunPath, "cmd.exe /c rmdir /s /q C:\\Windows\\SoftwareDistribution");
+            HelperGlobal.RunCommand(powerRunPath, "cmd.exe /c erase /f /s /q C:\\Windows\\SoftwareDistribution\\*.*");
+            HelperGlobal.RunCommand(powerRunPath, "cmd.exe /c rmdir /s /q C:\\Windows\\SoftwareDistribution");
 
             string powershellCmd = "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\UpdateOrchestrator\\*' | Disable-ScheduledTask; " +
                        "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WaaSMedic\\*' | Disable-ScheduledTask; " +
                        "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WindowsUpdate\\*' | Disable-ScheduledTask;";
-            ComGlobal.RunCommand(powerRunPath, $"cmd.exe /c powershell -Command \"{powershellCmd}\"");
+            HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c powershell -Command \"{powershellCmd}\"");
         }
     }
 }

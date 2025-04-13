@@ -19,7 +19,7 @@ namespace DebloaterTool
                 Logger.Log("Downloading custom wallpaper...");
 
                 // Attempt to download the wallpaper file
-                if (!ComGlobal.DownloadFile(ExternalLinks.wallpaper, savePath))
+                if (!HelperGlobal.DownloadFile(ExternalLinks.wallpaper, savePath))
                 {
                     Logger.Log("Failed to download wallpaper. Exiting...", Level.ERROR);
                     return;
@@ -28,11 +28,11 @@ namespace DebloaterTool
                 Logger.Log("Wallpaper downloaded successfully.");
 
                 // Apply the downloaded image as the desktop wallpaper
-                int result = ComImports.SystemParametersInfo(
-                    ComImports.SPI_SETDESKWALLPAPER, 
+                int result = HelperImports.SystemParametersInfo(
+                    HelperImports.SPI_SETDESKWALLPAPER, 
                     0, 
                     savePath, 
-                    ComImports.SPIF_UPDATEINIFILE | ComImports.SPIF_SENDCHANGE
+                    HelperImports.SPIF_UPDATEINIFILE | HelperImports.SPIF_SENDCHANGE
                 );
 
                 // Check if the wallpaper was successfully changed
