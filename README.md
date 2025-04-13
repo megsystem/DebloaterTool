@@ -56,7 +56,7 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 - 🧬 **Disable Spectre and Meltdown mitigations**  
   Boost performance on older CPUs by disabling certain security patches.
 
-- 🛠️ **Disable select unnecessary security features**  
+- 🛠️ **Disable unnecessary security features**  
   Improve speed by turning off non-essential security layers.
 
 > [!WARNING]  
