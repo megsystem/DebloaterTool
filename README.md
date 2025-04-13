@@ -26,8 +26,8 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 
 ---
 
-## Features ✅
 <a id="features"></a>
+## Features ✅
 
 - 🗑️ **Remove pre-installed bloatware**
 - 🚫 **Disable unnecessary background services**
@@ -38,11 +38,11 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 > * 🛑 *Some features may disable Windows Updater, affecting system security.* 🛑<br>
 > * 🛟 *It is recommended to create a system restore point before running the tool.* 🛟<br>
 
-## Installation 📥
 <a id="installation"></a>
+## Installation 📥
 
-### 📦 Option 1: Using the `Compiled Version` (For Ease of Use)
 <a id="compiled-version"></a>
+### 📦 Option 1: Using the `Compiled Version` (For Ease of Use)
 
 1. **Download the Executable:**
    - Visit the [DebloaterTool Releases Page](https://github.com/megsystem/DebloaterTool/releases) and download `DebloaterTool.exe`.  
@@ -51,8 +51,8 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 2. **Run the Application:**
    - Double-click on `DebloaterTool.exe` to launch the tool. **Ensure you run it as an administrator.**
 
-### ⌨️ Option 2: Running the Command Using the `Command Line`
 <a id="use-command-line"></a>
+### ⌨️ Option 2: Running the Command Using the `Command Line`
 
 1. **Open a Command Execution Tool:**  
    - You can use **Command Prompt**, **PowerShell**, or even the **Windows Run Dialog** (`Win + R`) — whichever you prefer for running commands.
@@ -74,11 +74,11 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 4. **Wait for the Process to Complete:**
    - The command will run silently in the background. Once finished, the DebloaterTool should be ready for use.
 
-## 📸 Screenshots
 <a id="screenshots"></a>
+## 📸 Screenshots
 
-### 🧰 DebloaterTool Interface
 <a id="debloatertool-interface"></a>
+### 🧰 DebloaterTool Interface
 
 | UI |
 |----|
@@ -90,8 +90,8 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 
 ---
 
-### 💻 Windows 10
 <a id="windows-10-examples"></a>
+### 💻 Windows 10
 
 | Bootloader |
 |------------|
@@ -107,8 +107,8 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 
 ---
 
-### 💻 Windows 11
 <a id="windows-11-examples"></a>
+### 💻 Windows 11
 
 | Bootloader |
 |------------|
@@ -122,18 +122,18 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 |--------|
 | ![Result - WIN11](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win11.result.png) |
 
-## Contributing 🤝
 <a id="contributing"></a>
+## Contributing 🤝
 
 Pull requests are welcome! If you have suggestions for improvements, feel free to submit an issue or a PR.
 
-## License 📜
 <a id="license"></a>
+## License 📜
 
 This project is licensed under the MIT License. See `LICENSE` for details.
 
-## Disclaimer 🛑
 <a id="disclaimer"></a>
+## Disclaimer 🛑
 
 **Use DebloaterTool at your own risk.**  
 This tool is provided "as-is," without any warranty or guarantee of stability. Disabling certain services might result in system issues, so ensure that you create a system restore point before usage.
