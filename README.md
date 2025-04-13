@@ -51,8 +51,12 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 ## Screenshots 📷
 ![DebloaterTool UI](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/1.png)
 ![DebloaterTool Process](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/2.png)
-![Final Result - WIN11](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/3.png)
-![Final Result - WIN10](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/4.png)
+![Bootloader - WIN10](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win10.bootloader.png)
+![Desktop - WIN10](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win10.desktop.png)
+![Result - WIN10](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win10.result.png)
+![Bootloader - WIN11](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win11.bootloader.png)
+![Desktop - WIN11](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win11.desktop.png)
+![Result - WIN11](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win11.result.png)
 
 ## Contributing 🤝
 Pull requests are welcome! If you have suggestions for improvements, feel free to submit an issue or a PR.
