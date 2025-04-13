@@ -48,15 +48,49 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 4. **Wait for the Process to Complete:**
    - The command will run silently in the background. Once finished, the DebloaterTool should be ready for use.
 
-## Screenshots 📷
-![DebloaterTool UI](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/1.png)
-![DebloaterTool Process](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/2.png)
-![Bootloader - WIN10](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win10.bootloader.png)
-![Desktop - WIN10](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win10.desktop.png)
-![Result - WIN10](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win10.result.png)
-![Bootloader - WIN11](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win11.bootloader.png)
-![Desktop - WIN11](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win11.desktop.png)
-![Result - WIN11](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win11.result.png)
+## 📸 Screenshots
+
+### 🧰 DebloaterTool Interface
+
+| UI |
+|----|
+| ![DebloaterTool UI](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/1.png) |
+
+| Process |
+|---------|
+| ![DebloaterTool Process](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/2.png) |
+
+---
+
+### 💻 Windows 10
+
+| Bootloader |
+|------------|
+| ![Bootloader - WIN10](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win10.bootloader.png) |
+
+| Desktop |
+|---------|
+| ![Desktop - WIN10](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win10.desktop.png) |
+
+| Result |
+|--------|
+| ![Result - WIN10](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win10.result.png) |
+
+---
+
+### 💻 Windows 11
+
+| Bootloader |
+|------------|
+| ![Bootloader - WIN11](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win11.bootloader.png) |
+
+| Desktop |
+|---------|
+| ![Desktop - WIN11](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win11.desktop.png) |
+
+| Result |
+|--------|
+| ![Result - WIN11](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win11.result.png) |
 
 ## Contributing 🤝
 Pull requests are welcome! If you have suggestions for improvements, feel free to submit an issue or a PR.
