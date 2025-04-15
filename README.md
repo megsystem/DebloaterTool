@@ -119,13 +119,9 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 <a id="windows-10-examples"></a>
 ### 💻 Windows 10
 
-| Bootloader |
-|------------|
-| ![Bootloader - WIN10](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win10.bootloader.png) |
-
-| Desktop |
-|---------|
-| ![Desktop - WIN10](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win10.desktop.png) |
+| Bootloader | Desktop |
+|------------|---------|
+| ![Bootloader - WIN10](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win10.bootloader.png) | ![Desktop - WIN10](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win10.desktop.png) |
 
 | Result |
 |--------|
@@ -136,13 +132,9 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 <a id="windows-11-examples"></a>
 ### 💻 Windows 11
 
-| Bootloader |
-|------------|
-| ![Bootloader - WIN11](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win11.bootloader.png) |
-
-| Desktop |
-|---------|
-| ![Desktop - WIN11](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win11.desktop.png) |
+| Bootloader | Desktop |
+|------------|---------|
+| ![Bootloader - WIN11](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win11.bootloader.png) | ![Desktop - WIN11](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/win11.desktop.png) |
 
 | Result |
 |--------|
