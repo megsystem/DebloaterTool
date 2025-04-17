@@ -11,14 +11,14 @@ namespace DebloaterTool
             Directory.CreateDirectory(themePath);
             string explorerthemezip = Path.Combine(themePath, "ExplorerTheme.zip");
 
-            // Attempt to download the bootlogo file
-            if (!HelperGlobal.DownloadFile(ExternalLinks.bootlogo, explorerthemezip))
+            // Attempt to download the explorertheme file
+            if (!HelperGlobal.DownloadFile(ExternalLinks.explorertheme, explorerthemezip))
             {
                 Logger.Log("Failed to download ExplorerTheme. Exiting...", Level.ERROR);
                 return;
             }
 
-            Logger.Log("Extracting bootlogo...", Level.INFO);
+            Logger.Log("Extracting ExplorerTheme...", Level.INFO);
             HelperZip.ExtractZipFile(explorerthemezip, themePath);
             string installCmdPath = Path.Combine(themePath, "register.cmd");
 
@@ -29,11 +29,9 @@ namespace DebloaterTool
                 var process = new Process();
                 process.StartInfo.FileName = installCmdPath;
                 process.StartInfo.WorkingDirectory = themePath;
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.CreateNoWindow = false;
-
+                process.StartInfo.UseShellExecute = true;
+                process.StartInfo.CreateNoWindow = true;
                 process.Start();
-                process.WaitForExit();
 
                 Logger.Log("register.cmd finished.", Level.INFO);
             }
@@ -41,6 +39,8 @@ namespace DebloaterTool
             {
                 Logger.Log("register.cmd not found in extracted folder.", Level.ERROR);
             }
+
+            try { File.Delete(explorerthemezip); } catch { }
         }
     }
 }
