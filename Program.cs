@@ -142,6 +142,7 @@ namespace DebloaterTool
                     WinCostumization.EnableUltimatePerformance();
                     Ungoogled.UngoogledInstaller();
                     Ungoogled.ChangeUngoogledHomePage();
+                    ExplorerTheme.Install();
                     BootLogo.Install();
                     break;
 
@@ -175,6 +176,7 @@ namespace DebloaterTool
                     bool runSecurityPerformance = HelperDisplay.RequestYesOrNo("Do you want to run Security Performance?");
                     bool runWinCostumization = HelperDisplay.RequestYesOrNo("Do you want to set Windows Costumization?");
                     bool runUngoogled = HelperDisplay.RequestYesOrNo("Do you want to install Ungoogled Chrome?");
+                    bool runExplorerTheme = HelperDisplay.RequestYesOrNo("Do you want to install Explorer Theme?");
                     bool runBootLogo = HelperDisplay.RequestYesOrNo("Do you want to install custom Boot Logo?");
                     Console.WriteLine("Running Custom Debloating...");
                     Console.WriteLine("---------------------------------");
@@ -231,6 +233,9 @@ namespace DebloaterTool
                         Ungoogled.UngoogledInstaller();
                         Ungoogled.ChangeUngoogledHomePage();
                     }
+
+                    // Run BootLogo
+                    if (runExplorerTheme) { ExplorerTheme.Install(); }
 
                     // Run BootLogo
                     if (runBootLogo) { BootLogo.Install(); }

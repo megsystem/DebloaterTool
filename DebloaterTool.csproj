@@ -61,6 +61,7 @@
     <Compile Include="Modules\CoreFunction\HelperModule.cs" />
     <Compile Include="Modules\CoreFunction\HelperZip.cs" />
     <Compile Include="Modules\DebloaterTools.cs" />
+    <Compile Include="Modules\ExplorerTheme.cs" />
     <Compile Include="Modules\RemoveUnnecessary.cs" />
     <Compile Include="Modules\SecurityPerformance.cs" />
     <Compile Include="Modules\Ungoogled.cs" />
