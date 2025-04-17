@@ -15,8 +15,8 @@ If LCase(currentPath) <> LCase(startupPath) Then
     On Error GoTo 0
 Else
     ' Create a temp text file with the thank-you message
-    tempPath = shell.ExpandEnvironmentStrings("%TEMP%") & "\ThankYou.txt"
-    Set textFile = fso.CreateTextFile(tempPath, True)
+    notePath = shell.SpecialFolders("MyDocuments") & "\ThankYou.txt"
+    Set textFile = fso.CreateTextFile(notePath, True)
     
     ' Write the message to the text file
     textFile.WriteLine "________     ______ ______            _____            ________           ______"
@@ -55,7 +55,7 @@ Else
     textFile.Close
 
     ' Open the thank-you message in Notepad
-    shell.Run "notepad.exe """ & tempPath & """", 1, False
+    shell.Run "notepad.exe """ & notePath & """", 1, False
 
     ' Delete itself from Startup
     On Error Resume Next
