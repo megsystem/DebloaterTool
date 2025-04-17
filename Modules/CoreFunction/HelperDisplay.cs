@@ -15,13 +15,14 @@ namespace DebloaterTool
         {
             while (true)
             {
-                Console.Write($"{message} (yes/no): ");
-                string response = Console.ReadLine()?.Trim().ToLower();
+                Console.Write($"{message} (y/n): ");
+                ConsoleKeyInfo keyInfo = Console.ReadKey();
+                Console.WriteLine(); // Moves the cursor to the next line
 
-                if (response == "yes") return true;
-                if (response == "no") return false;
+                if (keyInfo.Key == ConsoleKey.Y) return true;
+                if (keyInfo.Key == ConsoleKey.N) return false;
 
-                Console.WriteLine("Invalid input. Please enter 'yes' or 'no'.");
+                Console.WriteLine("\nInvalid input. Please press 'y' or 'n'.");
             }
         }
     }
