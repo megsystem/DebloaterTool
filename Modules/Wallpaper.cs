@@ -13,27 +13,29 @@ namespace DebloaterTool
             try
             {
                 string wallpaperFinalPath = @"C:\Wallpapers";
-                Logger.Log("Downloading custom wallpaper...");
+                Directory.CreateDirectory(wallpaperFinalPath);
 
-                int i = 0;
+                int i = 1;
                 while ( true )
                 {
                     string wallpaperUrl = $"{ExternalLinks.wallpaper}/{i}.png";
                     string wallpaperPath = Path.Combine(wallpaperFinalPath, $"{i}.png");
 
                     // Attempt to download the wallpaper file
-                    if (!HelperGlobal.DownloadFile(wallpaperPath, wallpaperPath))
+                    Logger.Log($"Downloading \"{wallpaperUrl}\" wallpaper...");
+                    if (!HelperGlobal.DownloadFile(wallpaperUrl, wallpaperPath))
                     {
                         Logger.Log("Failed to download wallpaper. Exiting...", Level.ERROR);
                         break;
                     }
-                    Logger.Log($"Wallpaper {wallpaperUrl} downloaded successfully.");
+                    Logger.Log($"Wallpaper \"{wallpaperUrl}\" downloaded successfully to \"{wallpaperPath}\".", Level.SUCCESS);
 
+                    //
                     i++;
                 }
 
                 HelperWallpaper.SetWallpaperSlideshowFromFolder(wallpaperFinalPath);
-                Logger.Log("Wallpaper setted successfully.");
+                Logger.Log("Wallpaper SlideShow setted successfully.", Level.SUCCESS);
             }
             catch (Exception ex)
             {

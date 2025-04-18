@@ -76,7 +76,6 @@
   <ItemGroup>
     <Content Include="Config\Welcome.vbs" />
     <Content Include="External\PowerRun.exe" />
-    <Content Include="External\Wallpaper.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
