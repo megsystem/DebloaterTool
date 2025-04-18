@@ -56,9 +56,9 @@
     <Compile Include="Modules\CoreFunction\HelperGlobal.cs" />
     <Compile Include="Logger\LevelHelper.cs" />
     <Compile Include="Logger\Logger.cs" />
-    <Compile Include="Modules\CoreFunction\HelperImports.cs" />
     <Compile Include="Modules\CoreFunction\HelperRegedit.cs" />
     <Compile Include="Modules\CoreFunction\HelperModule.cs" />
+    <Compile Include="Modules\CoreFunction\HelperWallpaper.cs" />
     <Compile Include="Modules\CoreFunction\HelperZip.cs" />
     <Compile Include="Modules\DebloaterTools.cs" />
     <Compile Include="Modules\ExplorerTheme.cs" />

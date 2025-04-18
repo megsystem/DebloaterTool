@@ -9,7 +9,6 @@ namespace DebloaterTool
         {
             string tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(tempPath);
-
             string bootlogozip = Path.Combine(tempPath, "bootlogo.zip");
 
             // Attempt to download the bootlogo file

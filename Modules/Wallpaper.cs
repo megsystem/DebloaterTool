@@ -12,38 +12,28 @@ namespace DebloaterTool
         {
             try
             {
-                // Get the path to the Pictures folder
-                string picturesFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-                string savePath = Path.Combine(picturesFolder, "DebloaterTool.png");
-
+                string wallpaperFinalPath = @"C:\Wallpapers";
                 Logger.Log("Downloading custom wallpaper...");
 
-                // Attempt to download the wallpaper file
-                if (!HelperGlobal.DownloadFile(ExternalLinks.wallpaper, savePath))
+                int i = 0;
+                while ( true )
                 {
-                    Logger.Log("Failed to download wallpaper. Exiting...", Level.ERROR);
-                    return;
+                    string wallpaperUrl = $"{ExternalLinks.wallpaper}/{i}.png";
+                    string wallpaperPath = Path.Combine(wallpaperFinalPath, $"{i}.png");
+
+                    // Attempt to download the wallpaper file
+                    if (!HelperGlobal.DownloadFile(wallpaperPath, wallpaperPath))
+                    {
+                        Logger.Log("Failed to download wallpaper. Exiting...", Level.ERROR);
+                        break;
+                    }
+                    Logger.Log($"Wallpaper {wallpaperUrl} downloaded successfully.");
+
+                    i++;
                 }
 
-                Logger.Log("Wallpaper downloaded successfully.");
-
-                // Apply the downloaded image as the desktop wallpaper
-                int result = HelperImports.SystemParametersInfo(
-                    HelperImports.SPI_SETDESKWALLPAPER, 
-                    0, 
-                    savePath, 
-                    HelperImports.SPIF_UPDATEINIFILE | HelperImports.SPIF_SENDCHANGE
-                );
-
-                // Check if the wallpaper was successfully changed
-                if (result != 0)
-                {
-                    Logger.Log("Wallpaper successfully changed.", Level.SUCCESS);
-                }
-                else
-                {
-                    Logger.Log("Wallpaper change failed.", Level.ERROR);
-                }
+                HelperWallpaper.SetWallpaperSlideshowFromFolder(wallpaperFinalPath);
+                Logger.Log("Wallpaper setted successfully.");
             }
             catch (Exception ex)
             {
