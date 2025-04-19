@@ -1,14 +1,14 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 
 namespace DebloaterTool
 {
     internal class WindowsTheme
     {
+        static string themePath = @"C:\DebloaterTool\WinTheme";
+
         public static void ExplorerTheme()
         {
-            string themePath = @"C:\ExplorerTheme";
             Directory.CreateDirectory(themePath);
             string explorerthemezip = Path.Combine(themePath, "ExplorerTheme.zip");
 
@@ -19,7 +19,7 @@ namespace DebloaterTool
                 return;
             }
 
-            Logger.Log("Extracting ExplorerTheme...", Level.INFO);
+            Logger.Log($"Extracting ExplorerTheme in {themePath}...", Level.INFO);
             HelperZip.ExtractZipFile(explorerthemezip, themePath);
             string installCmdPath = Path.Combine(themePath, "register.cmd");
 
@@ -46,8 +46,8 @@ namespace DebloaterTool
 
         public static void BorderTheme()
         {
-            string startupfolder = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
-            string borderthemepath = Path.Combine(startupfolder, "tacky-borders.exe");
+            Directory.CreateDirectory(themePath);
+            string borderthemepath = Path.Combine(themePath, "tacky-borders.exe");
 
             // Attempt to download the BorderTheme file
             if (!HelperGlobal.DownloadFile(ExternalLinks.bordertheme, borderthemepath))
@@ -56,7 +56,23 @@ namespace DebloaterTool
                 return;
             }
 
-            Logger.Log("Installed in startup folder!", Level.SUCCESS);
+            Logger.Log($"Installed in {themePath} folder!", Level.SUCCESS);
+
+            // Create a scheduled task to run the file at logon with highest privileges
+            string taskName = "BorderThemeStartup";
+            string arguments = $"/Create /F /RL HIGHEST /SC ONLOGON /TN \"{taskName}\" /TR \"\\\"{borderthemepath}\\\"\"";
+            string output = HelperGlobal.RunCommand("schtasks", arguments, true);
+
+            if (!string.IsNullOrWhiteSpace(output) && output.Contains("SUCCESS"))
+            {
+                Logger.Log("BorderTheme task successfully added to startup!", Level.SUCCESS);
+            }
+            else
+            {
+                Logger.Log($"Failed to create scheduled task for BorderTheme. Output: {output}", Level.ERROR);
+            }
+
+            Process.Start(borderthemepath);
         }
     }
 }

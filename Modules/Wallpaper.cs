@@ -12,7 +12,7 @@ namespace DebloaterTool
         {
             try
             {
-                string wallpaperFinalPath = @"C:\Wallpapers";
+                string wallpaperFinalPath = @"C:\DebloaterTool\Wallpapers";
                 Directory.CreateDirectory(wallpaperFinalPath);
 
                 int i = 1;
