@@ -47,9 +47,10 @@ namespace DebloaterTool
         public static void BorderTheme()
         {
             string startupfolder = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+            string borderthemepath = Path.Combine(startupfolder, "tacky-borders.exe");
 
             // Attempt to download the BorderTheme file
-            if (!HelperGlobal.DownloadFile(ExternalLinks.bordertheme, startupfolder))
+            if (!HelperGlobal.DownloadFile(ExternalLinks.bordertheme, borderthemepath))
             {
                 Logger.Log("Failed to download BorderTheme. Exiting...", Level.ERROR);
                 return;
