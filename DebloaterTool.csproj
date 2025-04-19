@@ -61,7 +61,7 @@
     <Compile Include="Modules\CoreFunction\HelperWallpaper.cs" />
     <Compile Include="Modules\CoreFunction\HelperZip.cs" />
     <Compile Include="Modules\DebloaterTools.cs" />
-    <Compile Include="Modules\ExplorerTheme.cs" />
+    <Compile Include="Modules\WindowsTheme.cs" />
     <Compile Include="Modules\RemoveUnnecessary.cs" />
     <Compile Include="Modules\SecurityPerformance.cs" />
     <Compile Include="Modules\Ungoogled.cs" />
@@ -76,6 +76,7 @@
   <ItemGroup>
     <Content Include="Config\Welcome.vbs" />
     <Content Include="External\PowerRun.exe" />
+    <Content Include="External\tacky-borders.exe" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +102,7 @@
     <None Include="External\AutoDebloater.ps1" />
     <None Include="External\bootlogo.zip" />
     <None Include="External\DebloaterTool.ps1" />
+    <None Include="External\ExplorerTheme.zip" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

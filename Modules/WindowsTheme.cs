@@ -1,11 +1,12 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace DebloaterTool
 {
-    internal class ExplorerTheme
+    internal class WindowsTheme
     {
-        public static void Install()
+        public static void ExplorerTheme()
         {
             string themePath = @"C:\ExplorerTheme";
             Directory.CreateDirectory(themePath);
@@ -41,6 +42,20 @@ namespace DebloaterTool
             }
 
             try { File.Delete(explorerthemezip); } catch { }
+        }
+
+        public static void BorderTheme()
+        {
+            string startupfolder = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+
+            // Attempt to download the BorderTheme file
+            if (!HelperGlobal.DownloadFile(ExternalLinks.bordertheme, startupfolder))
+            {
+                Logger.Log("Failed to download BorderTheme. Exiting...", Level.ERROR);
+                return;
+            }
+
+            Logger.Log("Installed in startup folder!", Level.SUCCESS);
         }
     }
 }
