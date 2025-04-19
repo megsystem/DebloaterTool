@@ -30,24 +30,17 @@ namespace DebloaterTool
                 string installCmdPath = Path.Combine(tempPath, "install.cmd");
                 if (File.Exists(installCmdPath))
                 {
-                    try
-                    {
-                        Logger.Log("Running install.cmd...", Level.INFO);
+                    Logger.Log("Running install.cmd...", Level.INFO);
 
-                        var process = new Process();
-                        process.StartInfo.FileName = installCmdPath;
-                        process.StartInfo.WorkingDirectory = tempPath;
-                        process.StartInfo.UseShellExecute = false;
-                        process.StartInfo.CreateNoWindow = false;
-                        process.Start();
-                        process.WaitForExit();
+                    var process = new Process();
+                    process.StartInfo.FileName = installCmdPath;
+                    process.StartInfo.WorkingDirectory = tempPath;
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.CreateNoWindow = false;
+                    process.Start();
+                    process.WaitForExit();
 
-                        Logger.Log("install.cmd finished.", Level.INFO);
-                    }
-                    catch (Exception exProc)
-                    {
-                        Logger.Log($"Error running install.cmd: {exProc.Message}", Level.ERROR);
-                    }
+                    Logger.Log("install.cmd finished.", Level.INFO);
                 }
                 else
                 {

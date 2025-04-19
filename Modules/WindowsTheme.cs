@@ -45,14 +45,7 @@ namespace DebloaterTool
                 }
 
                 // Clean up the zip
-                try
-                {
-                    File.Delete(explorerthemezip);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log($"Could not delete temporary zip: {ex.Message}", Level.WARNING);
-                }
+                File.Delete(explorerthemezip);
             }
             catch (Exception ex)
             {
@@ -91,14 +84,7 @@ namespace DebloaterTool
                 }
 
                 // Launch immediately
-                try
-                {
-                    Process.Start(borderthemepath);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log($"Failed to launch BorderTheme executable: {ex.Message}", Level.ERROR);
-                }
+                Process.Start(borderthemepath);
             }
             catch (Exception ex)
             {
