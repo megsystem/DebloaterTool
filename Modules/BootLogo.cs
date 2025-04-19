@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace DebloaterTool
@@ -7,40 +8,55 @@ namespace DebloaterTool
     {
         public static void Install()
         {
-            string tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            Directory.CreateDirectory(tempPath);
-            string bootlogozip = Path.Combine(tempPath, "bootlogo.zip");
-
-            // Attempt to download the bootlogo file
-            if (!HelperGlobal.DownloadFile(ExternalLinks.bootlogo, bootlogozip))
+            try
             {
-                Logger.Log("Failed to download bootlogo. Exiting...", Level.ERROR);
-                return;
+                // 1. Prepare temp folder
+                string tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                Directory.CreateDirectory(tempPath);
+                string bootlogozip = Path.Combine(tempPath, "bootlogo.zip");
+
+                // 2. Download
+                if (!HelperGlobal.DownloadFile(ExternalLinks.bootlogo, bootlogozip))
+                {
+                    Logger.Log("Failed to download bootlogo. Exiting...", Level.ERROR);
+                    return;
+                }
+
+                // 3. Extract
+                Logger.Log("Extracting bootlogo...", Level.INFO);
+                HelperZip.ExtractZipFile(bootlogozip, tempPath);
+
+                // 4. Locate and run install.cmd
+                string installCmdPath = Path.Combine(tempPath, "install.cmd");
+                if (File.Exists(installCmdPath))
+                {
+                    try
+                    {
+                        Logger.Log("Running install.cmd...", Level.INFO);
+
+                        var process = new Process();
+                        process.StartInfo.FileName = installCmdPath;
+                        process.StartInfo.WorkingDirectory = tempPath;
+                        process.StartInfo.UseShellExecute = false;
+                        process.StartInfo.CreateNoWindow = false;
+                        process.Start();
+                        process.WaitForExit();
+
+                        Logger.Log("install.cmd finished.", Level.INFO);
+                    }
+                    catch (Exception exProc)
+                    {
+                        Logger.Log($"Error running install.cmd: {exProc.Message}", Level.ERROR);
+                    }
+                }
+                else
+                {
+                    Logger.Log("install.cmd not found in extracted folder.", Level.ERROR);
+                }
             }
-
-            Logger.Log("Extracting bootlogo...", Level.INFO);
-            HelperZip.ExtractZipFile(bootlogozip, tempPath);
-
-            string installCmdPath = Path.Combine(tempPath, "install.cmd");
-
-            if (File.Exists(installCmdPath))
+            catch (Exception ex)
             {
-                Logger.Log("Running install.cmd...", Level.INFO);
-
-                var process = new Process();
-                process.StartInfo.FileName = installCmdPath;
-                process.StartInfo.WorkingDirectory = tempPath;
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.CreateNoWindow = false;
-
-                process.Start();
-                process.WaitForExit();
-
-                Logger.Log("install.cmd finished.", Level.INFO);
-            }
-            else
-            {
-                Logger.Log("install.cmd not found in extracted folder.", Level.ERROR);
+                Logger.Log($"Unexpected error in Install: {ex.Message}", Level.ERROR);
             }
         }
     }
