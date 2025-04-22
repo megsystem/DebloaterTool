@@ -125,10 +125,10 @@ namespace DebloaterTool
 
                         webClient.DownloadProgressChanged += (s, e) =>
                         {
-                            int progress = e.ProgressPercentage;
-                            Console.ForegroundColor = ConsoleColor.Magenta;
-                            Logger.Log($"Downloading... {progress}%   ", Level.DOWNLOAD, isProgress: true);
-                            Console.ResetColor();
+                            int totalBlocks = 50;
+                            int progressBlocks = (int)(e.ProgressPercentage / 100.0 * totalBlocks);
+                            string progressBar = new string('#', progressBlocks) + new string('-', totalBlocks - progressBlocks);
+                            Logger.Log($"Downloading: [{progressBar}] {e.ProgressPercentage}%   ", Level.DOWNLOAD, isProgress: true);
                         };
 
                         webClient.DownloadFileCompleted += (s, e) =>

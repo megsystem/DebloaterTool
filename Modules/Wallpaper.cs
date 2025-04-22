@@ -25,7 +25,7 @@ namespace DebloaterTool
                     Logger.Log($"Downloading \"{wallpaperUrl}\" wallpaper...");
                     if (!HelperGlobal.DownloadFile(wallpaperUrl, wallpaperPath))
                     {
-                        Logger.Log($"Wallpaper \"{wallpaperUrl}\" not found! Skipping...", Level.ERROR);
+                        Logger.Log($"Unable to download the \"{wallpaperUrl}\" wallpaper. Skipping...", Level.WARNING);
                         break;
                     }
                     Logger.Log($"Wallpaper \"{wallpaperUrl}\" downloaded successfully to \"{wallpaperPath}\".", Level.SUCCESS);

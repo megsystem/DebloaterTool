@@ -22,7 +22,7 @@ namespace DebloaterTool
 
             // Optional: set position and shuffle
             wallpaper.SetPosition(DesktopWallpaperPosition.Fill);
-            wallpaper.SetSlideshowOptions(DesktopSlideshowDirection.Forward, 3600000); // 1 hour in milliseconds
+            wallpaper.SetSlideshowOptions(DesktopSlideshowDirection.Forward, 86400000); // 1 day in milliseconds
         }
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
