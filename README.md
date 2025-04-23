@@ -114,6 +114,10 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 |---------|
 | ![DebloaterTool Process](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/2.png) |
 
+| Random Screenshot |
+|-------------------|
+| ![Random Screenshot](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/Random.png) |
+
 ---
 
 <a id="windows-10-examples"></a>
