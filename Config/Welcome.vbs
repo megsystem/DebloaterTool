@@ -14,8 +14,14 @@ If LCase(currentPath) <> LCase(startupPath) Then
     fso.CopyFile currentPath, startupPath, True
     On Error GoTo 0
 Else
+    ' Create DebloaterTool Path
+    folderPath = "C:\DebloaterTool"
+    If Not fso.FolderExists(folderPath) Then
+        fso.CreateFolder(folderPath)
+    End If
+
     ' Create a temp text file with the thank-you message
-    notePath = shell.SpecialFolders("MyDocuments") & "\ThankYou.txt"
+    notePath = folderPath & "\ThankYou.txt"
     Set textFile = fso.CreateTextFile(notePath, True)
     
     ' Write the message to the text file
