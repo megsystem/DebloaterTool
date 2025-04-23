@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Win32;
 using System.Runtime.InteropServices;
 
 namespace DebloaterTool
@@ -23,6 +24,23 @@ namespace DebloaterTool
             // Optional: set position and shuffle
             wallpaper.SetPosition(DesktopWallpaperPosition.Fill);
             wallpaper.SetSlideshowOptions(DesktopSlideshowDirection.Forward, 86400000); // 1 day in milliseconds
+        }
+
+        public static void SetLockScreenWallpaper(string imagePath)
+        {
+            // Define the registry subkey used for lock screen image configuration
+            string regSubKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\PersonalizationCSP";
+
+            // Prepare the required registry modifications to set the lock screen image
+            RegistryModification[] mods = new[]
+            {
+                new RegistryModification(Registry.LocalMachine, regSubKey, "LockScreenImagePath", RegistryValueKind.String, imagePath),
+                new RegistryModification(Registry.LocalMachine, regSubKey, "LockScreenImageUrl", RegistryValueKind.String, imagePath),
+                new RegistryModification(Registry.LocalMachine, regSubKey, "LockScreenImageStatus", RegistryValueKind.DWord, 1),
+            };
+
+            // Apply the registry changes and restart Explorer to enforce the new lock screen
+            HelperRegedit.InstallRegModification(mods);
         }
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, PreserveSig = false)]

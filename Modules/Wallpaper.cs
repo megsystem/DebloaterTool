@@ -35,6 +35,7 @@ namespace DebloaterTool
                 }
 
                 HelperWallpaper.SetWallpaperSlideshowFromFolder(wallpaperFinalPath);
+                HelperWallpaper.SetLockScreenWallpaper(Path.Combine(wallpaperFinalPath, $"1.png"));
                 Logger.Log("Wallpaper SlideShow setted successfully.", Level.SUCCESS);
             }
             catch (Exception ex)
