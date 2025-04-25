@@ -129,13 +129,13 @@ namespace DebloaterTool
                     WinUpdate.DisableWindowsUpdateV2();
                     DebloaterTools.RunChrisTool();
                     DebloaterTools.RunRaphiTool();
-                    RemoveUnnecessary.ApplyRegistryChanges();
+                    RemoveUnnecessary.ApplyOptimizationTweaks();
                     RemoveUnnecessary.UninstallEdge();
                     RemoveUnnecessary.CleanOutlookAndOneDrive();
                     SecurityPerformance.DisableRemAssistAndRemDesk();
                     SecurityPerformance.DisableSpectreAndMeltdown();
                     SecurityPerformance.DisableWinErrorReporting();
-                    SecurityPerformance.DisableTelAndDiagnost();
+                    SecurityPerformance.ApplySecurityPerformanceTweaks();
                     SecurityPerformance.DisableSMBv1();
                     WinStore.Uninstall();
                     WinCostumization.DisableSnapTools();
@@ -144,6 +144,7 @@ namespace DebloaterTool
                     Ungoogled.ChangeUngoogledHomePage();
                     WindowsTheme.ExplorerTheme();
                     WindowsTheme.BorderTheme();
+                    WindowsTheme.ApplyThemeTweaks();
                     BootLogo.Install();
                     break;
 
@@ -154,17 +155,18 @@ namespace DebloaterTool
                     WinUpdate.DisableWindowsUpdateV1();
                     DebloaterTools.RunChrisTool();
                     DebloaterTools.RunRaphiTool();
-                    RemoveUnnecessary.ApplyRegistryChanges();
+                    RemoveUnnecessary.ApplyOptimizationTweaks();
                     RemoveUnnecessary.UninstallEdge();
                     RemoveUnnecessary.CleanOutlookAndOneDrive();
                     SecurityPerformance.DisableRemAssistAndRemDesk();
                     SecurityPerformance.DisableWinErrorReporting();
-                    SecurityPerformance.DisableTelAndDiagnost();
+                    SecurityPerformance.ApplySecurityPerformanceTweaks();
                     SecurityPerformance.DisableSMBv1();
                     WinCostumization.DisableSnapTools();
                     WinCostumization.EnableUltimatePerformance();
                     Ungoogled.UngoogledInstaller();
                     Ungoogled.ChangeUngoogledHomePage();
+                    WindowsTheme.ApplyThemeTweaks();
                     BootLogo.Install();
                     break;
 
@@ -206,9 +208,9 @@ namespace DebloaterTool
                     // Run RemoveUnnecessary
                     if (runRemoveUnnecessary)
                     {
-                        RemoveUnnecessary.ApplyRegistryChanges();
                         RemoveUnnecessary.UninstallEdge();
                         RemoveUnnecessary.CleanOutlookAndOneDrive();
+                        RemoveUnnecessary.ApplyOptimizationTweaks();
                     }
 
                     // Run SecurityPerformance
@@ -217,7 +219,7 @@ namespace DebloaterTool
                         SecurityPerformance.DisableRemAssistAndRemDesk();
                         SecurityPerformance.DisableSpectreAndMeltdown();
                         SecurityPerformance.DisableWinErrorReporting();
-                        SecurityPerformance.DisableTelAndDiagnost();
+                        SecurityPerformance.ApplySecurityPerformanceTweaks();
                         SecurityPerformance.DisableSMBv1();
                     }
 
@@ -240,6 +242,7 @@ namespace DebloaterTool
                     { 
                         WindowsTheme.ExplorerTheme(); 
                         WindowsTheme.BorderTheme(); 
+                        WindowsTheme.ApplyThemeTweaks();
                     }
 
                     // Run BootLogo
