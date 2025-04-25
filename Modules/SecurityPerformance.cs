@@ -130,44 +130,46 @@ namespace DebloaterTool
         }
 
         /// <summary>
-        /// Applies security-and-performance registry tweaks:
-        ///   • Disables telemetry/diagnostic services
-        ///   • Turns off data-collection policies and feedback mechanisms
-        ///   • Disables location sensors and biometrics
+        /// Applies security-related registry tweaks to enhance system security
         /// </summary>
         public static void ApplySecurityPerformanceTweaks()
         {
             var modifications = new[]
             {
-                // Stop telemetry/diagnostic services
-                new RegistryModification(Registry.LocalMachine, @"SYSTEM\CurrentControlSet\Services\DiagTrack", "Start", RegistryValueKind.DWord, 4),
-                new RegistryModification(Registry.LocalMachine, @"SYSTEM\CurrentControlSet\Services\diagnosticshub.standardcollector.service", "Start", RegistryValueKind.DWord, 4),
-                new RegistryModification(Registry.LocalMachine, @"SYSTEM\CurrentControlSet\Services\dmwappushservice", "Start", RegistryValueKind.DWord, 4),
-                new RegistryModification(Registry.LocalMachine, @"SYSTEM\CurrentControlSet\Services\DcpSvc", "Start", RegistryValueKind.DWord, 4),
-                new RegistryModification(Registry.LocalMachine, @"SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\SQMLogger", "Start", RegistryValueKind.DWord, 0),
-                // Disable AppCompat and feedback/data-collection policies
-                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\AppCompat", "DisableEngine", RegistryValueKind.DWord, 1),
-                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\AppCompat", "SbEnable", RegistryValueKind.DWord, 0),
-                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\AppCompat", "AITEnable", RegistryValueKind.DWord, 0),
-                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\AppCompat", "DisableInventory", RegistryValueKind.DWord, 1),
+                // Disable automatic sign-on after restart (security measure)
+                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System", "DisableAutomaticRestartSignOn", RegistryValueKind.DWord, 1),
+                // Disable Find My Device (prevents device tracking)
+                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\FindMyDevice", "AllowFindMyDevice", RegistryValueKind.DWord, 0),
+                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Microsoft\Settings\FindMyDevice", "LocationSyncEnabled", RegistryValueKind.DWord, 0),
+                // Disable cross-device clipboard (prevents data leakage)
+                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\System", "AllowCrossDeviceClipboard", RegistryValueKind.DWord, 0),
+                // Disable credential syncing (prevents password exposure)
+                new RegistryModification(Registry.LocalMachine, @"Software\Policies\Microsoft\Windows\SettingSync", "DisableCredentialsSettingSync", RegistryValueKind.DWord, 2),
+                new RegistryModification(Registry.LocalMachine, @"Software\Policies\Microsoft\Windows\SettingSync", "DisableCredentialsSettingSyncUserOverride", RegistryValueKind.DWord, 1),
+                // Disable biometrics (can be exploited)
+                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Biometrics", "Enabled", RegistryValueKind.DWord, 0),
+                // Disable device metadata network access (reduces network attack surface)
+                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Device Metadata", "PreventDeviceMetadataFromNetwork", RegistryValueKind.DWord, 1),
+                // Disable app sync with devices (limits cross-device attack vectors)
+                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\AppPrivacy", "LetAppsSyncWithDevices", RegistryValueKind.DWord, 2),
+                // Deny device access for loosely coupled apps (improves access control)
+                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\LooselyCoupled", "Value", RegistryValueKind.String, "Deny"),
+                // Disable CDP connections (reduces network exposure)
+                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\CDP", "CdpSessionUserAuthzPolicy", RegistryValueKind.DWord, 0),
+                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\CDP", "NearShareChannelUserAuthzPolicy", RegistryValueKind.DWord, 0),
+                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\CDP", "RomeSdkChannelUserAuthzPolicy", RegistryValueKind.DWord, 0),
+                // Disable PCA (Program Compatibility Assistant - can be a security risk)
                 new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\AppCompat", "DisablePCA", RegistryValueKind.DWord, 1),
-                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\AppCompat", "DisableUAR", RegistryValueKind.DWord, 1),
-                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\System", "PublishUserActivities", RegistryValueKind.DWord, 0),
-                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\SQMClient\Windows", "CEIPEnable", RegistryValueKind.DWord, 0),
-                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\CloudContent", "DisableCloudOptimizedContent", RegistryValueKind.DWord, 1),
-                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\DataCollection", "DoNotShowFeedbackNotifications", RegistryValueKind.DWord, 1),
-                // PolicyManager experimentation toggle
-                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Microsoft\PolicyManager\current\device\System", "AllowExperimentation", RegistryValueKind.DWord, 0),
-                // Disable AdvertisingInfo (group-policy lock)
-                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo", "DisabledByGroupPolicy", RegistryValueKind.DWord, 1),
-                // Disable location sensors
+                // Disable SbEnable (SecureBoot compatibility check - can leak info)
+                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\AppCompat", "SbEnable", RegistryValueKind.DWord, 0),
+                // Disable location services (prevents location tracking)
+                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location", "Value", RegistryValueKind.String, "Deny"),
                 new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors", "DisableLocation", RegistryValueKind.DWord, 1),
                 new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors", "DisableLocationScripting", RegistryValueKind.DWord, 1),
                 new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors", "DisableWindowsLocationProvider", RegistryValueKind.DWord, 1),
-                // Sensor permission override
+                // Disable sensors (prevents unauthorized sensor access)
                 new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}", "SensorPermissionState", RegistryValueKind.DWord, 0),
-                // Disable biometric authentication
-                new RegistryModification(Registry.LocalMachine, @"SOFTWARE\Policies\Microsoft\Biometrics", "Enabled", RegistryValueKind.DWord, 0),
+                new RegistryModification(Registry.LocalMachine, @"System\CurrentControlSet\Services\lfsvc\Service\Configuration", "Status", RegistryValueKind.DWord, 0)
             };
 
             HelperRegedit.InstallRegModification(modifications);

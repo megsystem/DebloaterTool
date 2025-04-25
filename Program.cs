@@ -137,6 +137,7 @@ namespace DebloaterTool
                     SecurityPerformance.DisableWinErrorReporting();
                     SecurityPerformance.ApplySecurityPerformanceTweaks();
                     SecurityPerformance.DisableSMBv1();
+                    DataCollection.InstallTweaks();
                     WinStore.Uninstall();
                     WinCostumization.DisableSnapTools();
                     WinCostumization.EnableUltimatePerformance();
@@ -162,6 +163,7 @@ namespace DebloaterTool
                     SecurityPerformance.DisableWinErrorReporting();
                     SecurityPerformance.ApplySecurityPerformanceTweaks();
                     SecurityPerformance.DisableSMBv1();
+                    DataCollection.InstallTweaks();
                     WinCostumization.DisableSnapTools();
                     WinCostumization.EnableUltimatePerformance();
                     Ungoogled.UngoogledInstaller();
@@ -177,6 +179,7 @@ namespace DebloaterTool
                     bool runDebloater = HelperDisplay.RequestYesOrNo("Do you want to run Debloater Tools?");
                     bool runRemoveUnnecessary = HelperDisplay.RequestYesOrNo("Do you want to remove unnecessary components?");
                     bool runSecurityPerformance = HelperDisplay.RequestYesOrNo("Do you want to run Security Performance?");
+                    bool runDataCollection = HelperDisplay.RequestYesOrNo("Do you want to disable Data Collection?");
                     bool runWinCostumization = HelperDisplay.RequestYesOrNo("Do you want to set Windows Costumization?");
                     bool runUngoogled = HelperDisplay.RequestYesOrNo("Do you want to install Ungoogled Chrome?");
                     bool runCustomTheme = HelperDisplay.RequestYesOrNo("Do you want to install Custom Theme (explorer and border)?");
@@ -222,6 +225,9 @@ namespace DebloaterTool
                         SecurityPerformance.ApplySecurityPerformanceTweaks();
                         SecurityPerformance.DisableSMBv1();
                     }
+
+                    // Run DataCollection
+                    if (runDataCollection) DataCollection.InstallTweaks();
 
                     // Run WinCostumization
                     if (runWinCostumization)
