@@ -284,7 +284,7 @@ namespace DebloaterTool
                 string tempPath = Path.Combine(Path.GetTempPath(), "DebloaterWelcome.vbs");
                 File.WriteAllText(tempPath, Config.Resource.Welcome, Encoding.Unicode); // Save the script
                 Process.Start("wscript.exe", "\"" + tempPath + "\""); // Run the script
-                Process.Start("shutdown.exe", "-r -t 0"); // Restart the computer
+                Process.Start("shutdown.exe", "-r -t 5"); // Restart the computer
             }
             else
             {
