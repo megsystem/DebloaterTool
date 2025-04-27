@@ -12,30 +12,33 @@ namespace DebloaterTool
         {
             try
             {
+                // Prepare the destination folder
                 string wallpaperFinalPath = @"C:\DebloaterTool\Wallpapers";
                 Directory.CreateDirectory(wallpaperFinalPath);
 
+                // Now download the desktop wallpapers
                 int i = 1;
-                while ( true )
+                while (true)
                 {
-                    string wallpaperUrl = $"{ExternalLinks.wallpaper}/{i}.png";
-                    string wallpaperPath = Path.Combine(wallpaperFinalPath, $"{i}.png");
+                    string fileName = $"{i}.png";
+                    string fileUrl = $"{ExternalLinks.wallpaper}/{fileName}";
+                    string fileLocalPath = Path.Combine(wallpaperFinalPath, fileName);
 
-                    // Attempt to download the wallpaper file
-                    Logger.Log($"Downloading \"{wallpaperUrl}\" wallpaper...");
-                    if (!HelperGlobal.DownloadFile(wallpaperUrl, wallpaperPath))
-                    {
-                        Logger.Log($"Unable to download the \"{wallpaperUrl}\" wallpaper. Skipping...", Level.WARNING);
+                    if (!DownloadAndLog(fileUrl, fileLocalPath, $"Wallpaper #{i}"))
                         break;
-                    }
-                    Logger.Log($"Wallpaper \"{wallpaperUrl}\" downloaded successfully to \"{wallpaperPath}\".", Level.SUCCESS);
 
-                    //
                     i++;
                 }
 
+                // Now download the lockscreen
+                string lockscreenName = "Lockscreen.png";
+                string lockscreenUrl = $"{ExternalLinks.wallpaper}/{lockscreenName}";
+                string lockscreenLocalPath = Path.Combine(wallpaperFinalPath, lockscreenName);
+                DownloadAndLog(lockscreenUrl, lockscreenLocalPath, "Lockscreen");
+
+                // Set wallpapers
                 HelperWallpaper.SetWallpaperSlideshowFromFolder(wallpaperFinalPath);
-                HelperWallpaper.SetLockScreenWallpaper(Path.Combine(wallpaperFinalPath, $"1.png"));
+                HelperWallpaper.SetLockScreenWallpaper(lockscreenLocalPath);
                 Logger.Log("Wallpaper SlideShow setted successfully.", Level.SUCCESS);
             }
             catch (Exception ex)
@@ -43,6 +46,23 @@ namespace DebloaterTool
                 // Log any exceptions that occur during the process
                 Logger.Log($"Error setting wallpaper: {ex.Message}", Level.ERROR);
             }
+        }
+
+        /// <summary>
+        /// Attempts to download from <paramref name="url"/> to <paramref name="path"/>,
+        /// logging both the attempt and the result with a friendly description.
+        /// </summary>
+        static bool DownloadAndLog(string url, string path, string description)
+        {
+            Logger.Log($"Downloading {description} from \"{url}\"...");
+            if (!HelperGlobal.DownloadFile(url, path))
+            {
+                Logger.Log($"Unable to download the {description} from \"{url}\". Skipping...", Level.WARNING);
+                return false;
+            }
+
+            Logger.Log($"{description} downloaded successfully to \"{path}\".", Level.SUCCESS);
+            return true;
         }
     }
 }
