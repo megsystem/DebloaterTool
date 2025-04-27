@@ -33,9 +33,13 @@ namespace DebloaterTool
             Console.WriteLine("|              End User License Agreement (EULA)              |".CenterInConsole());
             Console.WriteLine("+=============================================================+".CenterInConsole());
             Console.WriteLine("| By using this software, you agree to the following terms:   |".CenterInConsole());
-            Console.WriteLine("| 1. You may not distribute this software without permission. |".CenterInConsole());
-            Console.WriteLine("| 2. The developers are not responsible for any damages.      |".CenterInConsole());
-            HelperDisplay.DisplayMessage("| 3. Please disable your antivirus before proceeding.         |".CenterInConsole(), ConsoleColor.DarkYellow);
+            Console.WriteLine("| 1. This software is open source under the MIT License.      |".CenterInConsole());
+            Console.WriteLine("| 2. You may not distribute modified versions without         |".CenterInConsole());
+            Console.WriteLine("|    including the original license.                          |".CenterInConsole());
+            Console.WriteLine("| 3. The developers are not responsible for any damages.      |".CenterInConsole());
+            HelperDisplay.DisplayMessage("| 4. Please disable your antivirus before proceeding.         |".CenterInConsole(), ConsoleColor.DarkYellow);
+            HelperDisplay.DisplayMessage("| 5. No warranty is provided; use at your own risk.           |".CenterInConsole(), ConsoleColor.Red);
+            Console.WriteLine("| 6. Support at https://megsystem.github.io/DebloaterTool/    |".CenterInConsole());
             Console.WriteLine("+=============================================================+".CenterInConsole());
             Console.WriteLine();
             Console.WriteLine("--------------------------------------------------------------------------");
