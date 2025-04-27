@@ -140,8 +140,7 @@ namespace DebloaterTool
                     WinStore.Uninstall();
                     WinCostumization.DisableSnapTools();
                     WinCostumization.EnableUltimatePerformance();
-                    Ungoogled.UngoogledInstaller();
-                    Ungoogled.ChangeUngoogledHomePage();
+                    Ungoogled.Install();
                     WindowsTheme.ExplorerTheme();
                     WindowsTheme.BorderTheme();
                     WindowsTheme.ApplyThemeTweaks();
@@ -167,8 +166,7 @@ namespace DebloaterTool
                     DataCollection.DisableTelemetryServices();
                     WinCostumization.DisableSnapTools();
                     WinCostumization.EnableUltimatePerformance();
-                    Ungoogled.UngoogledInstaller();
-                    Ungoogled.ChangeUngoogledHomePage();
+                    Ungoogled.Install();
                     WindowsTheme.ApplyThemeTweaks();
                     BootLogo.Install();
                     break;
@@ -243,11 +241,7 @@ namespace DebloaterTool
                     }
 
                     // Run Ungoogled
-                    if (runUngoogled)
-                    {
-                        Ungoogled.UngoogledInstaller();
-                        Ungoogled.ChangeUngoogledHomePage();
-                    }
+                    if (runUngoogled) { Ungoogled.Install(); }
 
                     // Run Custom Theme
                     if (runCustomTheme) 

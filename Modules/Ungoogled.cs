@@ -10,9 +10,19 @@ namespace DebloaterTool
     internal class Ungoogled
     {
         /// <summary>
+        /// Executes the installation process by installing Ungoogled 
+        /// and setting its homepage.
+        /// </summary>
+        public static void Install()
+        {
+            UngoogledInstaller();
+            ChangeUngoogledHomePage();
+        }
+
+        /// <summary>
         /// Changes the homepage setting for the ungoogled browser to a custom URL.
         /// </summary>
-        public static void ChangeUngoogledHomePage()
+        private static void ChangeUngoogledHomePage()
         {
             string argToAdd = $"--custom-ntp={ExternalLinks.tabLink}";
             // Directories to search: Desktop, Common Desktop, Start Menu, Programs, and Taskbar pinned shortcuts.
@@ -72,7 +82,7 @@ namespace DebloaterTool
         /// <summary>
         /// Installs or reinstalls the ungoogled browser by downloading its installer and executing it.
         /// </summary>
-        public static void UngoogledInstaller()
+        private static void UngoogledInstaller()
         {
             try
             {
