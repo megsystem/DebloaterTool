@@ -2,7 +2,7 @@
 
 namespace DebloaterTool
 {
-    internal class HelperDisplay
+    internal static class HelperDisplay
     {
         public static void DisplayMessage(string message, ConsoleColor color)
         {
@@ -32,6 +32,16 @@ namespace DebloaterTool
 
                 Console.WriteLine("\nInvalid input. Please press 'y' or 'n'.");
             }
+        }
+
+        public static string CenterInConsole(this string text)
+        {
+            int windowWidth = Console.WindowWidth;
+            if (string.IsNullOrEmpty(text) || text.Length >= windowWidth)
+                return text;
+
+            int leftPadding = (windowWidth - text.Length) / 2;
+            return new string(' ', leftPadding) + text;
         }
     }
 }
