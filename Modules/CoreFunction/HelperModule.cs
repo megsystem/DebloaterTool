@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -6,26 +7,24 @@ namespace DebloaterTool
 {
     internal class HelperModule
     {
-        public static void ListModule(bool dontshowinmodule = true)
+        public static string[] ListModule()
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
+            var assembly = Assembly.GetExecutingAssembly();
+            var list = new List<string>();
+
             foreach (var type in assembly.GetTypes())
             {
-                var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static)
-                                  .Where(m => m.ReturnType == typeof(void) && m.GetParameters().Length == 0);
+                var methods = type
+                    .GetMethods(BindingFlags.Public | BindingFlags.Static)
+                    .Where(m => m.ReturnType == typeof(void) && m.GetParameters().Length == 0);
 
-                if (methods.Any())
+                foreach (var method in methods)
                 {
-                    // Display the class name without the namespace in a custom color (e.g., Cyan)
-                    HelperDisplay.DisplayMessage($"Class: {type.Name}", ConsoleColor.Cyan);
-
-                    foreach (var method in methods)
-                    {
-                        // Display the method name with the color Green
-                        HelperDisplay.DisplayMessage($"  - Method: {method.Name}()", ConsoleColor.Green);
-                    }
+                    list.Add($"{type.Name}.{method.Name}");
                 }
             }
+
+            return list.ToArray();
         }
 
         public static void RunModule(string input) 

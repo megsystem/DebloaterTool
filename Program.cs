@@ -134,7 +134,9 @@ namespace DebloaterTool
                     SecurityPerformance.DisableWinErrorReporting();
                     SecurityPerformance.ApplySecurityPerformanceTweaks();
                     SecurityPerformance.DisableSMBv1();
-                    DataCollection.InstallTweaks();
+                    DataCollection.DisableAdvertisingAndContentDelivery();
+                    DataCollection.DisableDataCollectionPolicies();
+                    DataCollection.DisableTelemetryServices();
                     WinStore.Uninstall();
                     WinCostumization.DisableSnapTools();
                     WinCostumization.EnableUltimatePerformance();
@@ -160,7 +162,9 @@ namespace DebloaterTool
                     SecurityPerformance.DisableWinErrorReporting();
                     SecurityPerformance.ApplySecurityPerformanceTweaks();
                     SecurityPerformance.DisableSMBv1();
-                    DataCollection.InstallTweaks();
+                    DataCollection.DisableAdvertisingAndContentDelivery();
+                    DataCollection.DisableDataCollectionPolicies();
+                    DataCollection.DisableTelemetryServices();
                     WinCostumization.DisableSnapTools();
                     WinCostumization.EnableUltimatePerformance();
                     Ungoogled.UngoogledInstaller();
@@ -224,7 +228,12 @@ namespace DebloaterTool
                     }
 
                     // Run DataCollection
-                    if (runDataCollection) DataCollection.InstallTweaks();
+                    if (runDataCollection) 
+                    {
+                        DataCollection.DisableAdvertisingAndContentDelivery();
+                        DataCollection.DisableDataCollectionPolicies();
+                        DataCollection.DisableTelemetryServices();
+                    }
 
                     // Run WinCostumization
                     if (runWinCostumization)
@@ -252,14 +261,20 @@ namespace DebloaterTool
                     if (runBootLogo) { BootLogo.Install(); }
                     break;
 
-                case 'D': // Tropical
-                    HelperModule.ListModule();
-                    Console.Write("Enter method to execute (e.g. WinDefender.Uninstall): ");
-                    string input = Console.ReadLine();
+                case 'D':
+                    // 1. Prompt & filter in one go
+                    var toRun = HelperModule
+                        .ListModule()
+                        .Where(entry => HelperDisplay.RequestYesOrNo($"Do you want to run {entry}?"))
+                        .ToList();
+
+                    // 2. Header & verbose log
                     Console.WriteLine("Running DebugMode Debloating...");
-                    Console.WriteLine("---------------------------------");
-                    Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
-                    HelperModule.RunModule(input);
+                    Console.WriteLine(new string('-', 33));
+                    Logger.Log("[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
+
+                    // 3. Execute
+                    toRun.ForEach(HelperModule.RunModule);
                     break;
             }
 

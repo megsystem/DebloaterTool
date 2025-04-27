@@ -5,19 +5,9 @@ namespace DebloaterTool
     internal class DataCollection
     {
         /// <summary>
-        /// Disables telemetry, diagnostic services, and various data collection features
-        /// </summary>
-        public static void InstallTweaks()
-        {
-            DisableTelemetryServices();
-            DisableDataCollectionPolicies();
-            DisableAdvertisingAndContentDelivery();
-        }
-
-        /// <summary>
         /// Disables Windows telemetry and diagnostic services by setting their start type to disabled
         /// </summary>
-        private static void DisableTelemetryServices()
+        public static void DisableTelemetryServices()
         {
             var modifications = new[]
             {
@@ -34,7 +24,7 @@ namespace DebloaterTool
         /// <summary>
         /// Disables various data collection policies and feedback mechanisms
         /// </summary>
-        private static void DisableDataCollectionPolicies()
+        public static void DisableDataCollectionPolicies()
         {
             var modifications = new[]
             {
@@ -89,7 +79,7 @@ namespace DebloaterTool
         /// <summary>
         /// Disables advertising features and content delivery
         /// </summary>
-        private static void DisableAdvertisingAndContentDelivery()
+        public static void DisableAdvertisingAndContentDelivery()
         {
             var modifications = new[]
             {
