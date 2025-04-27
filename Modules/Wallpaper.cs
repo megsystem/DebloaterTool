@@ -16,6 +16,16 @@ namespace DebloaterTool
                 string wallpaperFinalPath = @"C:\DebloaterTool\Wallpapers";
                 Directory.CreateDirectory(wallpaperFinalPath);
 
+                // Now download the lockscreen
+                string lockscreenName = "Lockscreen.png";
+                string lockscreenUrl = $"{ExternalLinks.wallpaper}/{lockscreenName}";
+                string lockscreenLocalPath = Path.Combine(wallpaperFinalPath, lockscreenName);
+                DownloadAndLog(lockscreenUrl, lockscreenLocalPath, "Lockscreen");
+
+                // Set Wallpaper Lockscreen
+                HelperWallpaper.SetLockScreenWallpaper(lockscreenLocalPath);
+                Logger.Log("Wallpaper Lockscreen setted successfully.", Level.SUCCESS);
+
                 // Now download the desktop wallpapers
                 int i = 1;
                 while (true)
@@ -30,16 +40,9 @@ namespace DebloaterTool
                     i++;
                 }
 
-                // Now download the lockscreen
-                string lockscreenName = "Lockscreen.png";
-                string lockscreenUrl = $"{ExternalLinks.wallpaper}/{lockscreenName}";
-                string lockscreenLocalPath = Path.Combine(wallpaperFinalPath, lockscreenName);
-                DownloadAndLog(lockscreenUrl, lockscreenLocalPath, "Lockscreen");
-
-                // Set wallpapers
-                HelperWallpaper.SetLockScreenWallpaper(lockscreenLocalPath);
+                // Set Wallpaper Desktop
                 HelperWallpaper.SetWallpaperSlideshowFromFolder(wallpaperFinalPath);
-                Logger.Log("Wallpapers setted successfully.", Level.SUCCESS);
+                Logger.Log("Wallpaper Slideshow setted successfully.", Level.SUCCESS);
             }
             catch (Exception ex)
             {
