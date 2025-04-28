@@ -29,7 +29,7 @@ namespace DebloaterTool
         public static readonly string Version = $"V{version.Major}.{version.Minor}.{version.Build}";
 
         // Downloads links - fork and put your urls
-        public static string tabLink = "https://xengshi.github.io/materialYouNewTab/";
+        public static string tabLink = "https://megsystem.github.io/materialYouNewTab/"; // forked - original by XengShi
         public static string wallpaper = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Wallpapers";
         public static string powerRun = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/PowerRun.exe";
         public static string bootlogo = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/bootlogo.zip";
