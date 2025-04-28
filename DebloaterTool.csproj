@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="External\ExternalLinks.cs" />
+    <Compile Include="Config\Settings.cs" />
     <Compile Include="Config\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -76,8 +76,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\Welcome.vbs" />
-    <Content Include="External\PowerRun.exe" />
-    <Content Include="External\tacky-borders.exe" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -100,10 +98,6 @@
   <ItemGroup>
     <None Include="Config\christitus.json" />
     <None Include="Config\defender.reg" />
-    <None Include="External\AutoDebloater.ps1" />
-    <None Include="External\bootlogo.zip" />
-    <None Include="External\DebloaterTool.ps1" />
-    <None Include="External\ExplorerTheme.zip" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

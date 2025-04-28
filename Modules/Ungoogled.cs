@@ -24,7 +24,7 @@ namespace DebloaterTool
         /// </summary>
         private static void ChangeUngoogledHomePage()
         {
-            string argToAdd = $"--custom-ntp={ExternalLinks.tabLink}";
+            string argToAdd = $"--custom-ntp={Settings.tabLink}";
             // Directories to search: Desktop, Common Desktop, Start Menu, Programs, and Taskbar pinned shortcuts.
             string[] dirs = new string[] {
                 Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),

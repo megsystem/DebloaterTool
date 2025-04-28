@@ -39,11 +39,11 @@ namespace DebloaterTool
         /// </summary>
         public static void DisableWindowsUpdateV2()
         {
-            Logger.Log($"Downloading from {ExternalLinks.powerRun}...");
+            Logger.Log($"Downloading from {Settings.powerRun}...");
             string powerRunPath = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.exe");
-            if (!HelperGlobal.DownloadFile(ExternalLinks.powerRun, powerRunPath))
+            if (!HelperGlobal.DownloadFile(Settings.powerRun, powerRunPath))
             {
-                Logger.Log($"Failed to download {ExternalLinks.powerRun}. Skipping...", Level.ERROR);
+                Logger.Log($"Failed to download {Settings.powerRun}. Skipping...", Level.ERROR);
                 return;
             }
             Logger.Log($"Download complete to {powerRunPath}");

@@ -18,16 +18,8 @@ namespace DebloaterTool
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)768 | (SecurityProtocolType)3072;
 
             // Run the Welcome Screen and EULA
-            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            Console.Title = $"{(IsAdministrator() ? "[Administrator]: " : "")}DebloaterTool V{version.Major}.{version.Minor}.{version.Build}";
-            HelperDisplay.DisplayMessage(@"+====================================================================================+".CenterInConsole(), ConsoleColor.Magenta);
-            HelperDisplay.DisplayMessage(@"|  ________     ______ ______            _____            ________           ______  |".CenterInConsole(), ConsoleColor.Magenta);
-            HelperDisplay.DisplayMessage(@"|  ___  __ \_______  /____  /___________ __  /_______________  __/______________  /  |".CenterInConsole(), ConsoleColor.Magenta);
-            HelperDisplay.DisplayMessage(@"|  __  / / /  _ \_  __ \_  /_  __ \  __ `/  __/  _ \_  ___/_  /  _  __ \  __ \_  /   |".CenterInConsole(), ConsoleColor.Magenta);
-            HelperDisplay.DisplayMessage(@"|  _  /_/ //  __/  /_/ /  / / /_/ / /_/ // /_ /  __/  /   _  /   / /_/ / /_/ /  /    |".CenterInConsole(), ConsoleColor.Magenta);
-            HelperDisplay.DisplayMessage(@"|  /_____/ \___//_.___//_/  \____/\__,_/ \__/ \___//_/    /_/    \____/\____//_/     |".CenterInConsole(), ConsoleColor.Magenta);
-            HelperDisplay.DisplayMessage(@"|                                                                                    |".CenterInConsole(), ConsoleColor.Magenta);
-            HelperDisplay.DisplayMessage(@"+====================================================================================+".CenterInConsole(), ConsoleColor.Magenta);
+            Console.Title = $"{(IsAdministrator() ? "[Administrator]: " : "")}DebloaterTool {Settings.Version}";
+            foreach (string line in Settings.Logo) HelperDisplay.DisplayMessage(line.CenterInConsole(), ConsoleColor.Magenta);
             Console.WriteLine();
             Console.WriteLine("+=============================================================+".CenterInConsole());
             Console.WriteLine("|              End User License Agreement (EULA)              |".CenterInConsole());

@@ -13,12 +13,12 @@ namespace DebloaterTool
             try
             {
                 // Prepare the destination folder
-                string wallpaperFinalPath = @"C:\DebloaterTool\Wallpapers";
+                string wallpaperFinalPath = $@"{Settings.InstallPath}\Wallpapers";
                 Directory.CreateDirectory(wallpaperFinalPath);
 
                 // Now download the lockscreen
                 string lockscreenName = "Lockscreen.png";
-                string lockscreenUrl = $"{ExternalLinks.wallpaper}/{lockscreenName}";
+                string lockscreenUrl = $"{Settings.wallpaper}/{lockscreenName}";
                 string lockscreenLocalPath = Path.Combine(wallpaperFinalPath, lockscreenName);
                 DownloadAndLog(lockscreenUrl, lockscreenLocalPath, "Lockscreen");
 
@@ -31,7 +31,7 @@ namespace DebloaterTool
                 while (true)
                 {
                     string fileName = $"{i}.png";
-                    string fileUrl = $"{ExternalLinks.wallpaper}/{fileName}";
+                    string fileUrl = $"{Settings.wallpaper}/{fileName}";
                     string fileLocalPath = Path.Combine(wallpaperFinalPath, fileName);
 
                     if (!DownloadAndLog(fileUrl, fileLocalPath, $"Wallpaper #{i}"))

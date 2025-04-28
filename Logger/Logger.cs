@@ -6,9 +6,6 @@ namespace DebloaterTool
 {
     public static class Logger
     {
-        // Log file path (same directory as the executable)
-        private static readonly string LogFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DebloaterTool.log");
-
         public static void Log(string message, Level level = Level.INFO, bool Save = true, bool Return = false)
         {
             Console.ForegroundColor = GetColor(level);
@@ -41,7 +38,16 @@ namespace DebloaterTool
         {
             try
             {
-                File.AppendAllText(LogFilePath, logEntry + Environment.NewLine);
+                bool fileExists = File.Exists(Settings.LogFilePath);
+
+                if (!fileExists)
+                {
+                    // Create file with header
+                    File.WriteAllText(Settings.LogFilePath, string.Join(Environment.NewLine, Settings.Logo) + Environment.NewLine);
+                }
+
+                // Append the log entry
+                File.AppendAllText(Settings.LogFilePath, logEntry + Environment.NewLine);
             }
             catch (Exception ex)
             {

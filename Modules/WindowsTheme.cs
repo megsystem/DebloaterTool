@@ -7,7 +7,7 @@ namespace DebloaterTool
 {
     internal class WindowsTheme
     {
-        static string themePath = @"C:\DebloaterTool\WinTheme";
+        static string themePath = $@"{Settings.InstallPath}\WinTheme";
 
         public static void ExplorerTheme()
         {
@@ -17,7 +17,7 @@ namespace DebloaterTool
                 string explorerthemezip = Path.Combine(themePath, "ExplorerTheme.zip");
 
                 // Attempt to download the explorertheme file
-                if (!HelperGlobal.DownloadFile(ExternalLinks.explorertheme, explorerthemezip))
+                if (!HelperGlobal.DownloadFile(Settings.explorertheme, explorerthemezip))
                 {
                     Logger.Log("Failed to download ExplorerTheme. Exiting...", Level.ERROR);
                     return;
@@ -62,7 +62,7 @@ namespace DebloaterTool
                 string borderthemepath = Path.Combine(themePath, "tacky-borders.exe");
 
                 // Attempt to download the BorderTheme file
-                if (!HelperGlobal.DownloadFile(ExternalLinks.bordertheme, borderthemepath))
+                if (!HelperGlobal.DownloadFile(Settings.bordertheme, borderthemepath))
                 {
                     Logger.Log("Failed to download BorderTheme. Exiting...", Level.ERROR);
                     return;
