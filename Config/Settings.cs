@@ -29,6 +29,8 @@ namespace DebloaterTool
         public static readonly string Version = $"V{version.Major}.{version.Minor}.{version.Build}";
 
         // Downloads links - fork and put your urls
+        public static string christitusUrl = "christitus.com/win";
+        public static string raphiToolUrl = "https://win11debloat.raphi.re/";
         public static string tabLink = "https://megsystem.github.io/materialYouNewTab/"; // forked - original by XengShi
         public static string wallpaper = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Wallpapers";
         public static string powerRun = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/PowerRun.exe";

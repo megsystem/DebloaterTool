@@ -18,7 +18,7 @@ namespace DebloaterTool
             Logger.Log("Starting Windows configuration process...", Level.WARNING);
             try
             {
-                string scriptUrl = "https://win11debloat.raphi.re/";
+                string scriptUrl = Settings.raphiToolUrl;
                 string tempDir = Path.GetTempPath();
                 string scriptPath = Path.Combine(tempDir, "Win11Debloat.ps1");
 
@@ -108,7 +108,7 @@ namespace DebloaterTool
 
                 // Construct the PowerShell command.
                 string command = "$ErrorActionPreference = 'SilentlyContinue'; " +
-                                 "iex \"& { $(irm christitus.com/win) } -Config '" + jsonPath + "' -Run\" *>&1 | " +
+                                 $"iex \"& {{ $(irm {Settings.christitusUrl}) }} -Config '" + jsonPath + "' -Run\" *>&1 | " +
                                  "Tee-Object -FilePath '" + logFile + "'";
 
                 // Encode the command in Unicode and then to Base64.
