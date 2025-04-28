@@ -43,7 +43,7 @@ namespace DebloaterTool
             Console.WriteLine("+=============================================================+".CenterInConsole());
             Console.WriteLine();
             Console.WriteLine("--------------------------------------------------------------------------");
-            Logger.Log($"Welcome to DebloaterTool Debug Console!", Level.INFO);
+            Logger.Log($"Welcome to DebloaterTool Debug Console!", Level.INFO, Save: false);
             Console.WriteLine("--------------------------------------------------------------------------");
 
             // Parse arguments to decide which elements to skip.

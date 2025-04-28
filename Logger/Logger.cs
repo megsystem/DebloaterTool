@@ -9,7 +9,7 @@ namespace DebloaterTool
         // Log file path (same directory as the executable)
         private static readonly string LogFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DebloaterTool.log");
 
-        public static void Log(string message, Level level = Level.INFO, bool isProgress = false)
+        public static void Log(string message, Level level = Level.INFO, bool Save = true, bool Return = false)
         {
             Console.ForegroundColor = GetColor(level);
 
@@ -28,13 +28,13 @@ namespace DebloaterTool
             for (int i = 0; i < wrappedLines.Count; i++)
             {
                 string linePrefix = (i == 0) ? timestamp : padding;
-                if (isProgress) Console.Write("\r" + linePrefix + wrappedLines[i]);
+                if (Return) Console.Write("\r" + linePrefix + wrappedLines[i]);
                 else Console.WriteLine(linePrefix + wrappedLines[i]);
             }
             Console.ResetColor();
 
             // Write log to file (only if not progress log)
-            if (!isProgress) WriteLogToFile(timestamp + message);
+            if (Save) WriteLogToFile(timestamp + message);
         }
 
         private static void WriteLogToFile(string logEntry)

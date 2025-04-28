@@ -138,7 +138,8 @@ namespace DebloaterTool
                             int totalBlocks = 50;
                             int progressBlocks = (int)(e.ProgressPercentage / 100.0 * totalBlocks);
                             string progressBar = new string('#', progressBlocks) + new string('-', totalBlocks - progressBlocks);
-                            Logger.Log($"Downloading: [{progressBar}] {e.ProgressPercentage}%   ", Level.DOWNLOAD, isProgress: true);
+                            Logger.Log($"Downloading: [{progressBar}] {e.ProgressPercentage}%   ", Level.DOWNLOAD,
+                                Return: true, Save: false);
                         };
 
                         webClient.DownloadFileCompleted += (s, e) =>
