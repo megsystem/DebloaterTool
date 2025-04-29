@@ -12,6 +12,7 @@ namespace DebloaterTool
         /// </summary>
         public static void Uninstall()
         {
+            Directory.CreateDirectory(Settings.debloatersPath);
             Logger.Log($"Downloading from {Settings.powerRun}...");
             string powerRunPath = Path.Combine(Settings.debloatersPath, $"PowerRun.exe");
             if (!File.Exists(powerRunPath))

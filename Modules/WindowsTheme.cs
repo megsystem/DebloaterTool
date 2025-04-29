@@ -106,7 +106,7 @@ namespace DebloaterTool
                     waited++;
                 }
 
-                if (IsWindows10())
+                if (!IsWindows11())
                 {
                     string content = File.ReadAllText(configPath);
 
@@ -132,28 +132,12 @@ namespace DebloaterTool
             }
         }
 
-        private static bool IsWindows10()
+        public static bool IsWindows11()
         {
-            try
-            {
-                using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
-                {
-                    if (key != null)
-                    {
-                        string productName = key.GetValue("ProductName") as string;
-                        if (!string.IsNullOrEmpty(productName) && productName.Contains("Windows 10"))
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Failed to detect Windows version: {ex.Message}", Level.ERROR);
-            }
-
-            return false;
+            var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+            var currentBuildStr = (string)reg.GetValue("CurrentBuild");
+            var currentBuild = int.Parse(currentBuildStr);
+            return currentBuild >= 22000;
         }
 
         public static void ApplyThemeTweaks()
