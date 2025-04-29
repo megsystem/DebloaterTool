@@ -13,11 +13,18 @@ namespace DebloaterTool
         public static void Uninstall()
         {
             Logger.Log($"Downloading from {Settings.powerRun}...");
-            string powerRunPath = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.exe");
-            if (!HelperGlobal.DownloadFile(Settings.powerRun, powerRunPath))
+            string powerRunPath = Path.Combine(Settings.debloatersPath, $"PowerRun.exe");
+            if (!File.Exists(powerRunPath))
             {
-                Logger.Log($"Failed to download {Settings.powerRun}. Skipping...", Level.ERROR);
-                return;
+                if (!HelperGlobal.DownloadFile(Settings.powerRun, powerRunPath))
+                {
+                    Logger.Log($"Failed to download {Settings.powerRun}. Skipping...", Level.ERROR);
+                    return;
+                }
+            }
+            else
+            {
+                Logger.Log("PowerRun.exe already exists. Skipping download.", Level.WARNING);
             }
             Logger.Log($"Download complete to {powerRunPath}");
 
@@ -47,14 +54,12 @@ namespace DebloaterTool
                 "C:\\Windows\\System32\\WebThreatDefSvc"
             };
 
-            string tempRegFile = Path.Combine(Path.GetTempPath(), "defenderkiller.reg");
-            File.WriteAllText(tempRegFile, Config.Resource.defender);
+            Directory.CreateDirectory(Settings.debloatersPath);
+            string regFile = Path.Combine(Settings.debloatersPath, "defenderkiller.reg");
+            File.WriteAllText(regFile, Settings.defender);
 
             // Import the registry file silently using regedit (/s switch).
-            HelperGlobal.RunCommand(powerRunPath, $"regedit.exe /s \"{tempRegFile}\"");
-
-            // Optionally, delete the temporary file after execution.
-            try { File.Delete(tempRegFile); } catch { /* Ignore errors on deletion */ }
+            HelperGlobal.RunCommand(powerRunPath, $"regedit.exe /s \"{regFile}\"");
 
             foreach (var file in filesToDelete)
             {

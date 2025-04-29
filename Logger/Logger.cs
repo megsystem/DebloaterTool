@@ -38,9 +38,11 @@ namespace DebloaterTool
         {
             try
             {
-                bool fileExists = File.Exists(Settings.LogFilePath);
+                // Ensure the directory exists
+                string directory = Path.GetDirectoryName(Settings.LogFilePath);
+                Directory.CreateDirectory(directory);
 
-                if (!fileExists)
+                if (!File.Exists(Settings.LogFilePath))
                 {
                     // Create file with header
                     File.WriteAllText(Settings.LogFilePath, string.Join(Environment.NewLine, Settings.Logo) + Environment.NewLine);

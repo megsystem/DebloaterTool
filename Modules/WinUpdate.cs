@@ -40,11 +40,18 @@ namespace DebloaterTool
         public static void DisableWindowsUpdateV2()
         {
             Logger.Log($"Downloading from {Settings.powerRun}...");
-            string powerRunPath = Path.Combine(Path.GetTempPath(), $"{Path.GetRandomFileName()}.exe");
-            if (!HelperGlobal.DownloadFile(Settings.powerRun, powerRunPath))
+            string powerRunPath = Path.Combine(Settings.debloatersPath, $"PowerRun.exe");
+            if (!File.Exists(powerRunPath))
             {
-                Logger.Log($"Failed to download {Settings.powerRun}. Skipping...", Level.ERROR);
-                return;
+                if (!HelperGlobal.DownloadFile(Settings.powerRun, powerRunPath))
+                {
+                    Logger.Log($"Failed to download {Settings.powerRun}. Skipping...", Level.ERROR);
+                    return;
+                }
+            }
+            else
+            {
+                Logger.Log("PowerRun.exe already exists. Skipping download.", Level.WARNING);
             }
             Logger.Log($"Download complete to {powerRunPath}");
 

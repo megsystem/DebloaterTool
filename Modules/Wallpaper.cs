@@ -13,13 +13,12 @@ namespace DebloaterTool
             try
             {
                 // Prepare the destination folder
-                string wallpaperFinalPath = $@"{Settings.InstallPath}\Wallpapers";
-                Directory.CreateDirectory(wallpaperFinalPath);
+                Directory.CreateDirectory(Settings.wallpapersPath);
 
                 // Now download the lockscreen
                 string lockscreenName = "Lockscreen.png";
                 string lockscreenUrl = $"{Settings.wallpaper}/{lockscreenName}";
-                string lockscreenLocalPath = Path.Combine(wallpaperFinalPath, lockscreenName);
+                string lockscreenLocalPath = Path.Combine(Settings.wallpapersPath, lockscreenName);
                 DownloadAndLog(lockscreenUrl, lockscreenLocalPath, "Lockscreen");
 
                 // Set Wallpaper Lockscreen
@@ -32,7 +31,7 @@ namespace DebloaterTool
                 {
                     string fileName = $"{i}.png";
                     string fileUrl = $"{Settings.wallpaper}/{fileName}";
-                    string fileLocalPath = Path.Combine(wallpaperFinalPath, fileName);
+                    string fileLocalPath = Path.Combine(Settings.wallpapersPath, fileName);
 
                     if (!DownloadAndLog(fileUrl, fileLocalPath, $"Wallpaper #{i}"))
                         break;
@@ -41,7 +40,7 @@ namespace DebloaterTool
                 }
 
                 // Set Wallpaper Desktop
-                HelperWallpaper.SetWallpaperSlideshowFromFolder(wallpaperFinalPath);
+                HelperWallpaper.SetWallpaperSlideshowFromFolder(Settings.wallpapersPath);
                 Logger.Log("Wallpaper Slideshow setted successfully.", Level.SUCCESS);
             }
             catch (Exception ex)

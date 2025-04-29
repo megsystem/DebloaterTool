@@ -18,24 +18,44 @@ namespace DebloaterTool
             @"+====================================================================================+",
         };
 
-        // Log file path (same directory as the executable)
-        public static readonly string LogFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DebloaterTool.log");
-
         // Default folder
         public static readonly string InstallPath = @"C:\DebloaterTool";
+
+        // Log file path (same directory as the executable)
+        public static readonly string LogFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DebloaterTool.log");
 
         // Version Program
         static readonly Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
         public static readonly string Version = $"V{version.Major}.{version.Minor}.{version.Build}";
 
         // Downloads links - fork and put your urls
-        public static string christitusUrl = "christitus.com/win";
-        public static string raphiToolUrl = "https://win11debloat.raphi.re/";
         public static string tabLink = "https://megsystem.github.io/materialYouNewTab/"; // forked - original by XengShi
         public static string wallpaper = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Wallpapers";
         public static string powerRun = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/PowerRun.exe";
         public static string bootlogo = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/bootlogo.zip";
         public static string bordertheme = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/tacky-borders.exe";
         public static string explorertheme = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/ExplorerTheme.zip";
+
+        // RaphiTool Settings
+        public static string raphiToolUrl = "https://win11debloat.raphi.re/";
+        public static string raphiToolArgs = "-Silent " +
+            "-RemoveApps -RemoveAppsCustom -RemoveGamingApps -RemoveCommApps -RemoveDevApps -RemoveW11Outlook -ForceRemoveEdge " +
+            "-DisableDVR -DisableTelemetry -DisableBingSearches -DisableBing -DisableDesktopSpotlight -DisableLockscrTips -DisableLockscreenTips " +
+            "-DisableWindowsSuggestions -DisableSuggestions -ShowKnownFileExt -HideDupliDrive -TaskbarAlignLeft -HideSearchTb " +
+            "-HideTaskview -DisableStartRecommended -DisableCopilot -DisableRecall -DisableWidgets -HideWidgets -DisableChat -HideChat " +
+            "-EnableEndTask -ClearStart -ClearStartAllUsers -RevertContextMenu -DisableMouseAcceleration -DisableStickyKeys " +
+            "-ExplorerToThisPC -DisableOnedrive -HideOnedrive ";
+
+        // ChrisTool Settings
+        public static string christitusUrl = "christitus.com/win";
+        public static byte[] christitusConfig = Config.Resource.christitus;
+
+        // DefenderReg Settings
+        public static string defender = Config.Resource.defender;
+
+        // Paths vars
+        public static string debloatersPath = $@"{Settings.InstallPath}\Debloaters";
+        public static string wallpapersPath = $@"{Settings.InstallPath}\Wallpapers";
+        public static string themePath = $@"{Settings.InstallPath}\WinTheme";
     }
 }

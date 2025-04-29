@@ -2,19 +2,18 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 
 namespace DebloaterTool
 {
     internal class WindowsTheme
     {
-        static string themePath = $@"{Settings.InstallPath}\WinTheme";
-
         public static void ExplorerTheme()
         {
             try
             {
-                Directory.CreateDirectory(themePath);
-                string explorerthemezip = Path.Combine(themePath, "ExplorerTheme.zip");
+                Directory.CreateDirectory(Settings.themePath);
+                string explorerthemezip = Path.Combine(Settings.themePath, "ExplorerTheme.zip");
 
                 // Attempt to download the explorertheme file
                 if (!HelperGlobal.DownloadFile(Settings.explorertheme, explorerthemezip))
@@ -23,9 +22,9 @@ namespace DebloaterTool
                     return;
                 }
 
-                Logger.Log($"Extracting ExplorerTheme in {themePath}...", Level.INFO);
-                HelperZip.ExtractZipFile(explorerthemezip, themePath);
-                string installCmdPath = Path.Combine(themePath, "register.cmd");
+                Logger.Log($"Extracting ExplorerTheme in {Settings.themePath}...", Level.INFO);
+                HelperZip.ExtractZipFile(explorerthemezip, Settings.themePath);
+                string installCmdPath = Path.Combine(Settings.themePath, "register.cmd");
 
                 if (File.Exists(installCmdPath))
                 {
@@ -33,7 +32,7 @@ namespace DebloaterTool
 
                     var process = new Process();
                     process.StartInfo.FileName = installCmdPath;
-                    process.StartInfo.WorkingDirectory = themePath;
+                    process.StartInfo.WorkingDirectory = Settings.themePath;
                     process.StartInfo.UseShellExecute = true;
                     process.StartInfo.CreateNoWindow = true;
                     process.Start();
@@ -58,8 +57,8 @@ namespace DebloaterTool
         {
             try
             {
-                Directory.CreateDirectory(themePath);
-                string borderthemepath = Path.Combine(themePath, "tacky-borders.exe");
+                Directory.CreateDirectory(Settings.themePath);
+                string borderthemepath = Path.Combine(Settings.themePath, "tacky-borders.exe");
 
                 // Attempt to download the BorderTheme file
                 if (!HelperGlobal.DownloadFile(Settings.bordertheme, borderthemepath))
@@ -68,7 +67,7 @@ namespace DebloaterTool
                     return;
                 }
 
-                Logger.Log($"Installed in {themePath} folder!", Level.SUCCESS);
+                Logger.Log($"Installed in {Settings.themePath} folder!", Level.SUCCESS);
 
                 // Create a scheduled task to run the file at logon with highest privileges
                 string taskName = "BorderThemeStartup";
@@ -86,11 +85,75 @@ namespace DebloaterTool
 
                 // Launch immediately
                 Process.Start(borderthemepath);
+
+                // Set confuration
+                string configPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                    ".config", "tacky-borders", "config.yaml"
+                );
+
+                int waited = 0;
+                while (!File.Exists(configPath))
+                {
+                    if (waited >= 30)
+                    {
+                        Logger.Log($"Timeout waiting for file: {configPath}", Level.ERROR);
+                        return;
+                    }
+
+                    Logger.Log($"Waiting for config file to appear... ({waited + 1}s)", Level.INFO);
+                    Thread.Sleep(1000);
+                    waited++;
+                }
+
+                if (IsWindows10())
+                {
+                    string content = File.ReadAllText(configPath);
+
+                    if (content.Contains("border_radius: Auto"))
+                    {
+                        content = content.Replace("border_radius: Auto", "border_radius: RoundSmall");
+                        File.WriteAllText(configPath, content);
+                        Logger.Log("Config updated: border_radius set to RoundSmall.", Level.INFO);
+                    }
+                    else
+                    {
+                        Logger.Log("No matching 'border_radius: Auto' entry found.", Level.ERROR);
+                    }
+                }
+                else
+                {
+                    Logger.Log("Not running on Windows 10. No changes made.", Level.WARNING);
+                }
             }
             catch (Exception ex)
             {
                 Logger.Log($"Unexpected error in BorderTheme: {ex.Message}", Level.ERROR);
             }
+        }
+
+        private static bool IsWindows10()
+        {
+            try
+            {
+                using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+                {
+                    if (key != null)
+                    {
+                        string productName = key.GetValue("ProductName") as string;
+                        if (!string.IsNullOrEmpty(productName) && productName.Contains("Windows 10"))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Failed to detect Windows version: {ex.Message}", Level.ERROR);
+            }
+
+            return false;
         }
 
         public static void ApplyThemeTweaks()
