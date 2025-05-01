@@ -52,14 +52,14 @@
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
     <Compile Include="Modules\BootLogo.cs" />
-    <Compile Include="Modules\CoreFunction\HelperDisplay.cs" />
-    <Compile Include="Modules\CoreFunction\HelperGlobal.cs" />
+    <Compile Include="Modules\Helpers\HelperDisplay.cs" />
+    <Compile Include="Modules\Helpers\HelperGlobal.cs" />
     <Compile Include="Logger\LevelHelper.cs" />
     <Compile Include="Logger\Logger.cs" />
-    <Compile Include="Modules\CoreFunction\HelperRegedit.cs" />
-    <Compile Include="Modules\CoreFunction\HelperModule.cs" />
-    <Compile Include="Modules\CoreFunction\HelperWallpaper.cs" />
-    <Compile Include="Modules\CoreFunction\HelperZip.cs" />
+    <Compile Include="Modules\Helpers\HelperRegedit.cs" />
+    <Compile Include="Modules\Helpers\HelperModule.cs" />
+    <Compile Include="Modules\Helpers\HelperWallpaper.cs" />
+    <Compile Include="Modules\Helpers\HelperZip.cs" />
     <Compile Include="Modules\DebloaterTools.cs" />
     <Compile Include="Modules\DataCollection.cs" />
     <Compile Include="Modules\WindowsTheme.cs" />
