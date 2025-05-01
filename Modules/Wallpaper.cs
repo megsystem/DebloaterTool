@@ -12,9 +12,6 @@ namespace DebloaterTool
         {
             try
             {
-                // Prepare the destination folder
-                Directory.CreateDirectory(Settings.wallpapersPath);
-
                 // Now download the lockscreen
                 string lockscreenName = "Lockscreen.png";
                 string lockscreenUrl = $"{Settings.wallpaper}/{lockscreenName}";

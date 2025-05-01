@@ -11,9 +11,7 @@ namespace DebloaterTool
             try
             {
                 // 1. Prepare temp folder
-                string tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-                Directory.CreateDirectory(tempPath);
-                string bootlogozip = Path.Combine(tempPath, "bootlogo.zip");
+                string bootlogozip = Path.Combine(Settings.bootlogoPath, "bootlogo.zip");
 
                 // 2. Download
                 if (!HelperGlobal.DownloadFile(Settings.bootlogo, bootlogozip))
@@ -24,17 +22,17 @@ namespace DebloaterTool
 
                 // 3. Extract
                 Logger.Log("Extracting bootlogo...", Level.INFO);
-                HelperZip.ExtractZipFile(bootlogozip, tempPath);
+                HelperZip.ExtractZipFile(bootlogozip, Settings.bootlogoPath);
 
                 // 4. Locate and run install.cmd
-                string installCmdPath = Path.Combine(tempPath, "install.cmd");
+                string installCmdPath = Path.Combine(Settings.bootlogoPath, "install.cmd");
                 if (File.Exists(installCmdPath))
                 {
                     Logger.Log("Running install.cmd...", Level.INFO);
 
                     var process = new Process();
                     process.StartInfo.FileName = installCmdPath;
-                    process.StartInfo.WorkingDirectory = tempPath;
+                    process.StartInfo.WorkingDirectory = Settings.bootlogoPath;
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.CreateNoWindow = false;
                     process.Start();
@@ -46,6 +44,9 @@ namespace DebloaterTool
                 {
                     Logger.Log("install.cmd not found in extracted folder.", Level.ERROR);
                 }
+
+                // 5. Delete bootlogo zip
+                File.Delete(bootlogozip);
             }
             catch (Exception ex)
             {

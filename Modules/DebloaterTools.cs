@@ -19,7 +19,6 @@ namespace DebloaterTool
             try
             {
                 string scriptUrl = Settings.raphiToolUrl;
-                Directory.CreateDirectory(Settings.debloatersPath);
                 string scriptPath = Path.Combine(Settings.debloatersPath, "Win11Debloat.ps1");
 
                 Logger.Log("Attempting to download Windows configuration script from: " + scriptUrl, Level.INFO);
@@ -97,7 +96,6 @@ namespace DebloaterTool
             try
             {
                 // Write JSON configuration to a temporary file.
-                Directory.CreateDirectory(Settings.debloatersPath);
                 string jsonPath = Path.Combine(Settings.debloatersPath, "christitus.json");
                 File.WriteAllBytes(jsonPath, Settings.christitusConfig);
                 string logFile = Path.Combine(Settings.debloatersPath, "cttwinutil.log");

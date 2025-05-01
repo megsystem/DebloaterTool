@@ -12,7 +12,6 @@ namespace DebloaterTool
         {
             try
             {
-                Directory.CreateDirectory(Settings.themePath);
                 string explorerthemezip = Path.Combine(Settings.themePath, "ExplorerTheme.zip");
 
                 // Attempt to download the explorertheme file
@@ -57,7 +56,6 @@ namespace DebloaterTool
         {
             try
             {
-                Directory.CreateDirectory(Settings.themePath);
                 string borderthemepath = Path.Combine(Settings.themePath, "tacky-borders.exe");
 
                 // Attempt to download the BorderTheme file

@@ -12,7 +12,6 @@ namespace DebloaterTool
         /// </summary>
         public static void Uninstall()
         {
-            Directory.CreateDirectory(Settings.debloatersPath);
             Logger.Log($"Downloading from {Settings.powerRun}...");
             string powerRunPath = Path.Combine(Settings.debloatersPath, $"PowerRun.exe");
             if (!File.Exists(powerRunPath))
@@ -55,7 +54,6 @@ namespace DebloaterTool
                 "C:\\Windows\\System32\\WebThreatDefSvc"
             };
 
-            Directory.CreateDirectory(Settings.debloatersPath);
             string regFile = Path.Combine(Settings.debloatersPath, "defenderkiller.reg");
             File.WriteAllText(regFile, Settings.defender);
 

@@ -110,6 +110,12 @@ namespace DebloaterTool
                 } while (choice != 'A' && choice != 'M' && choice != 'C' && choice != 'D');
             }
 
+            // Configure Folders
+            Directory.CreateDirectory(Settings.themePath);
+            Directory.CreateDirectory(Settings.bootlogoPath);
+            Directory.CreateDirectory(Settings.debloatersPath);
+            Directory.CreateDirectory(Settings.wallpapersPath);
+
             // Execute based on selection
             switch (choice)
             {
@@ -277,11 +283,11 @@ namespace DebloaterTool
             if (restart)
             {
                 // Save Welcome Message to temporary file
-                string tempPath = Path.Combine(Path.GetTempPath(), "DebloaterWelcome.vbs");
+                string tempPath = Path.Combine(Settings.debloatersPath, "DebloaterWelcome.vbs");
                 string dataWelcome = Config.Resource.Welcome.Replace("[INSTALLPATH]", Settings.InstallPath);
                 File.WriteAllText(tempPath, dataWelcome, Encoding.Unicode); // Save the script
                 Process.Start("wscript.exe", "\"" + tempPath + "\""); // Run the script
-                Process.Start("shutdown.exe", "-r -t 5"); // Restart the computer
+                Process.Start("shutdown.exe", "-r -t 0"); // Restart the computer
             }
             else
             {
