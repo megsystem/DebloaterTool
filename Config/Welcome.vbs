@@ -15,7 +15,7 @@ If LCase(currentPath) <> LCase(startupPath) Then
     On Error GoTo 0
 Else
     ' Create DebloaterTool Path
-    folderPath = "C:\DebloaterTool"
+    folderPath = "[INSTALLPATH]"
     If Not fso.FolderExists(folderPath) Then
         fso.CreateFolder(folderPath)
     End If

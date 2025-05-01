@@ -81,6 +81,7 @@ namespace DebloaterTool
                 }
 
                 // Invoke the method
+                Logger.Log($"Running {methodName} in {fullClassName}", Level.WARNING);
                 method.Invoke(instance, null);
                 Logger.Log($"Successfully executed {methodName} in {fullClassName}", Level.SUCCESS);
             }
