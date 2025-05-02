@@ -64,6 +64,7 @@ namespace DebloaterTool
                     Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
                     Logger.Log("EULA declined!", Level.CRITICAL);
                     Console.ReadKey();
+                    SaveLog(); // Save log
                     Environment.Exit(0);
                 }
             }
@@ -80,6 +81,7 @@ namespace DebloaterTool
                 }
                 else
                 {
+                    SaveLog(); // Save log
                     Environment.Exit(0);
                 }
             }
@@ -282,6 +284,16 @@ namespace DebloaterTool
             Logger.Log($"Debloating successfull successed (SUCC)", Level.SUCCESS);
             Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
 
+            // No restart
+            if (!restart) 
+                Logger.Log("Restart skipped. Process completed. Press ENTER to close.", Level.ALERT);
+
+            // Save log
+            SaveLog();
+
+            // Delete empty folder in the RootFolder
+            DeleteEmptyFolders(Settings.InstallPath);
+
             // Restart
             if (restart)
             {
@@ -292,21 +304,38 @@ namespace DebloaterTool
                 Process.Start("wscript.exe", $"\"{tempPath}\"")?.WaitForExit(); // Run the script
                 Process.Start("shutdown.exe", "-r -t 0"); // Restart the computer
             }
-            else
-            {
-                Logger.Log("Restart skipped. Process completed. Press ENTER to close.", Level.ALERT);
-                Console.ReadKey(); // Wait for user to press Enter
-            }
 
-            // Copy log file
+            // Wait for user to press Enter
+            Console.ReadKey(); 
+
+            // End
+            return;
+        }
+
+        static void SaveLog()
+        {
             string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
             string logFileName = $"DebloaterTool_{dateTime}.log";
             string destinationPath = Path.Combine(Settings.logsPath, logFileName);
             File.Copy(Settings.LogFilePath, destinationPath);
             File.Delete(Settings.LogFilePath);
+        }
 
-            // End
-            return;
+        static void DeleteEmptyFolders(string path)
+        {
+            foreach (string directory in Directory.GetDirectories(path))
+            {
+                // Recursively delete empty subfolders
+                DeleteEmptyFolders(directory);
+
+                // If the directory is now empty, delete it
+                if (Directory.GetFiles(directory).Length == 0 &&
+                    Directory.GetDirectories(directory).Length == 0)
+                {
+                    Directory.Delete(directory);
+                    Logger.Log($"Deleted empty folder: {directory}", Level.ALERT);
+                }
+            }
         }
 
         static void RestartAsAdmin()
@@ -317,6 +346,7 @@ namespace DebloaterTool
                 UseShellExecute = true,
                 Verb = "runas"
             };
+
             try
             {
                 Process.Start(proc);
@@ -325,6 +355,8 @@ namespace DebloaterTool
             {
                 Logger.Log($"Failed to start as administrator: {ex.Message}", Level.ERROR);
             }
+
+            SaveLog(); // Save log
             Environment.Exit(0);
         }
 
