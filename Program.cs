@@ -111,6 +111,7 @@ namespace DebloaterTool
             }
 
             // Configure Folders
+            Directory.CreateDirectory(Settings.logsPath);
             Directory.CreateDirectory(Settings.themePath);
             Directory.CreateDirectory(Settings.bootlogoPath);
             Directory.CreateDirectory(Settings.debloatersPath);
@@ -280,6 +281,8 @@ namespace DebloaterTool
             // Process completed
             Logger.Log($"Debloating successfull successed (SUCC)", Level.SUCCESS);
             Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
+
+            // Restart
             if (restart)
             {
                 // Save Welcome Message to temporary file
@@ -294,6 +297,13 @@ namespace DebloaterTool
                 Logger.Log("Restart skipped. Process completed. Press ENTER to close.", Level.ALERT);
                 Console.ReadKey(); // Wait for user to press Enter
             }
+
+            // Copy log file
+            string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+            string logFileName = $"DebloaterTool_{dateTime}.log";
+            string destinationPath = Path.Combine(Settings.logsPath, logFileName);
+            File.Copy(Settings.LogFilePath, destinationPath);
+            File.Delete(Settings.LogFilePath);
 
             // End
             return;
