@@ -1,8 +1,6 @@
 ﻿Windows Registry Editor Version 5.00
-; File: E:\Projects\Development\GitHub Repos\Listed Repos\windows-defender-remover\Remove_defender_moduled\DisableAntivirusProtection.reg
 
 ; disabling Antivirus
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender]
 "DisableRoutinelyTakingAction"=dword:00000001
 "ServiceKeepAlive"=dword:00000000
@@ -10,7 +8,6 @@
 "DisableLocalAdminMerge"=dword:00000001
 
 ; disable overwriting real time protection settings
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection]
 "LocalSettingOverrideDisableOnAccessProtection"=dword:00000000
 "LocalSettingOverrideRealtimeScanDirection"=dword:00000000
@@ -33,10 +30,8 @@
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Microsoft\Windows Defender]
 "DisableRoutinelyTakingAction"=dword:00000001
-; File: E:\Projects\Development\GitHub Repos\Listed Repos\windows-defender-remover\Remove_defender_moduled\DisableDefenderandSecurityCenterNotifications.reg
 
 ; Disable Windows Defender Security Center Notifications
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\WindowsDefenderSecurityCenter\DisableEnhancedNotifications]
 "value"=dword:00000001
 
@@ -47,7 +42,6 @@
 "value"=dword:00000001
 
 ; Disable Windows Security Center Notifications
-
 [-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Security Center]
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Security Center]
@@ -61,10 +55,8 @@
 
 [HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.SecurityAndMaintenance]
 "Enabled"=dword:00000000
-; File: E:\Projects\Development\GitHub Repos\Listed Repos\windows-defender-remover\Remove_defender_moduled\DisableDefenderPolicies.reg
 
 ; Enforce Disabling of Windows Defender Antivirus Policy
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\Defender\AllowIOAVProtection]
 "value"=dword:00000000
 
@@ -258,7 +250,6 @@
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Policy]
 "VerifiedAndReputablePolicyState"=dword:00000000
-; File: E:\Projects\Development\GitHub Repos\Listed Repos\windows-defender-remover\Remove_defender_moduled\NomoreDelayandTimeouts.reg
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System]
 "VerboseStatus"=dword:00000000
@@ -279,7 +270,6 @@
 
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
 "ThumbnailLivePreviewHoverTime"=dword:00000001
-; File: E:\Projects\Development\GitHub Repos\Listed Repos\windows-defender-remover\Remove_defender_moduled\RemovalofWindowsDefenderAntivirus.reg
 
 [-HKEY_LOCAL_MACHINE\Software\Classes\WOW6432Node\CLSID\{2781761E-28E0-4109-99FE-B9D127C57AFE}]
 
@@ -386,11 +376,9 @@
 [-HKEY_CLASSES_ROOT\CLSID\{F6976CF5-68A8-436C-975A-40BE53616D59}]
 
 ; Defender Loggers
-
 [-HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger]
 
 [-HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger]
-; File: E:\Projects\Development\GitHub Repos\Listed Repos\windows-defender-remover\Remove_defender_moduled\RemoveDefenderTasks.reg
 
 [-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{0ACC9108-2000-46C0-8407-5FD9F89521E8}]
 
@@ -399,14 +387,12 @@
 [-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{4A9233DB-A7D3-45D6-B476-8C7D8DF73EB5}]
 
 [-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{B05F34EE-83F2-413D-BC1D-7D5BD6E98300}]
-; File: E:\Projects\Development\GitHub Repos\Listed Repos\windows-defender-remover\Remove_defender_moduled\RemoverofDefenderContextMenu.reg
 
 [-HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Explorer\ShellServiceObjects\{900c0763-5cad-4a34-bc1f-40cd513679d5}]
 
 [-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\ShellServiceObjects\{900c0763-5cad-4a34-bc1f-40cd513679d5}]
 
 ; Remove "Scan with Defender" Context Menu
-
 [-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender]
 
 [-HKEY_CLASSES_ROOT\Folder\shell\WindowsDefender]
@@ -414,10 +400,8 @@
 [-HKEY_CLASSES_ROOT\DesktopBackground\Shell\WindowsSecurity]
 
 [-HKEY_CLASSES_ROOT\Folder\shell\WindowsDefender\Command]
-; File: E:\Projects\Development\GitHub Repos\Listed Repos\windows-defender-remover\Remove_defender_moduled\RemoveServices.reg
 
 ; Remove Defender and Windows Security Services
-
 [-HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MsSecCore]
 
 [-HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\wscsvc]
@@ -444,7 +428,6 @@
 [-HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MsSecFlt]
 
 [-HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MsSecWfp]
-; File: E:\Projects\Development\GitHub Repos\Listed Repos\windows-defender-remover\Remove_defender_moduled\RemoveShellAssociation.reg
 
 [-HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WinDefend]
 
@@ -474,10 +457,8 @@
 "WindowsDefender-1"=-
 "WindowsDefender-2"=-
 "WindowsDefender-3"=-
-; File: E:\Projects\Development\GitHub Repos\Listed Repos\windows-defender-remover\Remove_defender_moduled\RemoveSignatureUpdates.reg
 
 ; this file disables Signature Updates in Windows Defender
-
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\Signature Updates]
 "SignatureDisableNotification"=dword:00000001
 "RealtimeSignatureDelivery"=dword:00000000
@@ -488,10 +469,8 @@
 "DisableUpdateOnStartupWithoutEngine"=dword:00000001
 "ScheduleTime"=dword:00001440
 "DisableScanOnUpdate"=dword:00000001
-; File: E:\Projects\Development\GitHub Repos\Listed Repos\windows-defender-remover\Remove_defender_moduled\RemoveStartupEntries.reg
 
 ; Remove Defender's Startup Entries
-
 [HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run]
 "Windows Defender"=-
 "SecurityHealth"=-
@@ -503,7 +482,6 @@
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run]
 "WindowsDefender"=-
 "SecurityHealth"=-
-; File: E:\Projects\Development\GitHub Repos\Listed Repos\windows-defender-remover\Remove_defender_moduled\RemoveWindowsWebThreat.reg
 
 [-HKEY_CLASSES_ROOT\CLSID\{E48B2549-D510-4A76-8A5F-FC126A6215F0}]
 
@@ -520,7 +498,6 @@
 [-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsRuntime\ActivatableClassId\Microsoft.OneCore.WebThreatDefense.ThreatResponseEngine.ThreatDecisionEngine]
 
 [-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsRuntime\ActivatableClassId\Microsoft.OneCore.WebThreatDefense.Configuration.WTDUserSettings]
-; File: E:\Projects\Development\GitHub Repos\Listed Repos\windows-defender-remover\Remove_defender_moduled\WindowsSettingsPageVisibility.reg
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
 "SettingsPageVisibility"="hide:windowsdefender;"
