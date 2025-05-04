@@ -32,7 +32,7 @@ Else
     textFile.WriteLine "/_____/ \___//_.___//_/  \____/\__,_/ \__/ \___//_/    /_/    \____/\____//_/   "
     textFile.WriteLine "--------------------------------------------------------------------------------"
     textFile.WriteLine ""
-    textFile.WriteLine "                Thank You for Using DebloaterTool!"
+    textFile.WriteLine "                       Thank You for Using DebloaterTool!"
     textFile.WriteLine ""
     textFile.WriteLine "You've just taken the first step toward a cleaner, faster, and more efficient "
     textFile.WriteLine "Windows experience. Whether you removed bloatware, stopped annoying background "
