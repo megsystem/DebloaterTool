@@ -22,7 +22,7 @@ namespace DebloaterTool
         public static readonly string InstallPath = @"C:\DebloaterTool";
 
         // Log file path
-        public static readonly string LogFilePath = Path.Combine(Path.GetTempPath(), $"DebloaterTool_{Path.GetRandomFileName()}.log");
+        public static readonly string LogFilePath = Path.Combine(Path.GetTempPath(), $"DebloaterToolSaved.log");
 
         // Version Program
         static readonly Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
@@ -54,7 +54,7 @@ namespace DebloaterTool
         public static string defender = Config.Resource.defender;
 
         // Paths vars
-        public static string logsPath = $@"{Settings.InstallPath}\Logs";
+        public static string logsPath = $@"{Settings.InstallPath}\Saved Logs";
         public static string debloatersPath = $@"{Settings.InstallPath}\Debloaters";
         public static string wallpapersPath = $@"{Settings.InstallPath}\Wallpapers";
         public static string themePath = $@"{Settings.InstallPath}\WinTheme";

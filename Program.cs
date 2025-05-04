@@ -21,18 +21,18 @@ namespace DebloaterTool
             Console.Title = $"{(IsAdministrator() ? "[Administrator]: " : "")}DebloaterTool {Settings.Version}";
             foreach (string line in Settings.Logo) HelperDisplay.DisplayMessage(line.CenterInConsole(), ConsoleColor.Magenta);
             Console.WriteLine();
-            Console.WriteLine("+=============================================================+".CenterInConsole());
-            Console.WriteLine("|              End User License Agreement (EULA)              |".CenterInConsole());
-            Console.WriteLine("+=============================================================+".CenterInConsole());
-            Console.WriteLine("| By using this software, you agree to the following terms:   |".CenterInConsole());
-            Console.WriteLine("| 1. This software is open source under the MIT License.      |".CenterInConsole());
-            Console.WriteLine("| 2. You may not distribute modified versions without         |".CenterInConsole());
-            Console.WriteLine("|    including the original license.                          |".CenterInConsole());
-            Console.WriteLine("| 3. The developers are not responsible for any damages.      |".CenterInConsole());
+            HelperDisplay.DisplayMessage("+=============================================================+".CenterInConsole(), ConsoleColor.DarkCyan);
+            HelperDisplay.DisplayMessage("|              End User License Agreement (EULA)              |".CenterInConsole(), ConsoleColor.DarkCyan);
+            HelperDisplay.DisplayMessage("+=============================================================+".CenterInConsole(), ConsoleColor.DarkCyan);
+            HelperDisplay.DisplayMessage("| By using this software, you agree to the following terms:   |".CenterInConsole(), ConsoleColor.DarkCyan);
+            HelperDisplay.DisplayMessage("| 1. This software is open source under the MIT License.      |".CenterInConsole(), ConsoleColor.DarkCyan);
+            HelperDisplay.DisplayMessage("| 2. You may not distribute modified versions without         |".CenterInConsole(), ConsoleColor.DarkCyan);
+            HelperDisplay.DisplayMessage("|    including the original license.                          |".CenterInConsole(), ConsoleColor.DarkCyan);
+            HelperDisplay.DisplayMessage("| 3. The developers are not responsible for any damages.      |".CenterInConsole(), ConsoleColor.Red);
             HelperDisplay.DisplayMessage("| 4. Please disable your antivirus before proceeding.         |".CenterInConsole(), ConsoleColor.DarkYellow);
-            HelperDisplay.DisplayMessage("| 5. No warranty is provided; use at your own risk.           |".CenterInConsole(), ConsoleColor.Red);
-            Console.WriteLine("| 6. Support at https://megsystem.github.io/DebloaterTool/    |".CenterInConsole());
-            Console.WriteLine("+=============================================================+".CenterInConsole());
+            HelperDisplay.DisplayMessage("| 5. No warranty is provided; use at your own risk.           |".CenterInConsole(), ConsoleColor.DarkCyan);
+            HelperDisplay.DisplayMessage("| 6. Support at https://megsystem.github.io/DebloaterTool/    |".CenterInConsole(), ConsoleColor.DarkCyan);
+            HelperDisplay.DisplayMessage("+=============================================================+".CenterInConsole(), ConsoleColor.DarkCyan);
             Console.WriteLine();
             Console.WriteLine("--------------------------------------------------------------------------");
             Logger.Log($"Welcome to DebloaterTool Debug Console!", Level.INFO, Save: false);
@@ -61,18 +61,17 @@ namespace DebloaterTool
             {
                 if (!HelperDisplay.RequestYesOrNo("Do you accept the EULA?"))
                 {
-                    Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
                     Logger.Log("EULA declined!", Level.CRITICAL);
                     Console.ReadKey();
-                    SaveLog(); // Save log
                     Environment.Exit(0);
                 }
+
+                Logger.Log("EULA Accepted!", Level.SUCCESS);
             }
 
             // Check if the program is runned with administrator rights!
             if (!IsAdministrator())
             {
-                Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
                 Logger.Log("Not runned as administrator!", Level.CRITICAL);
 
                 if (HelperDisplay.RequestYesOrNo("Do you want to run as administrator?"))
@@ -81,7 +80,6 @@ namespace DebloaterTool
                 }
                 else
                 {
-                    SaveLog(); // Save log
                     Environment.Exit(0);
                 }
             }
@@ -280,19 +278,18 @@ namespace DebloaterTool
             // Run Wallpaper
             Wallpaper.SetCustomWallpaper();
 
-            // Process completed
-            Logger.Log($"Debloating successfull successed (SUCC)", Level.SUCCESS);
-            Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
-
-            // No restart
-            if (!restart) 
-                Logger.Log("Restart skipped. Process completed. Press ENTER to close.", Level.ALERT);
-
-            // Save log
-            SaveLog();
-
             // Delete empty folder in the RootFolder
             DeleteEmptyFolders(Settings.InstallPath);
+
+            // Save log
+            string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+            string logFileName = $"DebloaterTool_{dateTime}.log";
+            string destinationPath = Path.Combine(Settings.logsPath, logFileName);
+            Logger.Log($"Debloating complete!", Level.SUCCESS);
+            Logger.Log($"Log file saved on {destinationPath}", Level.SUCCESS);
+            Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
+            File.Copy(Settings.LogFilePath, destinationPath);
+            File.Delete(Settings.LogFilePath);
 
             // Restart
             if (restart)
@@ -306,19 +303,11 @@ namespace DebloaterTool
             }
 
             // Wait for user to press Enter
+            HelperDisplay.DisplayMessage("Press ENTER to close this window.", ConsoleColor.DarkYellow);
             Console.ReadKey(); 
 
             // End
             return;
-        }
-
-        static void SaveLog()
-        {
-            string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-            string logFileName = $"DebloaterTool_{dateTime}.log";
-            string destinationPath = Path.Combine(Settings.logsPath, logFileName);
-            File.Copy(Settings.LogFilePath, destinationPath);
-            File.Delete(Settings.LogFilePath);
         }
 
         static void DeleteEmptyFolders(string path)
@@ -356,7 +345,6 @@ namespace DebloaterTool
                 Logger.Log($"Failed to start as administrator: {ex.Message}", Level.ERROR);
             }
 
-            SaveLog(); // Save log
             Environment.Exit(0);
         }
 
