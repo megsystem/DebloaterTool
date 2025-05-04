@@ -278,9 +278,6 @@ namespace DebloaterTool
             // Run Wallpaper
             Wallpaper.SetCustomWallpaper();
 
-            // Delete empty folder in the RootFolder
-            DeleteEmptyFolders(Settings.InstallPath);
-
             // Save log
             string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
             string logFileName = $"DebloaterTool_{dateTime}.log";
@@ -290,6 +287,9 @@ namespace DebloaterTool
             Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
             File.Copy(Settings.LogFilePath, destinationPath);
             File.Delete(Settings.LogFilePath);
+
+            // Delete empty folder in the RootFolder
+            DeleteEmptyFolders(Settings.InstallPath);
 
             // Restart
             if (restart)
@@ -303,7 +303,9 @@ namespace DebloaterTool
             }
 
             // Wait for user to press Enter
-            HelperDisplay.DisplayMessage("Press ENTER to close this window.", ConsoleColor.DarkYellow);
+            HelperDisplay.DisplayMessage("+---------------------------------------------------------------------------------------------+", ConsoleColor.DarkYellow);
+            HelperDisplay.DisplayMessage("|  Press ENTER to close this window. Thank you for using our debloater. - @_giovannigiannone  |", ConsoleColor.DarkYellow);
+            HelperDisplay.DisplayMessage("+---------------------------------------------------------------------------------------------+", ConsoleColor.DarkYellow);
             Console.ReadKey(); 
 
             // End
@@ -322,7 +324,6 @@ namespace DebloaterTool
                     Directory.GetDirectories(directory).Length == 0)
                 {
                     Directory.Delete(directory);
-                    Logger.Log($"Deleted empty folder: {directory}", Level.ALERT);
                 }
             }
         }
