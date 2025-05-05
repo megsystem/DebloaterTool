@@ -6,7 +6,7 @@ namespace DebloaterTool
 {
     public static class Logger
     {
-        public static void Log(string message, Level level = Level.INFO, bool Save = true, bool Return = false)
+        public static void Log(string message, Level level = Level.INFO, bool Save = true, bool Return = false, bool NewLine = false)
         {
             Console.ForegroundColor = GetColor(level);
 
@@ -26,6 +26,7 @@ namespace DebloaterTool
             {
                 string linePrefix = (i == 0) ? timestamp : padding;
                 if (Return) Console.Write("\r" + linePrefix + wrappedLines[i]);
+                else if (NewLine) Console.WriteLine("\n" + linePrefix + wrappedLines[i]);
                 else Console.WriteLine(linePrefix + wrappedLines[i]);
             }
             Console.ResetColor();

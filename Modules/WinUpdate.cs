@@ -41,26 +41,19 @@ namespace DebloaterTool
         {
             Logger.Log($"Downloading from {Settings.powerRun}...");
             string powerRunPath = Path.Combine(Settings.debloatersPath, $"PowerRun.exe");
-            if (!File.Exists(powerRunPath))
+            if (!HelperDonwload.DownloadFile(Settings.powerRun, powerRunPath))
             {
-                if (!HelperGlobal.DownloadFile(Settings.powerRun, powerRunPath))
-                {
-                    Logger.Log($"Failed to download {Settings.powerRun}. Skipping...", Level.ERROR);
-                    return;
-                }
-            }
-            else
-            {
-                Logger.Log("PowerRun.exe already exists. Skipping download.", Level.WARNING);
+                Logger.Log($"Failed to download {Settings.powerRun}. Skipping...", Level.ERROR);
+                return;
             }
             Logger.Log($"Download complete to {powerRunPath}");
 
             string[] services = { "wuauserv", "UsoSvc", "uhssvc", "WaaSMedicSvc" };
             foreach (var service in services)
             {
-                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c net stop {service}");
-                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c sc config {service} start= disabled");
-                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c sc failure {service} reset= 0 actions= \"\"");
+                HelperRunner.Command(powerRunPath, $"cmd.exe /c net stop {service}");
+                HelperRunner.Command(powerRunPath, $"cmd.exe /c sc config {service} start= disabled");
+                HelperRunner.Command(powerRunPath, $"cmd.exe /c sc failure {service} reset= 0 actions= \"\"");
             }
 
             string[] files = { "WaaSMedicSvc.dll", "wuaueng.dll" };
@@ -69,22 +62,22 @@ namespace DebloaterTool
                 string filePath = $"C:\\Windows\\System32\\{file}";
                 string backupPath = $"{filePath}_BAK";
 
-                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c takeown /f {filePath}");
-                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c icacls {filePath} /grant Everyone:F");
-                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c rename {filePath} {backupPath}");
-                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c icacls {backupPath} /setowner \"NT SERVICE\\TrustedInstaller\" & icacls {backupPath} /remove Everyone");
+                HelperRunner.Command(powerRunPath, $"cmd.exe /c takeown /f {filePath}");
+                HelperRunner.Command(powerRunPath, $"cmd.exe /c icacls {filePath} /grant Everyone:F");
+                HelperRunner.Command(powerRunPath, $"cmd.exe /c rename {filePath} {backupPath}");
+                HelperRunner.Command(powerRunPath, $"cmd.exe /c icacls {backupPath} /setowner \"NT SERVICE\\TrustedInstaller\" & icacls {backupPath} /remove Everyone");
             }
 
-            HelperGlobal.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\WaaSMedicSvc\" /v Start /t REG_DWORD /d 4 /f");
-            HelperGlobal.RunCommand(powerRunPath, "cmd.exe /c reg add \"HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU\" /v NoAutoUpdate /t REG_DWORD /d 1 /f");
+            HelperRunner.Command(powerRunPath, "cmd.exe /c reg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\WaaSMedicSvc\" /v Start /t REG_DWORD /d 4 /f");
+            HelperRunner.Command(powerRunPath, "cmd.exe /c reg add \"HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU\" /v NoAutoUpdate /t REG_DWORD /d 1 /f");
 
-            HelperGlobal.RunCommand(powerRunPath, "cmd.exe /c erase /f /s /q C:\\Windows\\SoftwareDistribution\\*.*");
-            HelperGlobal.RunCommand(powerRunPath, "cmd.exe /c rmdir /s /q C:\\Windows\\SoftwareDistribution");
+            HelperRunner.Command(powerRunPath, "cmd.exe /c erase /f /s /q C:\\Windows\\SoftwareDistribution\\*.*");
+            HelperRunner.Command(powerRunPath, "cmd.exe /c rmdir /s /q C:\\Windows\\SoftwareDistribution");
 
             string powershellCmd = "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\UpdateOrchestrator\\*' | Disable-ScheduledTask; " +
                        "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WaaSMedic\\*' | Disable-ScheduledTask; " +
                        "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WindowsUpdate\\*' | Disable-ScheduledTask;";
-            HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c powershell -Command \"{powershellCmd}\"");
+            HelperRunner.Command(powerRunPath, $"cmd.exe /c powershell -Command \"{powershellCmd}\"");
         }
     }
 }

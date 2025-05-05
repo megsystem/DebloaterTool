@@ -14,7 +14,7 @@ namespace DebloaterTool
                 string bootlogozip = Path.Combine(Settings.bootlogoPath, "bootlogo.zip");
 
                 // 2. Download
-                if (!HelperGlobal.DownloadFile(Settings.bootlogo, bootlogozip))
+                if (!HelperDonwload.DownloadFile(Settings.bootlogo, bootlogozip))
                 {
                     Logger.Log("Failed to download bootlogo. Exiting...", Level.ERROR);
                     return;

@@ -15,7 +15,7 @@ namespace DebloaterTool
                 string explorerthemezip = Path.Combine(Settings.themePath, "ExplorerTheme.zip");
 
                 // Attempt to download the explorertheme file
-                if (!HelperGlobal.DownloadFile(Settings.explorertheme, explorerthemezip))
+                if (!HelperDonwload.DownloadFile(Settings.explorertheme, explorerthemezip))
                 {
                     Logger.Log("Failed to download ExplorerTheme. Exiting...", Level.ERROR);
                     return;
@@ -57,9 +57,10 @@ namespace DebloaterTool
             try
             {
                 string borderthemepath = Path.Combine(Settings.themePath, "tacky-borders.exe");
+                string processName = Path.GetFileNameWithoutExtension(borderthemepath);
 
                 // Attempt to download the BorderTheme file
-                if (!HelperGlobal.DownloadFile(Settings.bordertheme, borderthemepath))
+                if (!HelperDonwload.DownloadFile(Settings.bordertheme, borderthemepath))
                 {
                     Logger.Log("Failed to download BorderTheme. Exiting...", Level.ERROR);
                     return;
@@ -70,7 +71,7 @@ namespace DebloaterTool
                 // Create a scheduled task to run the file at logon with highest privileges
                 string taskName = "BorderThemeStartup";
                 string arguments = $"/Create /F /RL HIGHEST /SC ONLOGON /TN \"{taskName}\" /TR \"\\\"{borderthemepath}\\\"\"";
-                string output = HelperGlobal.RunCommand("schtasks", arguments, true);
+                string output = HelperRunner.Command("schtasks", arguments, true);
 
                 if (!string.IsNullOrWhiteSpace(output) && output.Contains("SUCCESS"))
                 {
@@ -82,7 +83,14 @@ namespace DebloaterTool
                 }
 
                 // Launch immediately
-                Process.Start(borderthemepath);
+                if (Process.GetProcessesByName(processName).Length == 0)
+                {
+                    Process.Start(borderthemepath);
+                }
+                else
+                {
+                    Logger.Log($"Process '{processName}' is already running. Skipping launch.", Level.WARNING);
+                }
 
                 // Set confuration
                 string configPath = Path.Combine(

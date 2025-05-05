@@ -9,10 +9,10 @@
         public static void Uninstall()
         {
             // Remove Microsoft Store for the current user.
-            HelperGlobal.RunCommand("powershell", "-NoProfile -Command \"Get-AppxPackage *WindowsStore* | Remove-AppxPackage\"");
+            HelperRunner.Command("powershell", "-NoProfile -Command \"Get-AppxPackage *WindowsStore* | Remove-AppxPackage\"");
 
             // Remove Microsoft Store for all users.
-            HelperGlobal.RunCommand("powershell", "-NoProfile -Command \"Get-AppxPackage -AllUsers *WindowsStore* | Remove-AppxPackage\"");
+            HelperRunner.Command("powershell", "-NoProfile -Command \"Get-AppxPackage -AllUsers *WindowsStore* | Remove-AppxPackage\"");
         }
     }
 }

@@ -14,17 +14,10 @@ namespace DebloaterTool
         {
             Logger.Log($"Downloading from {Settings.powerRun}...");
             string powerRunPath = Path.Combine(Settings.debloatersPath, $"PowerRun.exe");
-            if (!File.Exists(powerRunPath))
+            if (!HelperDonwload.DownloadFile(Settings.powerRun, powerRunPath))
             {
-                if (!HelperGlobal.DownloadFile(Settings.powerRun, powerRunPath))
-                {
-                    Logger.Log($"Failed to download {Settings.powerRun}. Skipping...", Level.ERROR);
-                    return;
-                }
-            }
-            else
-            {
-                Logger.Log("PowerRun.exe already exists. Skipping download.", Level.WARNING);
+                Logger.Log($"Failed to download {Settings.powerRun}. Skipping...", Level.ERROR);
+                return;
             }
             Logger.Log($"Download complete to {powerRunPath}");
 
@@ -58,16 +51,16 @@ namespace DebloaterTool
             File.WriteAllText(regFile, Settings.defender);
 
             // Import the registry file silently using regedit (/s switch).
-            HelperGlobal.RunCommand(powerRunPath, $"regedit.exe /s \"{regFile}\"");
+            HelperRunner.Command(powerRunPath, $"regedit.exe /s \"{regFile}\"");
 
             foreach (var file in filesToDelete)
             {
-                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c del /f \"{file}\"");
+                HelperRunner.Command(powerRunPath, $"cmd.exe /c del /f \"{file}\"");
             }
 
             foreach (var dir in directoriesToDelete)
             {
-                HelperGlobal.RunCommand(powerRunPath, $"cmd.exe /c rmdir /s /q \"{dir}\"");
+                HelperRunner.Command(powerRunPath, $"cmd.exe /c rmdir /s /q \"{dir}\"");
             }
         }
     }

@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Threading;
 using System.Web.Script.Serialization;
 
 namespace DebloaterTool
@@ -127,30 +126,7 @@ namespace DebloaterTool
 
                     string tempFile = Path.Combine(Path.GetTempPath(), assetName);
                     Logger.Log("Downloading installer to " + tempFile + "...", Level.INFO);
-
-                    using (WebClient webClient = new WebClient())
-                    {
-                        webClient.Headers.Add("User-Agent", "Mozilla/5.0 (compatible; AcmeInc/1.0)");
-                        ManualResetEvent downloadCompleted = new ManualResetEvent(false);
-
-                        webClient.DownloadProgressChanged += (s, e) =>
-                        {
-                            int totalBlocks = 50;
-                            int progressBlocks = (int)(e.ProgressPercentage / 100.0 * totalBlocks);
-                            string progressBar = new string('#', progressBlocks) + new string('-', totalBlocks - progressBlocks);
-                            Logger.Log($"Downloading: [{progressBar}] {e.ProgressPercentage}%   ", Level.DOWNLOAD,
-                                Return: true, Save: false);
-                        };
-
-                        webClient.DownloadFileCompleted += (s, e) =>
-                        {
-                            downloadCompleted.Set();
-                        };
-
-                        webClient.DownloadFileAsync(new Uri(downloadUrl), tempFile);
-                        downloadCompleted.WaitOne(); // Wait until the download completes.
-                        Console.WriteLine(); // Move to next line after progress bar.
-                    }
+                    HelperDonwload.DownloadFile(downloadUrl, tempFile);
                     Logger.Log("Download completed.", Level.SUCCESS);
 
                     Logger.Log("Starting installer...", Level.SUCCESS);

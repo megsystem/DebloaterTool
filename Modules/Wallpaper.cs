@@ -54,7 +54,7 @@ namespace DebloaterTool
         static bool DownloadAndLog(string url, string path, string description)
         {
             Logger.Log($"Downloading {description} from \"{url}\"...");
-            if (!HelperGlobal.DownloadFile(url, path))
+            if (!HelperDonwload.DownloadFile(url, path))
             {
                 Logger.Log($"Unable to download the {description} from \"{url}\". Skipping...", Level.WARNING);
                 return false;

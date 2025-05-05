@@ -31,7 +31,7 @@ namespace DebloaterTool
         public static void EnableUltimatePerformance()
         {
             // Retrieve the current list of power plans.
-            string ultimatePlan = HelperGlobal.RunCommand("cmd.exe", "/c powercfg -list", redirect: true);
+            string ultimatePlan = HelperRunner.Command("cmd.exe", "/c powercfg -list", redirect: true);
             if (ultimatePlan.Contains("Ultimate Performance"))
             {
                 Logger.Log("Ultimate Performance plan is already installed.");
@@ -39,12 +39,12 @@ namespace DebloaterTool
             else
             {
                 Logger.Log("Installing Ultimate Performance plan...");
-                HelperGlobal.RunCommand("cmd.exe", "/c powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61");
+                HelperRunner.Command("cmd.exe", "/c powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61");
                 Logger.Log("> Ultimate Performance plan installed.");
             }
 
             // Retrieve the updated list of power plans.
-            string updatedPlanList = HelperGlobal.RunCommand("cmd.exe", "/c powercfg -list", redirect: true);
+            string updatedPlanList = HelperRunner.Command("cmd.exe", "/c powercfg -list", redirect: true);
 
             // Inline logic to extract the GUID for the Ultimate Performance plan.
             string ultimatePlanGUID = string.Empty;
@@ -71,7 +71,7 @@ namespace DebloaterTool
             // Set the Ultimate Performance plan as the active power plan if its GUID was found.
             if (!string.IsNullOrEmpty(ultimatePlanGUID))
             {
-                HelperGlobal.RunCommand("cmd.exe", $"/c powercfg -setactive {ultimatePlanGUID}");
+                HelperRunner.Command("cmd.exe", $"/c powercfg -setactive {ultimatePlanGUID}");
                 Logger.Log("Ultimate Performance plan is now active.");
             }
         }
