@@ -28,10 +28,13 @@ namespace DebloaterTool
                     client.DownloadProgressChanged += (s, e) =>
                     {
                         int totalBlocks = 50;
-                        int progressBlocks = (int)(e.ProgressPercentage / 100.0 * totalBlocks);
+                        int progressBlocks = (int)(e.ProgressPercentage / 99.0 * totalBlocks);
                         string progressBar = new string('#', progressBlocks) + new string('-', totalBlocks - progressBlocks);
-                        Logger.Log($"Downloading: [{progressBar}] {e.ProgressPercentage}%   ", Level.DOWNLOAD,
-                            Return: true, Save: false);
+                        if (e.ProgressPercentage != 100)
+                        {
+                            Logger.Log($"Downloading: [{progressBar}] {e.ProgressPercentage+1}%   ", Level.DOWNLOAD,
+                                Return: true, Save: false);
+                        }
                     };
 
                     client.DownloadFileCompleted += (s, e) =>
@@ -64,7 +67,7 @@ namespace DebloaterTool
                     }
                 }
 
-                Logger.Log($"Download completate in {outputPath}", Level.SUCCESS, NewLine: true);
+                Console.WriteLine();
                 return true;
             }
             catch (Exception ex)
