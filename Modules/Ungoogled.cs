@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Web.Script.Serialization;
 
 namespace DebloaterTool
@@ -85,57 +84,46 @@ namespace DebloaterTool
         {
             try
             {
-                Logger.Log("Fetching latest release information...", Level.INFO);
+                string json = HelperDonwload.FetchDataUrl("https://api.github.com/repos/ungoogled-software/ungoogled-chromium-windows/releases/latest");
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                dynamic release = serializer.Deserialize<dynamic>(json);
 
-                string apiUrl = "https://api.github.com/repos/ungoogled-software/ungoogled-chromium-windows/releases/latest";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiUrl);
-                request.UserAgent = "Mozilla/5.0 (compatible; AcmeInc/1.0)";
+                bool is64Bit = Environment.Is64BitOperatingSystem;
+                string searchPattern = is64Bit ? "installer_x64.exe" : "installer_x86.exe";
+                string downloadUrl = null;
+                string assetName = null;
 
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                using (Stream responseStream = response.GetResponseStream())
+                foreach (var asset in release["assets"])
                 {
-                    string json = new StreamReader(responseStream).ReadToEnd();
-
-                    JavaScriptSerializer serializer = new JavaScriptSerializer();
-                    dynamic release = serializer.Deserialize<dynamic>(json);
-
-                    bool is64Bit = Environment.Is64BitOperatingSystem;
-                    string searchPattern = is64Bit ? "installer_x64.exe" : "installer_x86.exe";
-                    string downloadUrl = null;
-                    string assetName = null;
-
-                    foreach (var asset in release["assets"])
+                    string name = asset["name"];
+                    if (name.IndexOf(searchPattern, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        string name = asset["name"];
-                        if (name.IndexOf(searchPattern, StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            assetName = name;
-                            downloadUrl = asset["browser_download_url"];
-                            break;
-                        }
+                        assetName = name;
+                        downloadUrl = asset["browser_download_url"];
+                        break;
                     }
-
-                    if (downloadUrl == null)
-                    {
-                        Logger.Log("Installer asset not found for pattern: " + searchPattern, Level.ERROR);
-                        return;
-                    }
-
-                    Logger.Log("Latest installer found: " + assetName, Level.INFO);
-                    Logger.Log("Download URL: " + downloadUrl, Level.INFO);
-
-                    string tempFile = Path.Combine(Path.GetTempPath(), assetName);
-                    Logger.Log("Downloading installer to " + tempFile + "...", Level.INFO);
-                    HelperDonwload.DownloadFile(downloadUrl, tempFile);
-                    Logger.Log("Download completed.", Level.SUCCESS);
-
-                    Logger.Log("Starting installer...", Level.SUCCESS);
-                    Process installerProcess = Process.Start(tempFile);
-                    installerProcess.WaitForExit();
-                    Logger.Log("Installer process completed.", Level.SUCCESS);
-
-                    File.Delete(tempFile);
                 }
+
+                if (downloadUrl == null)
+                {
+                    Logger.Log("Installer asset not found for pattern: " + searchPattern, Level.ERROR);
+                    return;
+                }
+
+                Logger.Log("Latest installer found: " + assetName, Level.INFO);
+                Logger.Log("Download URL: " + downloadUrl, Level.INFO);
+
+                string tempFile = Path.Combine(Path.GetTempPath(), assetName);
+                Logger.Log("Downloading installer to " + tempFile + "...", Level.INFO);
+                HelperDonwload.DownloadFile(downloadUrl, tempFile);
+                Logger.Log("Download completed.", Level.SUCCESS);
+
+                Logger.Log("Starting installer...", Level.SUCCESS);
+                Process installerProcess = Process.Start(tempFile);
+                installerProcess.WaitForExit();
+                Logger.Log("Installer process completed.", Level.SUCCESS);
+
+                File.Delete(tempFile);
             }
             catch (Exception ex)
             {

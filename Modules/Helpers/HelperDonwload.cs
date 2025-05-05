@@ -76,5 +76,36 @@ namespace DebloaterTool
                 return false;
             }
         }
+
+        public static string FetchDataUrl(string apiUrl)
+        {
+            Logger.Log("Fetching data information...", Level.INFO);
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(apiUrl);
+                request.UserAgent = "Mozilla/5.0 (compatible; AcmeInc/1.0)";
+
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (Stream responseStream = response.GetResponseStream())
+                using (StreamReader reader = new StreamReader(responseStream))
+                {
+                    // Check for a successful response status code (e.g., 200 OK)
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        return reader.ReadToEnd();
+                    }
+                    else
+                    {
+                        Logger.Log($"Error: Received {response.StatusCode} status from the API", Level.ERROR);
+                        return null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"An unexpected error occurred: {ex.Message}", Level.ERROR);
+                return null;
+            }
+        }
     }
 }
