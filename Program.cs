@@ -121,9 +121,10 @@ namespace DebloaterTool
             switch (choice)
             {
                 case 'A': // Complete
-                    Console.WriteLine("Running Complete Debloating...");
-                    Console.WriteLine("------------------------------");
-                    Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
+                    Logger.Log("+===================================+", Level.VERBOSE);
+                    Logger.Log("|   Running Complete Debloating...  |", Level.VERBOSE);
+                    Logger.Log("+===================================+", Level.VERBOSE);
+                    Logger.Log("[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
                     WinDefender.Uninstall();
                     WinUpdate.DisableWindowsUpdateV1();
                     WinUpdate.DisableWindowsUpdateV2();
@@ -151,9 +152,10 @@ namespace DebloaterTool
                     break;
 
                 case 'M': // Minimal
-                    Console.WriteLine("Running Minimal Debloating...");
-                    Console.WriteLine("-----------------------------");
-                    Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
+                    Logger.Log("+===================================+", Level.VERBOSE);
+                    Logger.Log("|   Running Minimal Debloating...   |", Level.VERBOSE);
+                    Logger.Log("+===================================+", Level.VERBOSE);
+                    Logger.Log("[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
                     WinUpdate.DisableWindowsUpdateV1();
                     DebloaterTools.RunChrisTool();
                     DebloaterTools.RunRaphiTool();
@@ -186,9 +188,10 @@ namespace DebloaterTool
                     bool runUngoogled = HelperDisplay.RequestYesOrNo("Do you want to install Ungoogled Chrome?");
                     bool runCustomTheme = HelperDisplay.RequestYesOrNo("Do you want to install Custom Theme (explorer and border)?");
                     bool runBootLogo = HelperDisplay.RequestYesOrNo("Do you want to install custom Boot Logo?");
-                    Console.WriteLine("Running Custom Debloating...");
-                    Console.WriteLine("----------------------------");
-                    Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
+                    Logger.Log("+===================================+", Level.VERBOSE);
+                    Logger.Log("|    Running Custom Debloating...   |", Level.VERBOSE);
+                    Logger.Log("+===================================+", Level.VERBOSE);
+                    Logger.Log("[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
 
                     // Uninstall Windows Defender
                     if (runDefender) { WinDefender.Uninstall(); }
@@ -266,8 +269,9 @@ namespace DebloaterTool
                         .ToList();
 
                     // 2. Header & verbose log
-                    Console.WriteLine("Running DebugMode Debloating...");
-                    Console.WriteLine("-------------------------------");
+                    Logger.Log("+===================================+", Level.VERBOSE);
+                    Logger.Log("|  Running DebugMode Debloating...  |", Level.VERBOSE);
+                    Logger.Log("+===================================+", Level.VERBOSE);
                     Logger.Log("[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
 
                     // 3. Execute
