@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Diagnostics;
 
 namespace DebloaterTool
 {
@@ -40,7 +39,6 @@ namespace DebloaterTool
             }
 
             Logger.Log("Registry changes applied successfully.", Level.SUCCESS);
-            RestartExplorer();
         }
 
         public static void InstallRegModification(RegistryModification mod)
@@ -69,26 +67,6 @@ namespace DebloaterTool
             catch (Exception ex)
             {
                 Logger.Log($"Failed to modify {mod.ValueName} in {mod.SubKey}: {ex.Message}", Level.ERROR);
-            }
-        }
-
-        private static void RestartExplorer()
-        {
-            try
-            {
-                ProcessStartInfo psiKill = new ProcessStartInfo("taskkill", "/F /IM explorer.exe")
-                {
-                    CreateNoWindow = true,
-                    UseShellExecute = false
-                };
-
-                Process.Start(psiKill)?.WaitForExit();
-                Process.Start("explorer.exe");
-                Logger.Log("Explorer restarted to apply registry changes.", Level.SUCCESS);
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Error restarting explorer: {ex.Message}", Level.ERROR);
             }
         }
 
