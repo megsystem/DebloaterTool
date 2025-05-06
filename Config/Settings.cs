@@ -54,10 +54,10 @@ namespace DebloaterTool
         public static string defender = Config.Resource.defender;
 
         // Paths vars
-        public static string logsPath = $@"{Settings.InstallPath}\Saved Logs";
-        public static string debloatersPath = $@"{Settings.InstallPath}\Debloaters";
-        public static string wallpapersPath = $@"{Settings.InstallPath}\Wallpapers";
-        public static string themePath = $@"{Settings.InstallPath}\WinTheme";
-        public static string bootlogoPath = $@"{Settings.InstallPath}\Bootlogo";
+        public static string logsPath = $@"{InstallPath}\Saved Logs";
+        public static string debloatersPath = $@"{InstallPath}\Debloaters";
+        public static string wallpapersPath = $@"{InstallPath}\Wallpapers";
+        public static string themePath = $@"{InstallPath}\WinTheme";
+        public static string bootlogoPath = $@"{InstallPath}\Bootlogo";
     }
 }
