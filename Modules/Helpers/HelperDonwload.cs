@@ -11,64 +11,81 @@ namespace DebloaterTool
         {
             try
             {
-                if (File.Exists(outputPath))
+                using (WebClient client = new WebClient())
                 {
-                    Logger.Log($"File already exists at '{outputPath}', skipping download.", Level.WARNING);
+                    long remoteFileSize = 0;
+
+                    // Get remote file size using HEAD request
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                    request.Method = "HEAD";
+                    request.UserAgent = "Mozilla/5.0 (compatible; AcmeInc/1.0)";
+
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    {
+                        long.TryParse(response.Headers.Get("Content-Length"), out remoteFileSize);
+                    }
+
+                    if (File.Exists(outputPath))
+                    {
+                        long localFileSize = new FileInfo(outputPath).Length;
+
+                        if (remoteFileSize > 0 && localFileSize == remoteFileSize)
+                        {
+                            Logger.Log($"File already exists at '{outputPath}' and matches remote size, skipping download.", Level.WARNING);
+                            return true;
+                        }
+                    }
+
+                    using (ManualResetEvent waitHandle = new ManualResetEvent(false))
+                    {
+                        bool success = true;
+                        Exception downloadException = null;
+
+                        client.DownloadProgressChanged += (s, e) =>
+                        {
+                            int totalBlocks = 50;
+                            int progressBlocks = (int)(e.ProgressPercentage / 99.0 * totalBlocks);
+                            string progressBar = new string('#', progressBlocks) + new string('-', totalBlocks - progressBlocks);
+                            if (e.ProgressPercentage != 100)
+                            {
+                                Logger.Log($"Downloading: [{progressBar}] {e.ProgressPercentage + 1}%   ", Level.DOWNLOAD,
+                                    Return: true, Save: false);
+                            }
+                        };
+
+                        client.DownloadFileCompleted += (s, e) =>
+                        {
+                            if (e.Error != null)
+                            {
+                                downloadException = e.Error;
+                                success = false;
+                            }
+
+                            if (e.Cancelled)
+                            {
+                                success = false;
+                            }
+
+                            waitHandle.Set();
+                        };
+
+                        client.DownloadFileAsync(new Uri(url), outputPath);
+                        waitHandle.WaitOne(); // Wait until download completes
+
+                        if (!success)
+                        {
+                            if (File.Exists(outputPath))
+                            {
+                                File.Delete(outputPath); // Delete partial or empty file
+                            }
+
+                            throw downloadException ?? new Exception("Download was cancelled or failed.");
+                        }
+                    }
+
+                    Console.WriteLine();
                     return true;
                 }
-
-                using (WebClient client = new WebClient())
-                using (ManualResetEvent waitHandle = new ManualResetEvent(false))
-                {
-                    client.Headers.Add("User-Agent", "Mozilla/5.0 (compatible; AcmeInc/1.0)");
-
-                    bool success = true;
-                    Exception downloadException = null;
-
-                    client.DownloadProgressChanged += (s, e) =>
-                    {
-                        int totalBlocks = 50;
-                        int progressBlocks = (int)(e.ProgressPercentage / 99.0 * totalBlocks);
-                        string progressBar = new string('#', progressBlocks) + new string('-', totalBlocks - progressBlocks);
-                        if (e.ProgressPercentage != 100)
-                        {
-                            Logger.Log($"Downloading: [{progressBar}] {e.ProgressPercentage+1}%   ", Level.DOWNLOAD,
-                                Return: true, Save: false);
-                        }
-                    };
-
-                    client.DownloadFileCompleted += (s, e) =>
-                    {
-                        if (e.Error != null)
-                        {
-                            downloadException = e.Error;
-                            success = false;
-                        }
-
-                        if (e.Cancelled)
-                        {
-                            success = false;
-                        }
-
-                        waitHandle.Set();
-                    };
-
-                    client.DownloadFileAsync(new Uri(url), outputPath);
-                    waitHandle.WaitOne(); // Wait until the download completes
-
-                    if (!success)
-                    {
-                        if (File.Exists(outputPath))
-                        {
-                            File.Delete(outputPath); // Delete partial or empty file
-                        }
-
-                        throw downloadException ?? new Exception("Download was cancelled or failed.");
-                    }
-                }
-
-                Console.WriteLine();
-                return true;
             }
             catch (Exception ex)
             {
