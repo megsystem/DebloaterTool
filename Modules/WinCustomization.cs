@@ -2,7 +2,7 @@
 
 namespace DebloaterTool
 {
-    internal class WinCostumization
+    internal class WinCustomization
     {
         /// <summary>
         /// Disables various Windows snap tools by modifying registry settings for the current user.

@@ -68,7 +68,7 @@
     <Compile Include="Modules\SecurityPerformance.cs" />
     <Compile Include="Modules\Ungoogled.cs" />
     <Compile Include="Modules\Wallpaper.cs" />
-    <Compile Include="Modules\WinCostumization.cs" />
+    <Compile Include="Modules\WinCustomization.cs" />
     <Compile Include="Modules\WinDefender.cs" />
     <Compile Include="Modules\WinStore.cs" />
     <Compile Include="Modules\WinUpdate.cs" />

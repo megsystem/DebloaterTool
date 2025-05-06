@@ -5,6 +5,7 @@ using System.Net;
 using System.Linq;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
 
 // Created by @_giovannigiannone and ChatGPT
 // Inspired from the Talon's Project!
@@ -121,10 +122,11 @@ namespace DebloaterTool
             switch (choice)
             {
                 case 'A': // Complete
-                    Logger.Log("+===================================+", Level.VERBOSE);
-                    Logger.Log("|   Running Complete Debloating...  |", Level.VERBOSE);
-                    Logger.Log("+===================================+", Level.VERBOSE);
-                    Logger.Log("[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
+                    Logger.Log("+=====================================+", Level.VERBOSE);
+                    Logger.Log("|    Running Complete Debloating...   |", Level.VERBOSE);
+                    Logger.Log("+=====================================+", Level.VERBOSE);
+                    Logger.Log("| DebloaterTool by @_giovannigiannone |", Level.VERBOSE);
+                    Logger.Log("+=====================================+", Level.VERBOSE);
                     WinDefender.Uninstall();
                     WinUpdate.DisableWindowsUpdateV1();
                     WinUpdate.DisableWindowsUpdateV2();
@@ -142,8 +144,8 @@ namespace DebloaterTool
                     DataCollection.DisableDataCollectionPolicies();
                     DataCollection.DisableTelemetryServices();
                     WinStore.Uninstall();
-                    WinCostumization.DisableSnapTools();
-                    WinCostumization.EnableUltimatePerformance();
+                    WinCustomization.DisableSnapTools();
+                    WinCustomization.EnableUltimatePerformance();
                     Ungoogled.Install();
                     WindowsTheme.ExplorerTheme();
                     WindowsTheme.BorderTheme();
@@ -152,10 +154,11 @@ namespace DebloaterTool
                     break;
 
                 case 'M': // Minimal
-                    Logger.Log("+===================================+", Level.VERBOSE);
-                    Logger.Log("|   Running Minimal Debloating...   |", Level.VERBOSE);
-                    Logger.Log("+===================================+", Level.VERBOSE);
-                    Logger.Log("[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
+                    Logger.Log("+=====================================+", Level.VERBOSE);
+                    Logger.Log("|    Running Minimal Debloating.. .   |", Level.VERBOSE);
+                    Logger.Log("+=====================================+", Level.VERBOSE);
+                    Logger.Log("| DebloaterTool by @_giovannigiannone |", Level.VERBOSE);
+                    Logger.Log("+=====================================+", Level.VERBOSE);
                     WinUpdate.DisableWindowsUpdateV1();
                     DebloaterTools.RunChrisTool();
                     DebloaterTools.RunRaphiTool();
@@ -169,60 +172,67 @@ namespace DebloaterTool
                     DataCollection.DisableAdvertisingAndContentDelivery();
                     DataCollection.DisableDataCollectionPolicies();
                     DataCollection.DisableTelemetryServices();
-                    WinCostumization.DisableSnapTools();
-                    WinCostumization.EnableUltimatePerformance();
+                    WinCustomization.DisableSnapTools();
+                    WinCustomization.EnableUltimatePerformance();
                     Ungoogled.Install();
                     WindowsTheme.ApplyThemeTweaks();
                     BootLogo.Install();
                     break;
 
                 case 'C': // Custom
-                    bool runDefender = HelperDisplay.RequestYesOrNo("Do you want to disable Windows Defender?");
-                    bool runWindowsUpdate = HelperDisplay.RequestYesOrNo("Do you want to disable Windows Update?");
-                    bool runWindowsStore = HelperDisplay.RequestYesOrNo("Do you want to remove Windows Store?");
-                    bool runDebloater = HelperDisplay.RequestYesOrNo("Do you want to run Debloater Tools?");
-                    bool runRemoveUnnecessary = HelperDisplay.RequestYesOrNo("Do you want to remove unnecessary components?");
-                    bool runSecurityPerformance = HelperDisplay.RequestYesOrNo("Do you want to run Security Performance?");
-                    bool runDataCollection = HelperDisplay.RequestYesOrNo("Do you want to disable Data Collection?");
-                    bool runWinCostumization = HelperDisplay.RequestYesOrNo("Do you want to set Windows Costumization?");
-                    bool runUngoogled = HelperDisplay.RequestYesOrNo("Do you want to install Ungoogled Chrome?");
-                    bool runCustomTheme = HelperDisplay.RequestYesOrNo("Do you want to install Custom Theme (explorer and border)?");
-                    bool runBootLogo = HelperDisplay.RequestYesOrNo("Do you want to install custom Boot Logo?");
-                    Logger.Log("+===================================+", Level.VERBOSE);
-                    Logger.Log("|    Running Custom Debloating...   |", Level.VERBOSE);
-                    Logger.Log("+===================================+", Level.VERBOSE);
-                    Logger.Log("[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
+                    var tasks = new Dictionary<string, bool>
+                    {
+                        ["Disable Windows Defender"] = HelperDisplay.RequestYesOrNo("Do you want to disable Windows Defender?"),
+                        ["Disable Windows Update"] = HelperDisplay.RequestYesOrNo("Do you want to disable Windows Update?"),
+                        ["Remove Windows Store"] = HelperDisplay.RequestYesOrNo("Do you want to remove Windows Store?"),
+                        ["Run Debloater Tools"] = HelperDisplay.RequestYesOrNo("Do you want to run Debloater Tools?"),
+                        ["Remove Unnecessary Components"] = HelperDisplay.RequestYesOrNo("Do you want to remove unnecessary components?"),
+                        ["Run Security Performance"] = HelperDisplay.RequestYesOrNo("Do you want to run Security Performance?"),
+                        ["Remove Data Collection"] = HelperDisplay.RequestYesOrNo("Do you want to disable Data Collection?"),
+                        ["Set Windows Customization"] = HelperDisplay.RequestYesOrNo("Do you want to set Windows Customization?"),
+                        ["Install Ungoogled Chrome"] = HelperDisplay.RequestYesOrNo("Do you want to install Ungoogled Chrome?"),
+                        ["Install Windows Theme"] = HelperDisplay.RequestYesOrNo("Do you want to install Custom Theme (explorer and border)?"),
+                        ["Install Boot Logo"] = HelperDisplay.RequestYesOrNo("Do you want to install custom Boot Logo?")
+                    };
 
-                    // Uninstall Windows Defender
-                    if (runDefender) { WinDefender.Uninstall(); }
+                    // Header log
+                    Logger.Log("+=====================================+", Level.VERBOSE);
+                    Logger.Log("|     Running Custom Debloating...    |", Level.VERBOSE);
+                    Logger.Log("+=====================================+", Level.VERBOSE);
+                    foreach (var task in tasks)
+                    {
+                        string action = (task.Value ? "ON" : "SKIPPED");
+                        Logger.Log($"{task.Key}: {action}", Level.VERBOSE);
+                    }
+                    Logger.Log("+=====================================+", Level.VERBOSE);
+                    Logger.Log("| DebloaterTool by @_giovannigiannone |", Level.VERBOSE);
+                    Logger.Log("+=====================================+", Level.VERBOSE);
 
-                    // Run WinUpdate
-                    if (runWindowsUpdate)
+                    // Execution logic
+                    if (tasks["Disable Windows Defender"]) WinDefender.Uninstall();
+
+                    if (tasks["Disable Windows Update"])
                     {
                         WinUpdate.DisableWindowsUpdateV1();
                         WinUpdate.DisableWindowsUpdateV2();
                     }
 
-                    // Run WinStore
-                    if (runWindowsStore) { WinStore.Uninstall(); }
+                    if (tasks["Remove Windows Store"]) WinStore.Uninstall();
 
-                    // Run DebloaterTools
-                    if (runDebloater)
+                    if (tasks["Run Debloater Tools"])
                     {
                         DebloaterTools.RunChrisTool();
                         DebloaterTools.RunRaphiTool();
                     }
 
-                    // Run RemoveUnnecessary
-                    if (runRemoveUnnecessary)
+                    if (tasks["Remove Unnecessary Components"])
                     {
                         RemoveUnnecessary.UninstallEdge();
                         RemoveUnnecessary.CleanOutlookAndOneDrive();
                         RemoveUnnecessary.ApplyOptimizationTweaks();
                     }
 
-                    // Run SecurityPerformance
-                    if (runSecurityPerformance)
+                    if (tasks["Run Security Performance"])
                     {
                         SecurityPerformance.DisableRemAssistAndRemDesk();
                         SecurityPerformance.DisableSpectreAndMeltdown();
@@ -231,51 +241,59 @@ namespace DebloaterTool
                         SecurityPerformance.DisableSMBv1();
                     }
 
-                    // Run DataCollection
-                    if (runDataCollection) 
+                    if (tasks["Remove Data Collection"])
                     {
                         DataCollection.DisableAdvertisingAndContentDelivery();
                         DataCollection.DisableDataCollectionPolicies();
                         DataCollection.DisableTelemetryServices();
                     }
 
-                    // Run WinCostumization
-                    if (runWinCostumization)
+                    if (tasks["Set Windows Customization"])
                     {
-                        WinCostumization.DisableSnapTools();
-                        WinCostumization.EnableUltimatePerformance();
+                        WinCustomization.DisableSnapTools();
+                        WinCustomization.EnableUltimatePerformance();
                     }
 
-                    // Run Ungoogled
-                    if (runUngoogled) { Ungoogled.Install(); }
+                    if (tasks["Install Ungoogled Chrome"]) Ungoogled.Install();
 
-                    // Run Custom Theme
-                    if (runCustomTheme) 
-                    { 
-                        WindowsTheme.ExplorerTheme(); 
-                        WindowsTheme.BorderTheme(); 
+                    if (tasks["Install Windows Theme"])
+                    {
+                        WindowsTheme.ExplorerTheme();
+                        WindowsTheme.BorderTheme();
                         WindowsTheme.ApplyThemeTweaks();
                     }
 
-                    // Run BootLogo
-                    if (runBootLogo) { BootLogo.Install(); }
+                    if (tasks["Install Boot Logo"]) BootLogo.Install();
                     break;
 
                 case 'D':
-                    // 1. Prompt & filter in one go
-                    var toRun = HelperModule
-                        .ListModule()
-                        .Where(entry => HelperDisplay.RequestYesOrNo($"Do you want to run {entry}?"))
-                        .ToList();
+                    // 1. Prompt all options and track responses
+                    var allModules = HelperModule.ListModule();
+                    var selectedModules = new List<string>();
+                    var skippedModules = new List<string>();
+
+                    foreach (var module in allModules)
+                    {
+                        if (HelperDisplay.RequestYesOrNo($"Do you want to run {module}?"))
+                            selectedModules.Add(module);
+                        else
+                            skippedModules.Add(module);
+                    }
 
                     // 2. Header & verbose log
-                    Logger.Log("+===================================+", Level.VERBOSE);
-                    Logger.Log("|  Running DebugMode Debloating...  |", Level.VERBOSE);
-                    Logger.Log("+===================================+", Level.VERBOSE);
-                    Logger.Log("[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
+                    Logger.Log("+=====================================+", Level.VERBOSE);
+                    Logger.Log("|   Running DebugMode Debloating...   |", Level.VERBOSE);
+                    Logger.Log("+=====================================+", Level.VERBOSE);
+                    Logger.Log("ENABLED Modules:", Level.VERBOSE);
+                    selectedModules.ForEach(m => Logger.Log($"[+] {m}", Level.VERBOSE));
+                    Logger.Log("SKIPPED Modules:", Level.VERBOSE);
+                    skippedModules.ForEach(m => Logger.Log($"[-] {m}", Level.VERBOSE));
+                    Logger.Log("+=====================================+", Level.VERBOSE);
+                    Logger.Log("| DebloaterTool by @_giovannigiannone |", Level.VERBOSE);
+                    Logger.Log("+=====================================+", Level.VERBOSE);
 
-                    // 3. Execute
-                    toRun.ForEach(HelperModule.RunModule);
+                    // 3. Execute selected modules
+                    selectedModules.ForEach(HelperModule.RunModule);
                     break;
             }
 
