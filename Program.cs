@@ -122,7 +122,7 @@ namespace DebloaterTool
             {
                 case 'A': // Complete
                     Console.WriteLine("Running Complete Debloating...");
-                    Console.WriteLine("---------------------------------");
+                    Console.WriteLine("------------------------------");
                     Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
                     WinDefender.Uninstall();
                     WinUpdate.DisableWindowsUpdateV1();
@@ -152,7 +152,7 @@ namespace DebloaterTool
 
                 case 'M': // Minimal
                     Console.WriteLine("Running Minimal Debloating...");
-                    Console.WriteLine("---------------------------------");
+                    Console.WriteLine("-----------------------------");
                     Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
                     WinUpdate.DisableWindowsUpdateV1();
                     DebloaterTools.RunChrisTool();
@@ -187,7 +187,7 @@ namespace DebloaterTool
                     bool runCustomTheme = HelperDisplay.RequestYesOrNo("Do you want to install Custom Theme (explorer and border)?");
                     bool runBootLogo = HelperDisplay.RequestYesOrNo("Do you want to install custom Boot Logo?");
                     Console.WriteLine("Running Custom Debloating...");
-                    Console.WriteLine("---------------------------------");
+                    Console.WriteLine("----------------------------");
                     Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
 
                     // Uninstall Windows Defender
@@ -267,7 +267,7 @@ namespace DebloaterTool
 
                     // 2. Header & verbose log
                     Console.WriteLine("Running DebugMode Debloating...");
-                    Console.WriteLine(new string('-', 33));
+                    Console.WriteLine("-------------------------------");
                     Logger.Log("[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
 
                     // 3. Execute
