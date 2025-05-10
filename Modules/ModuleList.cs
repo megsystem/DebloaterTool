@@ -27,11 +27,11 @@ namespace DebloaterTool
             { WinStore.Uninstall, new TweakInfo("Uninstall Microsoft Store", false) },
             { WinCustomization.DisableSnapTools, new TweakInfo("Disable Snap Assist tools", true) },
             { WinCustomization.EnableUltimatePerformance, new TweakInfo("Enable Ultimate Performance mode", true) },
-            { Ungoogled.Install, new TweakInfo("Install Ungoogled Chromium", true) },
+            { Ungoogled.Install, new TweakInfo("Install Ungoogled Chromium", false) },
             { WindowsTheme.ExplorerTheme, new TweakInfo("Apply custom File Explorer theme", false) },
             { WindowsTheme.BorderTheme, new TweakInfo("Apply custom window border theme", false) },
             { WindowsTheme.ApplyThemeTweaks, new TweakInfo("Apply general theme tweaks", true) },
-            { BootLogo.Install, new TweakInfo("Install custom boot logo", true) }
+            { BootLogo.Install, new TweakInfo("Install custom boot logo", false) }
         };
     }
 
