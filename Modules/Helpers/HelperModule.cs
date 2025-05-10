@@ -1,94 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace DebloaterTool
 {
-    internal class HelperModule
+    public class HelperModule 
     {
-        public static string[] ListModule()
+        // All tweaks list
+        public static Dictionary<Action, TweakInfo> allTweaks = new Dictionary<Action, TweakInfo>
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            var list = new List<string>();
+            { WinDefender.Uninstall, new TweakInfo("Uninstall Windows Defender", false) },
+            { WinUpdate.DisableWindowsUpdateV1, new TweakInfo("Disable Windows Update (Version 1)", true) },
+            { WinUpdate.DisableWindowsUpdateV2, new TweakInfo("Disable Windows Update (Version 2)", false) },
+            { DebloaterTools.RunChrisTool, new TweakInfo("Run Chris Titus debloat tool", true) },
+            { DebloaterTools.RunRaphiTool, new TweakInfo("Run Raphi debloat tool", true) },
+            { RemoveUnnecessary.ApplyOptimizationTweaks, new TweakInfo("Apply system optimization tweaks", true) },
+            { RemoveUnnecessary.UninstallEdge, new TweakInfo("Uninstall Microsoft Edge", true) },
+            { RemoveUnnecessary.CleanOutlookAndOneDrive, new TweakInfo("Remove Outlook and OneDrive remnants", true) },
+            { SecurityPerformance.DisableRemAssistAndRemDesk, new TweakInfo("Disable Remote Assistance and Desktop", true) },
+            { SecurityPerformance.DisableSpectreAndMeltdown, new TweakInfo("Disable Spectre/Meltdown mitigations", false) },
+            { SecurityPerformance.DisableWinErrorReporting, new TweakInfo("Disable Windows Error Reporting", true) },
+            { SecurityPerformance.ApplySecurityPerformanceTweaks, new TweakInfo("Apply general security/performance tweaks", true) },
+            { SecurityPerformance.DisableSMBv1, new TweakInfo("Disable outdated SMBv1 protocol", true) },
+            { DataCollection.DisableAdvertisingAndContentDelivery, new TweakInfo("Disable ad/content delivery settings", true) },
+            { DataCollection.DisableDataCollectionPolicies, new TweakInfo("Disable data collection policies", true) },
+            { DataCollection.DisableTelemetryServices, new TweakInfo("Disable telemetry services", true) },
+            { WinStore.Uninstall, new TweakInfo("Uninstall Microsoft Store", false) },
+            { WinCustomization.DisableSnapTools, new TweakInfo("Disable Snap Assist tools", true) },
+            { WinCustomization.EnableUltimatePerformance, new TweakInfo("Enable Ultimate Performance mode", true) },
+            { Ungoogled.Install, new TweakInfo("Install Ungoogled Chromium", true) },
+            { WindowsTheme.ExplorerTheme, new TweakInfo("Apply custom File Explorer theme", false) },
+            { WindowsTheme.BorderTheme, new TweakInfo("Apply custom window border theme", false) },
+            { WindowsTheme.ApplyThemeTweaks, new TweakInfo("Apply general theme tweaks", true) },
+            { BootLogo.Install, new TweakInfo("Install custom boot logo", true) }
+        };
+    }
 
-            foreach (var type in assembly.GetTypes())
-            {
-                var methods = type
-                    .GetMethods(BindingFlags.Public | BindingFlags.Static)
-                    .Where(m => m.ReturnType == typeof(void) && m.GetParameters().Length == 0);
+    public class TweakInfo
+    {
+        public string Description { get; set; }
+        public bool IsDefaultEnabled { get; set; }
 
-                foreach (var method in methods)
-                {
-                    list.Add($"{type.Name}.{method.Name}");
-                }
-            }
-
-            return list.ToArray();
+        public TweakInfo(string description, bool isDefaultEnabled)
+        {
+            Description = description;
+            IsDefaultEnabled = isDefaultEnabled;
         }
+    }
 
-        public static void RunModule(string input) 
+    public class TweakModule
+    {
+        public Action Action { get; set; }
+        public TweakInfo Info { get; set; }
+
+        public TweakModule(Action action, TweakInfo info)
         {
-            // Remove "();" if present
-            if (input.EndsWith("();"))
-            {
-                input = input.Substring(0, input.Length - 3);  // Remove the "();"
-            }
-
-            // Remove "()" if the user includes it
-            if (input.EndsWith("()"))
-            {
-                input = input.Substring(0, input.Length - 2);
-            }
-
-            try
-            {
-                // Get the namespace of the current executing assembly
-                string namespacePrefix = Assembly.GetExecutingAssembly().GetName().Name;
-
-                // Split to extract class and method name
-                int lastDot = input.LastIndexOf('.');
-                if (lastDot == -1)
-                {
-                    Logger.Log("Invalid format. Use Class.Method.", Level.ERROR);
-                    return;
-                }
-
-                string fullClassName = namespacePrefix + "." + input.Substring(0, lastDot);  // Full Class Name
-                string methodName = input.Substring(lastDot + 1);    // Method
-
-                // Search for the class in all loaded assemblies
-                Type type = AppDomain.CurrentDomain
-                    .GetAssemblies()
-                    .SelectMany(a => a.GetTypes())
-                    .FirstOrDefault(t => t.FullName == fullClassName);
-
-                if (type == null)
-                {
-                    Logger.Log("Class not found.", Level.ERROR);
-                    return;
-                }
-
-                // Create an instance of the class
-                object instance = Activator.CreateInstance(type);
-
-                // Find the method
-                MethodInfo method = type.GetMethod(methodName);
-                if (method == null)
-                {
-                    Logger.Log("Method not found.", Level.ERROR);
-                    return;
-                }
-
-                // Invoke the method
-                Logger.Log($"Running {methodName} in {fullClassName}", Level.WARNING);
-                method.Invoke(instance, null);
-                Logger.Log($"Successfully executed {methodName} in {fullClassName}", Level.SUCCESS);
-            }
-            catch (Exception ex)
-            {
-                Logger.Log("Error: " + ex.Message, Level.ERROR);
-            }
+            Action = action;
+            Info = info;
         }
     }
 }
