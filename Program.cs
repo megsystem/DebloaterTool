@@ -126,9 +126,9 @@ namespace DebloaterTool
                     Logger.Log("+=====================================+", Level.VERBOSE);
                     Logger.Log("| DebloaterTool by @_giovannigiannone |", Level.VERBOSE);
                     Logger.Log("+=====================================+", Level.VERBOSE);
-                    foreach (var kvp in ModuleList.tweaks)
+                    foreach (var tweaks in ModuleRegistry.GetAllModules())
                     {
-                        kvp.Key();
+                        tweaks.Action();
                     }
                     break;
 
@@ -138,10 +138,10 @@ namespace DebloaterTool
                     Logger.Log("+=====================================+", Level.VERBOSE);
                     Logger.Log("| DebloaterTool by @_giovannigiannone |", Level.VERBOSE);
                     Logger.Log("+=====================================+", Level.VERBOSE);
-                    foreach (var kvp in ModuleList.tweaks)
+                    foreach (var tweaks in ModuleRegistry.GetAllModules())
                     {
-                        if (!kvp.Value.IsDefaultEnabled) continue; // Skip if not enabled
-                        kvp.Key(); // Run only enabled tweaks
+                        if (!tweaks.DefaultEnabled) continue; // Skip if not enabled
+                        tweaks.Action(); // Run only enabled tweaks
                     }
                     break;
 
@@ -151,19 +151,19 @@ namespace DebloaterTool
                     var skippedModules = new List<string>();
 
                     // Build dictionary with method names and corresponding TweakModule
-                    foreach (var kvp in ModuleList.tweaks)
+                    foreach (var tweaks in ModuleRegistry.GetAllModules())
                     {
-                        var method = kvp.Key.Method;
+                        var method = tweaks.Action.Method;
                         var fullName = $"{method.DeclaringType.Name}.{method.Name}";
-                        allModules[fullName] = new TweakModule(kvp.Key, kvp.Value);
+                        allModules[fullName] = tweaks;
                     }
 
                     // Prompt user with description
                     foreach (var module in allModules)
                     {
                         string prompt = 
-                            $"Description: {module.Value.Info.Description} " +
-                            $"[DEFAULT ENABLED: {module.Value.Info.IsDefaultEnabled.ToString().ToUpper()}]" +
+                            $"Description: {module.Value.Description} " +
+                            $"[DEFAULT ENABLED: {module.Value.DefaultEnabled.ToString().ToUpper()}]" +
                             $"\nDo you want to run {module.Key}?";
                         if (HelperDisplay.RequestYesOrNo(prompt))
                             selectedModules.Add(module.Key);
