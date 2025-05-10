@@ -134,7 +134,7 @@ namespace DebloaterTool
 
                 case 'M': // Minimal
                     Logger.Log("+=====================================+", Level.VERBOSE);
-                    Logger.Log("|    Running Minimal Debloating.. .   |", Level.VERBOSE);
+                    Logger.Log("|    Running Minimal Debloating...    |", Level.VERBOSE);
                     Logger.Log("+=====================================+", Level.VERBOSE);
                     Logger.Log("| DebloaterTool by @_giovannigiannone |", Level.VERBOSE);
                     Logger.Log("+=====================================+", Level.VERBOSE);
@@ -173,7 +173,7 @@ namespace DebloaterTool
 
                     // Logging
                     Logger.Log("+=====================================+", Level.VERBOSE);
-                    Logger.Log("|   Running Custom Debloating...      |", Level.VERBOSE);
+                    Logger.Log("|     Running Custom Debloating...    |", Level.VERBOSE);
                     Logger.Log("+=====================================+", Level.VERBOSE);
                     Logger.Log("ENABLED Modules:", Level.VERBOSE);
                     selectedModules.ForEach(m => Logger.Log($"[+] {m}", Level.VERBOSE));
