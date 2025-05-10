@@ -9,8 +9,8 @@ namespace DebloaterTool
         public static IList<TweakModule> GetAllModules() => new List<TweakModule>
         {
             new TweakModule(WinDefender.Uninstall, "Uninstall Windows Defender", false),
-            new TweakModule(WinUpdate.DisableWindowsUpdateV1, "Disable Windows Update (Version 1)", true),
-            new TweakModule(WinUpdate.DisableWindowsUpdateV2, "Disable Windows Update (Version 2)", false),
+            new TweakModule(WinUpdate.DisableWindowsUpdateV1, "Disable Windows Update (Regedit Version)", true),
+            new TweakModule(WinUpdate.DisableWindowsUpdateV2, "Disable Windows Update (Overwriter Version)", false),
             new TweakModule(DebloaterTools.RunChrisTool, "Run Chris Titus debloat tool", true),
             new TweakModule(DebloaterTools.RunRaphiTool, "Run Raphi debloat tool", true),
             new TweakModule(RemoveUnnecessary.ApplyOptimizationTweaks, "Apply system optimization tweaks", true),
