@@ -22,7 +22,10 @@ namespace DebloaterTool
         public static readonly string InstallPath = @"C:\DebloaterTool";
 
         // Log file path
-        public static readonly string LogFilePath = Path.Combine(Path.GetTempPath(), $"DebloaterToolSaved.log");
+        public static readonly string LogFilePath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "DebloaterToolSaved.log"
+        );
 
         // Version Program
         static readonly Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
