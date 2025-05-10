@@ -58,7 +58,7 @@
     <Compile Include="Logger\LevelHelper.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Modules\Helpers\HelperRegedit.cs" />
-    <Compile Include="Modules\Helpers\HelperModule.cs" />
+    <Compile Include="Modules\ModuleList.cs" />
     <Compile Include="Modules\Helpers\HelperWallpaper.cs" />
     <Compile Include="Modules\Helpers\HelperZip.cs" />
     <Compile Include="Modules\DebloaterTools.cs" />

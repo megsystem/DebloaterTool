@@ -126,7 +126,7 @@ namespace DebloaterTool
                     Logger.Log("+=====================================+", Level.VERBOSE);
                     Logger.Log("| DebloaterTool by @_giovannigiannone |", Level.VERBOSE);
                     Logger.Log("+=====================================+", Level.VERBOSE);
-                    foreach (var kvp in HelperModule.allTweaks)
+                    foreach (var kvp in ModuleList.tweaks)
                     {
                         kvp.Key();
                     }
@@ -138,7 +138,7 @@ namespace DebloaterTool
                     Logger.Log("+=====================================+", Level.VERBOSE);
                     Logger.Log("| DebloaterTool by @_giovannigiannone |", Level.VERBOSE);
                     Logger.Log("+=====================================+", Level.VERBOSE);
-                    foreach (var kvp in HelperModule.allTweaks)
+                    foreach (var kvp in ModuleList.tweaks)
                     {
                         if (!kvp.Value.IsDefaultEnabled) continue; // Skip if not enabled
                         kvp.Key(); // Run only enabled tweaks
@@ -151,7 +151,7 @@ namespace DebloaterTool
                     var skippedModules = new List<string>();
 
                     // Build dictionary with method names and corresponding TweakModule
-                    foreach (var kvp in HelperModule.allTweaks)
+                    foreach (var kvp in ModuleList.tweaks)
                     {
                         var method = kvp.Key.Method;
                         var fullName = $"{method.DeclaringType.Name}.{method.Name}";

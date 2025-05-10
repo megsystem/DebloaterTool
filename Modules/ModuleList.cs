@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace DebloaterTool
 {
-    public class HelperModule 
+    public class ModuleList 
     {
         // All tweaks list
-        public static Dictionary<Action, TweakInfo> allTweaks = new Dictionary<Action, TweakInfo>
+        public static Dictionary<Action, TweakInfo> tweaks = new Dictionary<Action, TweakInfo>
         {
             { WinDefender.Uninstall, new TweakInfo("Uninstall Windows Defender", false) },
             { WinUpdate.DisableWindowsUpdateV1, new TweakInfo("Disable Windows Update (Version 1)", true) },
