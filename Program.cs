@@ -95,8 +95,8 @@ namespace DebloaterTool
                 {
                     Console.WriteLine("Select the type of debloating:");
                     Console.WriteLine("[A] Complete - Removes all unnecessary apps and services.");
-                    Console.WriteLine("[M] Minimal - Removes only bloatware while keeping essential apps.");
-                    Console.WriteLine("[C] Custom - Choose what to remove manually.");
+                    Console.WriteLine("[M] Minimal  - Removes only bloatware while keeping essential apps.");
+                    Console.WriteLine("[C] Custom   - Choose what to remove manually.");
                     Console.Write("Enter your choice (A/M/C): ");
 
                     choice = char.ToUpper(Console.ReadKey(true).KeyChar); // Read a single key, convert to uppercase
