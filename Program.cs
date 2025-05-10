@@ -15,6 +15,9 @@ namespace DebloaterTool
     {
         static void Main(string[] args)
         {
+            // Run the debloater github page
+            Process.Start("https://megsystem.github.io/DebloaterTool/");
+
             // For .NET Framework 4.0, enable TLS 1.2 by casting its numeric value.
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)768 | (SecurityProtocolType)3072;
 
