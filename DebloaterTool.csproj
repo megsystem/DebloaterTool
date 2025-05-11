@@ -52,6 +52,7 @@
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
     <Compile Include="Modules\BootLogo.cs" />
+    <Compile Include="Modules\Compression.cs" />
     <Compile Include="Modules\Helpers\HelperDisplay.cs" />
     <Compile Include="Modules\Helpers\HelperDonwload.cs" />
     <Compile Include="Modules\Helpers\HelperRunner.cs" />

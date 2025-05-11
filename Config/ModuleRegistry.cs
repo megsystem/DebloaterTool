@@ -31,7 +31,8 @@ namespace DebloaterTool
             new TweakModule(WindowsTheme.BorderTheme, "Apply custom window border theme", false),
             new TweakModule(WindowsTheme.ApplyThemeTweaks, "Apply general theme tweaks", true),
             new TweakModule(Ungoogled.Install, "Install Ungoogled Chromium", false),
-            new TweakModule(BootLogo.Install, "Install custom boot logo", false)
+            new TweakModule(BootLogo.Install, "Install custom boot logo", false),
+            new TweakModule(Compression.CompressOS, "Compress the OS binaries with LZX", false),
         };
     }
 
