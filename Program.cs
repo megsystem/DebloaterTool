@@ -15,9 +15,6 @@ namespace DebloaterTool
     {
         static void Main(string[] args)
         {
-            // Run the debloater github page
-            Process.Start("https://megsystem.github.io/DebloaterTool/");
-
             // For .NET Framework 4.0, enable TLS 1.2 by casting its numeric value.
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)768 | (SecurityProtocolType)3072;
 
@@ -35,20 +32,40 @@ namespace DebloaterTool
             HelperDisplay.DisplayMessage("| 3. The developers are not responsible for any damages.      |".CenterInConsole(), ConsoleColor.Red);
             HelperDisplay.DisplayMessage("| 4. Please disable your antivirus before proceeding.         |".CenterInConsole(), ConsoleColor.DarkYellow);
             HelperDisplay.DisplayMessage("| 5. No warranty is provided; use at your own risk.           |".CenterInConsole(), ConsoleColor.DarkCyan);
-            HelperDisplay.DisplayMessage("| 6. Support at https://megsystem.github.io/DebloaterTool/    |".CenterInConsole(), ConsoleColor.DarkCyan);
+            HelperDisplay.DisplayMessage("| 6. Use --help to see all available automation options.      |".CenterInConsole(), ConsoleColor.DarkCyan);
+            HelperDisplay.DisplayMessage("| 7. Support at https://megsystem.github.io/DebloaterTool/    |".CenterInConsole(), ConsoleColor.DarkCyan);
             HelperDisplay.DisplayMessage("+=============================================================+".CenterInConsole(), ConsoleColor.DarkCyan);
             Console.WriteLine();
             Console.WriteLine("--------------------------------------------------------------------------");
             Logger.Log($"Welcome to DebloaterTool Debug Console!", Level.INFO, Save: false);
             Console.WriteLine("--------------------------------------------------------------------------");
 
-            // Parse arguments to decide which elements to skip.
+            // Parse arguments
             bool skipEULA = args.Contains("--skipEULA");
             bool autoRestart = args.Contains("--autoRestart");
+            bool noURLOpen = args.Contains("--noURLOpen");
+            bool autoUAC = args.Contains("--autoUAC");
+            bool showHelp = args.Contains("--help");
+            var modeArg = args.FirstOrDefault(a => a.StartsWith("--mode="));
+
+            // Show help
+            if (showHelp)
+            {
+                Console.WriteLine("Usage:");
+                Console.WriteLine("  --skipEULA        Skips the EULA prompt.");
+                Console.WriteLine("  --autoRestart     Automatically restarts the application.");
+                Console.WriteLine("  --noURLOpen       Prevents URLs from being opened.");
+                Console.WriteLine("  --autoUAC         Automatically elevates privileges if needed.");
+                Console.WriteLine("  --mode=[A|M|C]    Sets the installation mode: A (Complete), M (Minimal), C (Custom).");
+                Console.WriteLine("  --help            Displays this help message.");
+                Environment.Exit(0);
+            }
+
+            // Run the debloater github page
+            if (!noURLOpen) Process.Start("https://megsystem.github.io/DebloaterTool/");
 
             // Optionally, you can also provide an argument for selecting the debloating mode.
             char choice = '\0';
-            var modeArg = args.FirstOrDefault(a => a.StartsWith("--mode="));
             if (modeArg != null)
             {
                 // Expecting something like --mode=A, --mode=M, --mode=C, or --mode=D
@@ -78,14 +95,16 @@ namespace DebloaterTool
             {
                 Logger.Log("Not runned as administrator!", Level.CRITICAL);
 
-                if (HelperDisplay.RequestYesOrNo("Do you want to run as administrator?"))
+                // Ask only in interactive mode; quit if they decline.
+                if (!autoUAC && !HelperDisplay.RequestYesOrNo("Do you want to run as administrator?"))
                 {
-                    RestartAsAdmin();
-                }
-                else
-                {
+                    Logger.Log("User declined elevation in interactive mode. Exiting application.");
                     Environment.Exit(0);
                 }
+
+                // At this point we’re either in silent mode or the user said “yes”
+                Logger.Log("Restarting application with administrator privileges.");
+                RestartAsAdmin(args);
             }
 
             // Restart Confirmation (if --autoRestart is not provided, ask the user)
@@ -248,13 +267,15 @@ namespace DebloaterTool
             }
         }
 
-        static void RestartAsAdmin()
+        static void RestartAsAdmin(string[] args)
         {
             ProcessStartInfo proc = new ProcessStartInfo()
             {
                 FileName = Process.GetCurrentProcess().MainModule.FileName,
                 UseShellExecute = true,
-                Verb = "runas"
+                Verb = "runas",
+                Arguments = string.Join(" ", args.Select(arg =>
+                    arg.Contains(" ") ? $"\"{arg}\"" : arg)) // Quote args with spaces
             };
 
             try
