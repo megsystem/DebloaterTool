@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 
 namespace DebloaterTool
@@ -29,15 +28,7 @@ namespace DebloaterTool
                 if (File.Exists(installCmdPath))
                 {
                     Logger.Log("Running install.cmd...", Level.INFO);
-
-                    var process = new Process();
-                    process.StartInfo.FileName = installCmdPath;
-                    process.StartInfo.WorkingDirectory = Settings.bootlogoPath;
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.CreateNoWindow = false;
-                    process.Start();
-                    process.WaitForExit();
-
+                    HelperRunner.Command(installCmdPath, workingDirectory: Settings.bootlogoPath, NoWindow: false);
                     Logger.Log("install.cmd finished.", Level.INFO);
                 }
                 else

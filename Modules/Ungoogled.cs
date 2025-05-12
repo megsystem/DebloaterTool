@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Web.Script.Serialization;
 
@@ -119,8 +118,7 @@ namespace DebloaterTool
                 Logger.Log("Download completed.", Level.SUCCESS);
 
                 Logger.Log("Starting installer...", Level.SUCCESS);
-                Process installerProcess = Process.Start(tempFile);
-                installerProcess.WaitForExit();
+                HelperRunner.Command(tempFile);
                 Logger.Log("Installer process completed.", Level.SUCCESS);
 
                 File.Delete(tempFile);
