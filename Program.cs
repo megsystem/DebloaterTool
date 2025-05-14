@@ -32,7 +32,7 @@ namespace DebloaterTool
             HelperDisplay.DisplayMessage("| 3. The developers are not responsible for any damages.      |".CenterInConsole(), ConsoleColor.Red);
             HelperDisplay.DisplayMessage("| 4. Please disable your antivirus before proceeding.         |".CenterInConsole(), ConsoleColor.DarkYellow);
             HelperDisplay.DisplayMessage("| 5. No warranty is provided; use at your own risk.           |".CenterInConsole(), ConsoleColor.DarkCyan);
-            HelperDisplay.DisplayMessage("| 6. Use --help to see all available automation options.      |".CenterInConsole(), ConsoleColor.DarkCyan);
+            HelperDisplay.DisplayMessage("| 6. Use --help to see all available automation options.      |".CenterInConsole(), ConsoleColor.DarkMagenta);
             HelperDisplay.DisplayMessage("| 7. Support at https://megsystem.github.io/DebloaterTool/    |".CenterInConsole(), ConsoleColor.DarkCyan);
             HelperDisplay.DisplayMessage("+=============================================================+".CenterInConsole(), ConsoleColor.DarkCyan);
             Console.WriteLine();
