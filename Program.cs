@@ -217,6 +217,15 @@ namespace DebloaterTool
                                     selectedModules.Add(line.Trim());
                                 }
                             }
+
+                            // Skipped modules
+                            foreach (var module in allModules.Keys)
+                            {
+                                if (!selectedModules.Contains(module))
+                                {
+                                    skippedModules.Add(module);
+                                }
+                            }
                         }
                     }
                     
@@ -241,9 +250,9 @@ namespace DebloaterTool
                     Logger.Log("+=====================================+", Level.VERBOSE);
                     Logger.Log("|     Running Custom Debloating...    |", Level.VERBOSE);
                     Logger.Log("+=====================================+", Level.VERBOSE);
-                    Logger.Log("ENABLED Modules:", Level.VERBOSE);
+                    Logger.Log("ENABLED MODULES:", Level.VERBOSE);
                     selectedModules.ForEach(m => Logger.Log($"[+] {m}", Level.VERBOSE));
-                    Logger.Log("SKIPPED Modules:", Level.VERBOSE);
+                    Logger.Log("SKIPPED MODULES:", Level.VERBOSE);
                     skippedModules.ForEach(m => Logger.Log($"[-] {m}", Level.VERBOSE));
                     Logger.Log("+=====================================+", Level.VERBOSE);
                     Logger.Log("| DebloaterTool by @_giovannigiannone |", Level.VERBOSE);

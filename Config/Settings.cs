@@ -24,7 +24,7 @@ namespace DebloaterTool
         // Log file path
         public static readonly string LogFilePath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "DebloaterToolSaved.log"
+            "debloatertool.saved"
         );
 
         // Version Program
