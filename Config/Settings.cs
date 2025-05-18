@@ -34,10 +34,10 @@ namespace DebloaterTool
         // Downloads links - fork and put your urls
         public static string tabLink = "https://megsystem.github.io/materialYouNewTab/"; // forked - original by XengShi
         public static string wallpaper = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Wallpapers";
-        public static string powerRun = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/PowerRun.exe";
-        public static string bootlogo = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/bootlogo.zip";
-        public static string bordertheme = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/tacky-borders.exe";
-        public static string explorertheme = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/ExplorerTheme.zip";
+        public static string powerRun = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/PowerRun.exe";
+        public static string bootlogo = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/bootlogo.zip";
+        public static string bordertheme = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/tacky-borders.exe";
+        public static string explorertheme = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/ExplorerTheme.zip";
 
         // RaphiTool Settings
         public static string raphiToolUrl = "https://win11debloat.raphi.re/";

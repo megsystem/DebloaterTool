@@ -86,11 +86,11 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 2. **Execute the Command:**
    - For the standard mode, enter:
      ```powershell
-     powershell.exe -w hidden -Command "iex (iwr 'https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/DebloaterTool.ps1')"
+     powershell.exe -w hidden -Command "iex (iwr 'https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Scripts/DebloaterTool.ps1')"
      ```
    - For AutoDebloater (Complete Mode), use:
      ```powershell
-     powershell.exe -w hidden -Command "iex (iwr 'https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/AutoDebloater.ps1')"
+     powershell.exe -w hidden -Command "iex (iwr 'https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Scripts/AutoDebloater.ps1')"
      ```
    - Press **Enter** to execute.
 

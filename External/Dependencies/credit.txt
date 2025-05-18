@@ -1,0 +1,18 @@
+bootlogo.zip
+-------------
+- splash.bmp: Created by @_giovannigiannone (me)
+- install.cmd: Created by @_giovannigiannone (me)
+- uninstall.cmd: Created by @_giovannigiannone (me)
+- Other files from: https://github.com/Metabolix/HackBGRT
+
+ExplorerTheme.zip
+------------------
+- Based on: https://github.com/Maplespe/ExplorerBlurMica
+
+PowerRun.exe
+-------------
+- Sourced from: https://github.com/ionuttbara/windows-defender-remover/issues/153
+
+tacky-borders.exe
+------------------
+- From: https://github.com/lukeyou05/tacky-borders
