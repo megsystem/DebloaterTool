@@ -42,21 +42,23 @@ namespace DebloaterTool
 
             // Parse arguments
             bool skipEULA = args.Contains("--skipEULA");
-            bool autoRestart = args.Contains("--autoRestart");
             bool noURLOpen = args.Contains("--noURLOpen");
             bool autoUAC = args.Contains("--autoUAC");
             bool showHelp = args.Contains("--help");
             var modeArg = args.FirstOrDefault(a => a.StartsWith("--mode="));
+            var restartArg = args.FirstOrDefault(a => a.StartsWith("--restart="));
+            var moduleArgs = args.FirstOrDefault(a => a.StartsWith("--module="));
 
             // Show help
             if (showHelp)
             {
                 Console.WriteLine("Usage:");
                 Console.WriteLine("  --skipEULA        Skips the EULA prompt.");
-                Console.WriteLine("  --autoRestart     Automatically restarts the application.");
+                Console.WriteLine("  --restart=[Y/N]   Automatically restarts the computer after debloating.");
                 Console.WriteLine("  --noURLOpen       Prevents URLs from being opened.");
                 Console.WriteLine("  --autoUAC         Automatically elevates privileges if needed.");
                 Console.WriteLine("  --mode=[A|M|C]    Sets the installation mode: A (Complete), M (Minimal), C (Custom).");
+                Console.WriteLine("  --module=[PATH]   Loads modules listed in the specified text file.");
                 Console.WriteLine("  --help            Displays this help message.");
                 Environment.Exit(0);
             }
@@ -75,6 +77,12 @@ namespace DebloaterTool
                     choice = modeValue[0];
                     Console.WriteLine("Debloating mode selected via args: " + choice);
                 }
+            }
+
+            // Fallback only if modeArg is null or invalid
+            if (choice == '\0' && moduleArgs != null && moduleArgs.Length > 0)
+            {
+                choice = 'C';
             }
 
             // EULA Confirmation (skipped if --skipEULA is provided)
@@ -107,8 +115,20 @@ namespace DebloaterTool
                 RestartAsAdmin(args);
             }
 
-            // Restart Confirmation (if --autoRestart is not provided, ask the user)
-            bool restart = autoRestart || HelperDisplay.RequestYesOrNo("Do you want to restart after the process?");
+            bool restart;
+            if (!string.IsNullOrWhiteSpace(restartArg) && restartArg.Contains("="))
+            {
+                var restartValue = restartArg.Split('=')[1].ToUpper();
+                restart = restartValue == "Y"
+                    ? true
+                    : restartValue == "N"
+                        ? false
+                        : HelperDisplay.RequestYesOrNo("Do you want to restart after the process?");
+            }
+            else
+            {
+                restart = HelperDisplay.RequestYesOrNo("Do you want to restart after the process?");
+            }
 
             // If the mode wasn't set via arguments, ask the user interactively.
             if (choice != 'A' && choice != 'M' && choice != 'C')
@@ -180,17 +200,41 @@ namespace DebloaterTool
                         allModules[fullName] = tweaks;
                     }
 
-                    // Prompt user with description
-                    foreach (var module in allModules)
+                    // Check module args
+                    if (moduleArgs != null)
                     {
-                        string prompt = 
-                            $"Description: {module.Value.Description} " +
-                            $"[DEFAULT ENABLED: {module.Value.DefaultEnabled.ToString().ToUpper()}]" +
-                            $"\nDo you want to run {module.Key}?";
-                        if (HelperDisplay.RequestYesOrNo(prompt))
-                            selectedModules.Add(module.Key);
-                        else
-                            skippedModules.Add(module.Key);
+                        string modulepath = moduleArgs.Split('=')[1].ToUpper();
+                        if (File.Exists(modulepath))
+                        {
+                            // Read all lines from the file
+                            string[] lines = File.ReadAllLines(modulepath);
+
+                            // Add each line to the list
+                            foreach (string line in lines)
+                            {
+                                if (!string.IsNullOrWhiteSpace(line) && !line.TrimStart().StartsWith("//"))
+                                {
+                                    selectedModules.Add(line.Trim());
+                                }
+                            }
+                        }
+                    }
+                    
+                    // If the module list is empty
+                    if (!selectedModules.Any())
+                    {
+                        // Prompt user with description
+                        foreach (var module in allModules)
+                        {
+                            string prompt =
+                                $"Description: {module.Value.Description} " +
+                                $"[DEFAULT ENABLED: {module.Value.DefaultEnabled.ToString().ToUpper()}]" +
+                                $"\nDo you want to run {module.Key}?";
+                            if (HelperDisplay.RequestYesOrNo(prompt))
+                                selectedModules.Add(module.Key);
+                            else
+                                skippedModules.Add(module.Key);
+                        }
                     }
 
                     // Logging

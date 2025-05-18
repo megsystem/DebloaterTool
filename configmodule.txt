@@ -1,0 +1,32 @@
+// This is an example of the module file
+// Project by @_giovannigiannone
+// These are enabled modules:
+RemoveUnnecessary.UninstallEdge
+RemoveUnnecessary.CleanOutlookAndOneDrive
+
+// WinDefender.Uninstall: Uninstall Windows Defender (default: false)
+// WinUpdate.DisableWindowsUpdateV1: Disable Windows Update (Regedit Version) (default: true)
+// WinUpdate.DisableWindowsUpdateV2: Disable Windows Update (Overwriter Version) (default: false)
+// DebloaterTools.RunChrisTool: Run Chris Titus debloat tool (default: true)
+// DebloaterTools.RunRaphiTool: Run Raphi debloat tool (default: true)
+// RemoveUnnecessary.ApplyOptimizationTweaks: Apply system optimization tweaks (default: true)
+// RemoveUnnecessary.UninstallEdge: Uninstall Microsoft Edge (default: true)
+// RemoveUnnecessary.CleanOutlookAndOneDrive: Remove Outlook and OneDrive remnants (default: true)
+// SecurityPerformance.DisableRemAssistAndRemDesk: Disable Remote Assistance and Desktop (default: false)
+// SecurityPerformance.DisableSpectreAndMeltdown: Disable Spectre/Meltdown mitigations (default: false)
+// SecurityPerformance.DisableWinErrorReporting: Disable Windows Error Reporting (default: false)
+// SecurityPerformance.ApplySecurityPerformanceTweaks: Apply general security/performance tweaks (default: false)
+// SecurityPerformance.DisableSMBv1: Disable outdated SMBv1 protocol (default: false)
+// DataCollection.DisableAdvertisingAndContentDelivery: Disable ad/content delivery settings (default: true)
+// DataCollection.DisableDataCollectionPolicies: Disable data collection policies (default: true)
+// DataCollection.DisableTelemetryServices: Disable telemetry services (default: true)
+// WinStore.Uninstall: Uninstall Microsoft Store (default: false)
+// WinCustomization.DisableSnapTools: Disable Snap Assist tools (default: true)
+// WinCustomization.EnableUltimatePerformance: Enable Ultimate Performance mode (default: true)
+// WindowsTheme.ExplorerTheme: Apply custom File Explorer theme (default: false)
+// WindowsTheme.BorderTheme: Apply custom window border theme (default: false)
+// WindowsTheme.ApplyThemeTweaks: Apply general theme tweaks (default: true)
+// Ungoogled.Install: Install Ungoogled Chromium (default: false)
+// BootLogo.Install: Install custom boot logo (default: false)
+// Compression.CompressOS: Compress the OS binaries with LZX (default: false)
+// Compression.CleanupWinSxS: Clean up WinSxS to reduce disk usage (default: false)
