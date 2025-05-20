@@ -120,14 +120,14 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
       <img
         src="https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/random.png"
         alt="Random Screenshot"
-        height="300"
+        height="350"
       />
     </td>
     <td align="center">
       <img
         src="https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/alwaysontop.png"
         alt="AlwaysOnTop Screenshot"
-        height="300"
+        height="350"
       />
     </td>
   </tr>
@@ -136,8 +136,6 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
     <td align="center">AlwaysOnTop Screenshot</td>
   </tr>
 </table>
-
-
 
 ---
 
