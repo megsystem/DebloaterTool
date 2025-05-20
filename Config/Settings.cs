@@ -38,6 +38,7 @@ namespace DebloaterTool
         public static string bootlogo = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/bootlogo.zip";
         public static string bordertheme = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/tacky-borders.exe";
         public static string explorertheme = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/ExplorerTheme.zip";
+        public static string alwaysontop = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/AlwaysOnTop.exe";
 
         // RaphiTool Settings
         public static string raphiToolUrl = "https://win11debloat.raphi.re/";

@@ -16,3 +16,8 @@ PowerRun.exe
 tacky-borders.exe
 ------------------
 - From: https://github.com/lukeyou05/tacky-borders
+
+AlwaysOnTop.exe
+---------------
+- Source: https://github.com/ClusterM/AlwaysOnTopper/blob/master/Program.cs
+- Modified by @_giovannigiannone to be compatible with .NET Framework 4.0

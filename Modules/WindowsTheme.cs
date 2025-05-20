@@ -138,6 +138,52 @@ namespace DebloaterTool
             }
         }
 
+        public static void AlwaysOnTop()
+        {
+            try
+            {
+                string alwaysontoppath = Path.Combine(Settings.themePath, "AlwaysOnTop.exe");
+                string processName = Path.GetFileNameWithoutExtension(alwaysontoppath);
+
+                // Download the file
+                if (!HelperDonwload.DownloadFile(Settings.alwaysontop, alwaysontoppath))
+                {
+                    Logger.Log("Failed to download AlwaysOnTop. Exiting...", Level.ERROR);
+                    return;
+                }
+
+                Logger.Log($"Installed in {Settings.themePath} folder!", Level.SUCCESS);
+
+                // Create a scheduled task to run the file at logon with highest privileges
+                string taskName = "AlwaysOnTopStartup";
+                string arguments = $"/Create /F /RL HIGHEST /SC ONLOGON /TN \"{taskName}\" /TR \"\\\"{alwaysontoppath}\\\"\"";
+                string output = HelperRunner.Command("schtasks", arguments, true);
+
+                if (!string.IsNullOrWhiteSpace(output) && output.Contains("SUCCESS"))
+                {
+                    Logger.Log("AlwaysOnTop task successfully added to startup!", Level.SUCCESS);
+                }
+                else
+                {
+                    Logger.Log($"Failed to create scheduled task for AlwaysOnTop. Output: {output}", Level.ERROR);
+                }
+
+                // Launch immediately
+                if (Process.GetProcessesByName(processName).Length == 0)
+                {
+                    Process.Start(alwaysontoppath);
+                }
+                else
+                {
+                    Logger.Log($"Process '{processName}' is already running. Skipping launch.", Level.WARNING);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Unexpected error in BorderTheme: {ex.Message}", Level.ERROR);
+            }
+        }
+
         public static bool IsWindows11()
         {
             var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
