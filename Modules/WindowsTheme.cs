@@ -180,7 +180,7 @@ namespace DebloaterTool
             }
             catch (Exception ex)
             {
-                Logger.Log($"Unexpected error in BorderTheme: {ex.Message}", Level.ERROR);
+                Logger.Log($"Unexpected error in AlwaysOnTop: {ex.Message}", Level.ERROR);
             }
         }
 
