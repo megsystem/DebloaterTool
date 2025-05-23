@@ -29,6 +29,7 @@ namespace DebloaterTool
             new TweakModule(WinCustomization.EnableUltimatePerformance, "Enable Ultimate Performance mode", true),
             new TweakModule(WindowsTheme.ExplorerTheme, "Apply custom File Explorer theme", false),
             new TweakModule(WindowsTheme.BorderTheme, "Apply custom window border theme", false),
+            new TweakModule(WindowsTheme.WindhawkInstaller, "Installs Windhawk with silent installation", false),
             new TweakModule(WindowsTheme.AlwaysOnTop, "Install AlwaysOnTop to add a 'Top' button to any program", false),
             new TweakModule(WindowsTheme.ApplyThemeTweaks, "Apply general theme tweaks", true),
             new TweakModule(Ungoogled.Install, "Install Ungoogled Chromium", false),

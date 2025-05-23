@@ -39,6 +39,7 @@ namespace DebloaterTool
         public static string bordertheme = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/tacky-borders.exe";
         public static string explorertheme = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/ExplorerTheme.zip";
         public static string alwaysontop = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/AlwaysOnTop.exe";
+        public static string windhawkinstaller = "https://ramensoftware.com/downloads/windhawk_setup.exe";
 
         // RaphiTool Settings
         public static string raphiToolUrl = "https://win11debloat.raphi.re/";

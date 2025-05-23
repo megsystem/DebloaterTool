@@ -25,6 +25,7 @@ RemoveUnnecessary.CleanOutlookAndOneDrive
 // WinCustomization.EnableUltimatePerformance: Enable Ultimate Performance mode (default: true)
 // WindowsTheme.ExplorerTheme: Apply custom File Explorer theme (default: false)
 // WindowsTheme.BorderTheme: Apply custom window border theme (default: false)
+// WindowsTheme.WindhawkInstaller: Installs Windhawk with silent installation (default: false)
 // WindowsTheme.AlwaysOnTop: Install AlwaysOnTop to add a 'Top' button to any program (default: false)
 // WindowsTheme.ApplyThemeTweaks: Apply general theme tweaks (default: true)
 // Ungoogled.Install: Install Ungoogled Chromium (default: false)

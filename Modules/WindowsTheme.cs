@@ -28,14 +28,7 @@ namespace DebloaterTool
                 if (File.Exists(installCmdPath))
                 {
                     Logger.Log("Running register.cmd...", Level.INFO);
-
-                    var process = new Process();
-                    process.StartInfo.FileName = installCmdPath;
-                    process.StartInfo.WorkingDirectory = Settings.themePath;
-                    process.StartInfo.UseShellExecute = true;
-                    process.StartInfo.CreateNoWindow = true;
-                    process.Start();
-
+                    HelperRunner.Command(installCmdPath, workingDirectory: Settings.themePath, waitforexit: false);
                     Logger.Log("register.cmd finished.", Level.INFO);
                 }
                 else
@@ -172,6 +165,38 @@ namespace DebloaterTool
                 if (Process.GetProcessesByName(processName).Length == 0)
                 {
                     Process.Start(alwaysontoppath);
+                }
+                else
+                {
+                    Logger.Log($"Process '{processName}' is already running. Skipping launch.", Level.WARNING);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Unexpected error in AlwaysOnTop: {ex.Message}", Level.ERROR);
+            }
+        }
+
+        public static void WindhawkInstaller()
+        {
+            try
+            {
+                string windhawkpath = Path.Combine(Settings.themePath, "WindhawkInstaller.exe");
+                string processName = Path.GetFileNameWithoutExtension(windhawkpath);
+
+                // Download the file
+                if (!HelperDonwload.DownloadFile(Settings.windhawkinstaller, windhawkpath))
+                {
+                    Logger.Log("Failed to download Windhawk. Exiting...", Level.ERROR);
+                    return;
+                }
+
+                Logger.Log($"Installed in {Settings.themePath} folder!", Level.SUCCESS);
+
+                // Launch immediately
+                if (Process.GetProcessesByName(processName).Length == 0)
+                {
+                    HelperRunner.Command(windhawkpath, "/S");
                 }
                 else
                 {

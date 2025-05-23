@@ -10,7 +10,8 @@ namespace DebloaterTool
             string arguments = null, 
             bool redirect = false, 
             string workingDirectory = null,
-            bool NoWindow = true)
+            bool NoWindow = true,
+            bool waitforexit = true)
         {
             try
             {
@@ -31,7 +32,7 @@ namespace DebloaterTool
 
                 using (Process process = Process.Start(psi))
                 {
-                    process.WaitForExit();
+                    if (waitforexit) process.WaitForExit();
                     return (redirect) ? process.StandardOutput.ReadToEnd() : null;
                 }
             }
