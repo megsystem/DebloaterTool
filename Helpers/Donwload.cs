@@ -2,10 +2,11 @@
 using System.IO;
 using System.Net;
 using System.Threading;
+using DebloaterTool.Settings;
 
-namespace DebloaterTool
+namespace DebloaterTool.Helper
 {
-    internal class HelperDonwload
+    internal class Donwload
     {
         public static bool DownloadFile(string url, string outputPath)
         {
@@ -83,7 +84,7 @@ namespace DebloaterTool
                         }
                     }
 
-                    Console.WriteLine();
+                    System.Console.WriteLine();
                     return true;
                 }
             }

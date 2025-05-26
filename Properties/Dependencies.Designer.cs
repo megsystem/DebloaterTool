@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DebloaterTool.Config {
+namespace DebloaterTool.Properties {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace DebloaterTool.Config {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resource {
+    internal class Dependencies {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resource() {
+        internal Dependencies() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace DebloaterTool.Config {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DebloaterTool.Config.Resource", typeof(Resource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DebloaterTool.Properties.Dependencies", typeof(Dependencies).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -71,36 +71,14 @@ namespace DebloaterTool.Config {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Windows Registry Editor Version 5.00
-        ///; File: E:\Projects\Development\GitHub Repos\Listed Repos\windows-defender-remover\Remove_defender_moduled\DisableAntivirusProtection.reg
-        ///
-        ///; disabling Antivirus
-        ///
-        ///[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender]
-        ///&quot;DisableRoutinelyTakingAction&quot;=dword:00000001
-        ///&quot;ServiceKeepAlive&quot;=dword:00000000
-        ///&quot;AllowFastServiceStartup&quot;=dword:00000000
-        ///&quot;DisableLocalAdminMerge&quot;=dword:00000001
-        ///
-        ///; disable overwriting real time protection settings
-        ///
-        ///[HKEY_LOCAL_MACHINE\SOFTWARE\Pol [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string defender {
-            get {
-                return ResourceManager.GetString("defender", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Set fso = CreateObject(&quot;&quot;Scripting.FileSystemObject&quot;&quot;)
-        ///Set shell = CreateObject(&quot;&quot;WScript.Shell&quot;&quot;)
+        ///   Looks up a localized string similar to Set fso = CreateObject(&quot;Scripting.FileSystemObject&quot;)
+        ///Set shell = CreateObject(&quot;WScript.Shell&quot;)
         ///
         ///&apos; Current script path
         ///currentPath = WScript.ScriptFullName
         ///
         ///&apos; Startup folder path
-        ///startupPath = shell.SpecialFolders(&quot;&quot;Startup&quot;&quot;) &amp; &quot;&quot;\OpenMyDocs.vbs&quot;&quot;
+        ///startupPath = shell.SpecialFolders(&quot;Startup&quot;) &amp; &quot;\ThankYou.vbs&quot;
         ///
         ///&apos; Check if already in Startup folder
         ///If LCase(currentPath) &lt;&gt; LCase(startupPath) Then
@@ -109,11 +87,11 @@ namespace DebloaterTool.Config {
         ///    fso.CopyFile currentPath, startupPath, True
         ///    On Error GoTo 0
         ///Else
-        ///    &apos; Create a temp [rest of string was truncated]&quot;;.
+        ///    &apos; Create DebloaterTool Pa [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string Welcome {
+        internal static string welcome {
             get {
-                return ResourceManager.GetString("Welcome", resourceCulture);
+                return ResourceManager.GetString("welcome", resourceCulture);
             }
         }
     }

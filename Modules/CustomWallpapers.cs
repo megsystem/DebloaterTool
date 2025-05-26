@@ -1,25 +1,27 @@
 ﻿using System;
 using System.IO;
+using DebloaterTool.Helper;
+using DebloaterTool.Settings;
 
-namespace DebloaterTool
+namespace DebloaterTool.Modules
 {
-    internal class Wallpaper
+    internal class CustomWallpapers
     {
         /// <summary>
         /// Downloads a custom wallpaper and sets it as the desktop background.
         /// </summary>
-        public static void SetCustomWallpaper()
+        public static void InstallWallpapers()
         {
             try
             {
                 // Now download the lockscreen
                 string lockscreenName = "Lockscreen.png";
-                string lockscreenUrl = $"{Settings.wallpaper}/{lockscreenName}";
-                string lockscreenLocalPath = Path.Combine(Settings.wallpapersPath, lockscreenName);
+                string lockscreenUrl = $"{Global.wallpaper}/{lockscreenName}";
+                string lockscreenLocalPath = Path.Combine(Global.wallpapersPath, lockscreenName);
                 DownloadAndLog(lockscreenUrl, lockscreenLocalPath, "Lockscreen");
 
                 // Set Wallpaper Lockscreen
-                HelperWallpaper.SetLockScreenWallpaper(lockscreenLocalPath);
+                Wallpaper.SetLockScreenWallpaper(lockscreenLocalPath);
                 Logger.Log("Wallpaper Lockscreen setted successfully.", Level.SUCCESS);
 
                 // Now download the desktop wallpapers
@@ -27,8 +29,8 @@ namespace DebloaterTool
                 while (true)
                 {
                     string fileName = $"{i}.png";
-                    string fileUrl = $"{Settings.wallpaper}/{fileName}";
-                    string fileLocalPath = Path.Combine(Settings.wallpapersPath, fileName);
+                    string fileUrl = $"{Global.wallpaper}/{fileName}";
+                    string fileLocalPath = Path.Combine(Global.wallpapersPath, fileName);
 
                     if (!DownloadAndLog(fileUrl, fileLocalPath, $"Wallpaper #{i}"))
                         break;
@@ -37,7 +39,7 @@ namespace DebloaterTool
                 }
 
                 // Set Wallpaper Desktop
-                HelperWallpaper.SetWallpaperSlideshowFromFolder(Settings.wallpapersPath);
+                Wallpaper.SetWallpaperSlideshowFromFolder(Global.wallpapersPath);
                 Logger.Log("Wallpaper Slideshow setted successfully.", Level.SUCCESS);
             }
             catch (Exception ex)
@@ -54,7 +56,7 @@ namespace DebloaterTool
         static bool DownloadAndLog(string url, string path, string description)
         {
             Logger.Log($"Downloading {description} from \"{url}\"...");
-            if (!HelperDonwload.DownloadFile(url, path))
+            if (!Donwload.DownloadFile(url, path))
             {
                 Logger.Log($"Unable to download the {description} from \"{url}\". Skipping...", Level.WARNING);
                 return false;

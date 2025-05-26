@@ -119,12 +119,9 @@
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="christitus" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>christitus.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Settings\christitus.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="defender" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>defender.reg;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="Welcome" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Welcome.vbs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="welcome" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Settings\welcome.vbs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

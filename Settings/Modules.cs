@@ -1,9 +1,10 @@
 ﻿using System;
+using DebloaterTool.Modules;
 using System.Collections.Generic;
 
-namespace DebloaterTool
+namespace DebloaterTool.Settings
 {
-    public class ModuleRegistry 
+    public class Modules 
     {
         // All tweaks list
         public static IList<TweakModule> GetAllModules() => new List<TweakModule>
@@ -36,6 +37,7 @@ namespace DebloaterTool
             new TweakModule(BootLogo.Install, "Install custom boot logo", false),
             new TweakModule(Compression.CompressOS, "Compress the OS binaries with LZX", false),
             new TweakModule(Compression.CleanupWinSxS, "Clean up WinSxS to reduce disk usage", false),
+            new TweakModule(CustomWallpapers.InstallWallpapers, "Install custom wallpaper for lockscreen and desktop", false),
         };
     }
 

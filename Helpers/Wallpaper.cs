@@ -2,9 +2,9 @@
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 
-namespace DebloaterTool
+namespace DebloaterTool.Helper
 {
-    internal class HelperWallpaper
+    internal class Wallpaper
     {
         public static void SetWallpaperSlideshowFromFolder(string folderPath)
         {
@@ -40,7 +40,7 @@ namespace DebloaterTool
             };
 
             // Apply the registry changes and restart Explorer to enforce the new lock screen
-            HelperRegedit.InstallRegModification(mods);
+            Regedit.InstallRegModification(mods);
         }
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, PreserveSig = false)]

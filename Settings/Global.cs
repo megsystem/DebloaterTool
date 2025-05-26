@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System;
 
-namespace DebloaterTool
+namespace DebloaterTool.Settings
 {
-    internal class Settings
+    internal class Global
     {
         // Logo
         public static string[] Logo = new string[]
@@ -39,6 +39,7 @@ namespace DebloaterTool
         public static string bordertheme = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/tacky-borders.exe";
         public static string explorertheme = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/ExplorerTheme.zip";
         public static string alwaysontop = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/AlwaysOnTop.exe";
+        public static string defender = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/defender.reg";
         public static string windhawkinstaller = "https://ramensoftware.com/downloads/windhawk_setup.exe";
 
         // RaphiTool Settings
@@ -53,10 +54,7 @@ namespace DebloaterTool
 
         // ChrisTool Settings
         public static string christitusUrl = "christitus.com/win";
-        public static byte[] christitusConfig = Config.Resource.christitus;
-
-        // DefenderReg Settings
-        public static string defender = Config.Resource.defender;
+        public static byte[] christitusConfig = Properties.Dependencies.christitus;
 
         // Paths vars
         public static string logsPath = $@"{InstallPath}\Saved Logs";

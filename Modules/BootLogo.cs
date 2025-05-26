@@ -1,7 +1,9 @@
-﻿using System;
+﻿using DebloaterTool.Helper;
+using DebloaterTool.Settings;
+using System;
 using System.IO;
 
-namespace DebloaterTool
+namespace DebloaterTool.Modules
 {
     internal class BootLogo
     {
@@ -10,10 +12,10 @@ namespace DebloaterTool
             try
             {
                 // 1. Prepare temp folder
-                string bootlogozip = Path.Combine(Settings.bootlogoPath, "bootlogo.zip");
+                string bootlogozip = Path.Combine(Global.bootlogoPath, "bootlogo.zip");
 
                 // 2. Download
-                if (!HelperDonwload.DownloadFile(Settings.bootlogo, bootlogozip))
+                if (!Donwload.DownloadFile(Global.bootlogo, bootlogozip))
                 {
                     Logger.Log("Failed to download bootlogo. Exiting...", Level.ERROR);
                     return;
@@ -21,14 +23,14 @@ namespace DebloaterTool
 
                 // 3. Extract
                 Logger.Log("Extracting bootlogo...", Level.INFO);
-                HelperZip.ExtractZipFile(bootlogozip, Settings.bootlogoPath);
+                Zip.ExtractZipFile(bootlogozip, Global.bootlogoPath);
 
                 // 4. Locate and run install.cmd
-                string installCmdPath = Path.Combine(Settings.bootlogoPath, "install.cmd");
+                string installCmdPath = Path.Combine(Global.bootlogoPath, "install.cmd");
                 if (File.Exists(installCmdPath))
                 {
                     Logger.Log("Running install.cmd...", Level.INFO);
-                    HelperRunner.Command(installCmdPath, workingDirectory: Settings.bootlogoPath, NoWindow: false);
+                    Runner.Command(installCmdPath, workingDirectory: Global.bootlogoPath, NoWindow: false);
                     Logger.Log("install.cmd finished.", Level.INFO);
                 }
                 else

@@ -1,8 +1,9 @@
 ﻿using System;
+using DebloaterTool.Settings;
 using System.Collections.Generic;
 using System.IO;
 
-namespace DebloaterTool
+namespace DebloaterTool.Helper
 {
     public static class Logger
     {
@@ -39,17 +40,17 @@ namespace DebloaterTool
             try
             {
                 // Ensure the directory exists
-                string directory = Path.GetDirectoryName(Settings.LogFilePath);
+                string directory = Path.GetDirectoryName(Global.LogFilePath);
                 Directory.CreateDirectory(directory);
 
-                if (!File.Exists(Settings.LogFilePath))
+                if (!File.Exists(Global.LogFilePath))
                 {
                     // Create file with header
-                    File.WriteAllText(Settings.LogFilePath, string.Join(Environment.NewLine, Settings.Logo) + Environment.NewLine);
+                    File.WriteAllText(Global.LogFilePath, string.Join(Environment.NewLine, Global.Logo) + Environment.NewLine);
                 }
 
                 // Append the log entry
-                File.AppendAllText(Settings.LogFilePath, logEntry + Environment.NewLine);
+                File.AppendAllText(Global.LogFilePath, logEntry + Environment.NewLine);
             }
             catch (Exception ex)
             {
@@ -75,10 +76,9 @@ namespace DebloaterTool
             return lines;
         }
 
-        public static ConsoleColor GetColor(Level level)
+        public static ConsoleColor GetColor(this Level level)
         {
-            ConsoleColor color;
-            return LevelHelper.LevelColors.TryGetValue(level, out color) ? color : ConsoleColor.White;
+            return LevelColors.Colors.TryGetValue(level, out var color) ? color : ConsoleColor.White;
         }
     }
 }

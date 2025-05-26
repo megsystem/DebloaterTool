@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DebloaterTool
+namespace DebloaterTool.Settings
 {
     public enum Level
     {
@@ -15,9 +15,9 @@ namespace DebloaterTool
         DOWNLOAD
     }
 
-    internal static class LevelHelper
+    public static class LevelColors
     {
-        public static readonly Dictionary<Level, ConsoleColor> LevelColors = new Dictionary<Level, ConsoleColor>
+        public static readonly Dictionary<Level, ConsoleColor> Colors = new Dictionary<Level, ConsoleColor>
         {
             { Level.INFO, ConsoleColor.DarkCyan },
             { Level.SUCCESS, ConsoleColor.DarkGreen },

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using DebloaterTool.Helper;
+using DebloaterTool.Settings;
 using System.Web.Script.Serialization;
 
-namespace DebloaterTool
+namespace DebloaterTool.Modules
 {
     internal class Ungoogled
     {
@@ -21,7 +23,7 @@ namespace DebloaterTool
         /// </summary>
         private static void ChangeUngoogledHomePage()
         {
-            string argToAdd = $"--custom-ntp={Settings.tabLink}";
+            string argToAdd = $"--custom-ntp={Global.tabLink}";
             // Directories to search: Desktop, Common Desktop, Start Menu, Programs, and Taskbar pinned shortcuts.
             string[] dirs = new string[] {
                 Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
@@ -83,7 +85,7 @@ namespace DebloaterTool
         {
             try
             {
-                string json = HelperDonwload.FetchDataUrl("https://api.github.com/repos/ungoogled-software/ungoogled-chromium-windows/releases/latest");
+                string json = Donwload.FetchDataUrl("https://api.github.com/repos/ungoogled-software/ungoogled-chromium-windows/releases/latest");
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
                 dynamic release = serializer.Deserialize<dynamic>(json);
 
@@ -114,11 +116,11 @@ namespace DebloaterTool
 
                 string tempFile = Path.Combine(Path.GetTempPath(), assetName);
                 Logger.Log("Downloading installer to " + tempFile + "...", Level.INFO);
-                HelperDonwload.DownloadFile(downloadUrl, tempFile);
+                Donwload.DownloadFile(downloadUrl, tempFile);
                 Logger.Log("Download completed.", Level.SUCCESS);
 
                 Logger.Log("Starting installer...", Level.SUCCESS);
-                HelperRunner.Command(tempFile);
+                Runner.Command(tempFile);
                 Logger.Log("Installer process completed.", Level.SUCCESS);
 
                 File.Delete(tempFile);

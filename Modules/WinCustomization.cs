@@ -1,6 +1,7 @@
-﻿using Microsoft.Win32;
+﻿using DebloaterTool.Helper;
+using Microsoft.Win32;
 
-namespace DebloaterTool
+namespace DebloaterTool.Modules
 {
     internal class WinCustomization
     {
@@ -11,7 +12,7 @@ namespace DebloaterTool
         /// </summary>
         public static void DisableSnapTools()
         {
-            RegistryModification[] registryModifications = new RegistryModification[]
+            RegistryModification[] RegistryModifications = new RegistryModification[]
             {
                 new RegistryModification(Registry.CurrentUser, @"Control Panel\Desktop", "WindowArrangementActive", RegistryValueKind.String, "0"),
                 new RegistryModification(Registry.CurrentUser, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "JointResize", RegistryValueKind.DWord, 0),
@@ -20,7 +21,7 @@ namespace DebloaterTool
                 new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "EnableSnapAssistFlyout", RegistryValueKind.DWord, 0)
             };
 
-            HelperRegedit.InstallRegModification(registryModifications);
+            Regedit.InstallRegModification(RegistryModifications);
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace DebloaterTool
         public static void EnableUltimatePerformance()
         {
             // Retrieve the current list of power plans.
-            string ultimatePlan = HelperRunner.Command("cmd.exe", "/c powercfg -list", redirect: true);
+            string ultimatePlan = Runner.Command("cmd.exe", "/c powercfg -list", redirect: true);
             if (ultimatePlan.Contains("Ultimate Performance"))
             {
                 Logger.Log("Ultimate Performance plan is already installed.");
@@ -39,12 +40,12 @@ namespace DebloaterTool
             else
             {
                 Logger.Log("Installing Ultimate Performance plan...");
-                HelperRunner.Command("cmd.exe", "/c powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61");
+                Runner.Command("cmd.exe", "/c powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61");
                 Logger.Log("> Ultimate Performance plan installed.");
             }
 
             // Retrieve the updated list of power plans.
-            string updatedPlanList = HelperRunner.Command("cmd.exe", "/c powercfg -list", redirect: true);
+            string updatedPlanList = Runner.Command("cmd.exe", "/c powercfg -list", redirect: true);
 
             // Inline logic to extract the GUID for the Ultimate Performance plan.
             string ultimatePlanGUID = string.Empty;
@@ -71,7 +72,7 @@ namespace DebloaterTool
             // Set the Ultimate Performance plan as the active power plan if its GUID was found.
             if (!string.IsNullOrEmpty(ultimatePlanGUID))
             {
-                HelperRunner.Command("cmd.exe", $"/c powercfg -setactive {ultimatePlanGUID}");
+                Runner.Command("cmd.exe", $"/c powercfg -setactive {ultimatePlanGUID}");
                 Logger.Log("Ultimate Performance plan is now active.");
             }
         }

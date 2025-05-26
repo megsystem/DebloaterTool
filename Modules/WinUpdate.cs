@@ -1,7 +1,9 @@
-﻿using Microsoft.Win32;
+﻿using DebloaterTool.Settings;
+using DebloaterTool.Helper;
+using Microsoft.Win32;
 using System.IO;
 
-namespace DebloaterTool
+namespace DebloaterTool.Modules
 {
     internal class WinUpdate
     {
@@ -29,7 +31,7 @@ namespace DebloaterTool
                 new RegistryModification(Registry.LocalMachine, "SOFTWARE\\Microsoft\\WindowsUpdate\\UX\\Settings", "PauseUpdatesExpiryTime", RegistryValueKind.String, "3000-12-31T11:59:59Z")
             };
 
-            HelperRegedit.InstallRegModification(modifications);
+            Regedit.InstallRegModification(modifications);
         }
 
         /// <summary>
@@ -39,11 +41,11 @@ namespace DebloaterTool
         /// </summary>
         public static void DisableWindowsUpdateV2()
         {
-            Logger.Log($"Downloading from {Settings.powerRun}...");
-            string powerRunPath = Path.Combine(Settings.debloatersPath, $"PowerRun.exe");
-            if (!HelperDonwload.DownloadFile(Settings.powerRun, powerRunPath))
+            Logger.Log($"Downloading from {Global.powerRun}...");
+            string powerRunPath = Path.Combine(Global.debloatersPath, $"PowerRun.exe");
+            if (!Donwload.DownloadFile(Global.powerRun, powerRunPath))
             {
-                Logger.Log($"Failed to download {Settings.powerRun}. Skipping...", Level.ERROR);
+                Logger.Log($"Failed to download {Global.powerRun}. Skipping...", Level.ERROR);
                 return;
             }
             Logger.Log($"Download complete to {powerRunPath}");
@@ -51,9 +53,9 @@ namespace DebloaterTool
             string[] services = { "wuauserv", "UsoSvc", "uhssvc", "WaaSMedicSvc" };
             foreach (var service in services)
             {
-                HelperRunner.Command(powerRunPath, $"cmd.exe /c net stop {service}");
-                HelperRunner.Command(powerRunPath, $"cmd.exe /c sc config {service} start= disabled");
-                HelperRunner.Command(powerRunPath, $"cmd.exe /c sc failure {service} reset= 0 actions= \"\"");
+                Runner.Command(powerRunPath, $"cmd.exe /c net stop {service}");
+                Runner.Command(powerRunPath, $"cmd.exe /c sc config {service} start= disabled");
+                Runner.Command(powerRunPath, $"cmd.exe /c sc failure {service} reset= 0 actions= \"\"");
             }
 
             string[] files = { "WaaSMedicSvc.dll", "wuaueng.dll" };
@@ -62,22 +64,22 @@ namespace DebloaterTool
                 string filePath = $"C:\\Windows\\System32\\{file}";
                 string backupPath = $"{filePath}_BAK";
 
-                HelperRunner.Command(powerRunPath, $"cmd.exe /c takeown /f {filePath}");
-                HelperRunner.Command(powerRunPath, $"cmd.exe /c icacls {filePath} /grant Everyone:F");
-                HelperRunner.Command(powerRunPath, $"cmd.exe /c rename {filePath} {backupPath}");
-                HelperRunner.Command(powerRunPath, $"cmd.exe /c icacls {backupPath} /setowner \"NT SERVICE\\TrustedInstaller\" & icacls {backupPath} /remove Everyone");
+                Runner.Command(powerRunPath, $"cmd.exe /c takeown /f {filePath}");
+                Runner.Command(powerRunPath, $"cmd.exe /c icacls {filePath} /grant Everyone:F");
+                Runner.Command(powerRunPath, $"cmd.exe /c rename {filePath} {backupPath}");
+                Runner.Command(powerRunPath, $"cmd.exe /c icacls {backupPath} /setowner \"NT SERVICE\\TrustedInstaller\" & icacls {backupPath} /remove Everyone");
             }
 
-            HelperRunner.Command(powerRunPath, "cmd.exe /c reg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\WaaSMedicSvc\" /v Start /t REG_DWORD /d 4 /f");
-            HelperRunner.Command(powerRunPath, "cmd.exe /c reg add \"HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU\" /v NoAutoUpdate /t REG_DWORD /d 1 /f");
+            Runner.Command(powerRunPath, "cmd.exe /c reg add \"HKLM\\SYSTEM\\CurrentControlSet\\Services\\WaaSMedicSvc\" /v Start /t REG_DWORD /d 4 /f");
+            Runner.Command(powerRunPath, "cmd.exe /c reg add \"HKLM\\Software\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU\" /v NoAutoUpdate /t REG_DWORD /d 1 /f");
 
-            HelperRunner.Command(powerRunPath, "cmd.exe /c erase /f /s /q C:\\Windows\\SoftwareDistribution\\*.*");
-            HelperRunner.Command(powerRunPath, "cmd.exe /c rmdir /s /q C:\\Windows\\SoftwareDistribution");
+            Runner.Command(powerRunPath, "cmd.exe /c erase /f /s /q C:\\Windows\\SoftwareDistribution\\*.*");
+            Runner.Command(powerRunPath, "cmd.exe /c rmdir /s /q C:\\Windows\\SoftwareDistribution");
 
             string powershellCmd = "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\UpdateOrchestrator\\*' | Disable-ScheduledTask; " +
                        "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WaaSMedic\\*' | Disable-ScheduledTask; " +
                        "Get-ScheduledTask -TaskPath '\\Microsoft\\Windows\\WindowsUpdate\\*' | Disable-ScheduledTask;";
-            HelperRunner.Command(powerRunPath, $"cmd.exe /c powershell -Command \"{powershellCmd}\"");
+            Runner.Command(powerRunPath, $"cmd.exe /c powershell -Command \"{powershellCmd}\"");
         }
     }
 }

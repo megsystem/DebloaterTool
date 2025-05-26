@@ -1,11 +1,13 @@
-﻿using System;
+﻿using DebloaterTool.Helper;
+using DebloaterTool.Settings;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
 
-namespace DebloaterTool
+namespace DebloaterTool.Modules
 {
     internal class DebloaterTools
     {
@@ -18,8 +20,8 @@ namespace DebloaterTool
             Logger.Log("Starting Windows configuration process...", Level.WARNING);
             try
             {
-                string scriptUrl = Settings.raphiToolUrl;
-                string scriptPath = Path.Combine(Settings.debloatersPath, "Win11Debloat.ps1");
+                string scriptUrl = Global.raphiToolUrl;
+                string scriptPath = Path.Combine(Global.debloatersPath, "Win11Debloat.ps1");
 
                 Logger.Log("Attempting to download Windows configuration script from: " + scriptUrl, Level.INFO);
                 Logger.Log("Target script path: " + scriptPath, Level.INFO);
@@ -35,7 +37,7 @@ namespace DebloaterTool
                 // Build the PowerShell command string.
                 string powershellCommand =
                     "Set-ExecutionPolicy Bypass -Scope Process -Force; " +
-                    "& '" + scriptPath + $"' {Settings.raphiToolArgs}";
+                    "& '" + scriptPath + $"' {Global.raphiToolArgs}";
 
                 Logger.Log("Executing PowerShell command with parameters:", Level.INFO);
                 Logger.Log("Command: " + powershellCommand, Level.INFO);
@@ -96,13 +98,13 @@ namespace DebloaterTool
             try
             {
                 // Write JSON configuration to a temporary file.
-                string jsonPath = Path.Combine(Settings.debloatersPath, "christitus.json");
-                File.WriteAllBytes(jsonPath, Settings.christitusConfig);
-                string logFile = Path.Combine(Settings.debloatersPath, "cttwinutil.log");
+                string jsonPath = Path.Combine(Global.debloatersPath, "christitus.json");
+                File.WriteAllBytes(jsonPath, Global.christitusConfig);
+                string logFile = Path.Combine(Global.debloatersPath, "cttwinutil.log");
 
                 // Construct the PowerShell command.
                 string command = "$ErrorActionPreference = 'SilentlyContinue'; " +
-                                 $"iex \"& {{ $(irm {Settings.christitusUrl}) }} -Config '" + jsonPath + "' -Run\" *>&1 | " +
+                                 $"iex \"& {{ $(irm {Global.christitusUrl}) }} -Config '" + jsonPath + "' -Run\" *>&1 | " +
                                  "Tee-Object -FilePath '" + logFile + "'";
 
                 // Encode the command in Unicode and then to Base64.

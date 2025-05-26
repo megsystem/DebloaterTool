@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using DebloaterTool.Helper;
+using DebloaterTool.Settings;
+using System.IO;
 
-namespace DebloaterTool
+namespace DebloaterTool.Modules
 {
     internal class WinDefender
     {
@@ -12,11 +14,11 @@ namespace DebloaterTool
         /// </summary>
         public static void Uninstall()
         {
-            Logger.Log($"Downloading from {Settings.powerRun}...");
-            string powerRunPath = Path.Combine(Settings.debloatersPath, $"PowerRun.exe");
-            if (!HelperDonwload.DownloadFile(Settings.powerRun, powerRunPath))
+            Logger.Log($"Downloading from {Global.powerRun}...");
+            string powerRunPath = Path.Combine(Global.debloatersPath, $"PowerRun.exe");
+            if (!Donwload.DownloadFile(Global.powerRun, powerRunPath))
             {
-                Logger.Log($"Failed to download {Settings.powerRun}. Skipping...", Level.ERROR);
+                Logger.Log($"Failed to download {Global.powerRun}. Skipping...", Level.ERROR);
                 return;
             }
             Logger.Log($"Download complete to {powerRunPath}");
@@ -47,20 +49,24 @@ namespace DebloaterTool
                 "C:\\Windows\\System32\\WebThreatDefSvc"
             };
 
-            string regFile = Path.Combine(Settings.debloatersPath, "defenderkiller.reg");
-            File.WriteAllText(regFile, Settings.defender);
+            string regFile = Path.Combine(Global.debloatersPath, "defenderkiller.reg");
+            if (!Donwload.DownloadFile(Global.defender, regFile))
+            {
+                Logger.Log("Failed to download DefenderKiller.reg. Exiting...", Level.ERROR);
+                return;
+            }
 
             // Import the registry file silently using regedit (/s switch).
-            HelperRunner.Command(powerRunPath, $"regedit.exe /s \"{regFile}\"");
+            Runner.Command(powerRunPath, $"regedit.exe /s \"{regFile}\"");
 
             foreach (var file in filesToDelete)
             {
-                HelperRunner.Command(powerRunPath, $"cmd.exe /c del /f \"{file}\"");
+                Runner.Command(powerRunPath, $"cmd.exe /c del /f \"{file}\"");
             }
 
             foreach (var dir in directoriesToDelete)
             {
-                HelperRunner.Command(powerRunPath, $"cmd.exe /c rmdir /s /q \"{dir}\"");
+                Runner.Command(powerRunPath, $"cmd.exe /c rmdir /s /q \"{dir}\"");
             }
         }
     }

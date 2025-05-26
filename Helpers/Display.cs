@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace DebloaterTool
+namespace DebloaterTool.Helper
 {
-    internal static class HelperDisplay
+    internal static class Display
     {
         public static void DisplayMessage(string message, ConsoleColor color)
         {

@@ -1,6 +1,7 @@
-﻿using Microsoft.Win32;
+﻿using DebloaterTool.Helper;
+using Microsoft.Win32;
 
-namespace DebloaterTool
+namespace DebloaterTool.Modules
 {
     internal class SecurityPerformance
     {
@@ -29,7 +30,7 @@ namespace DebloaterTool
                     4)
             };
 
-            HelperRegedit.InstallRegModification(modifications);
+            Regedit.InstallRegModification(modifications);
         }
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace DebloaterTool
                     0)
             };
 
-            HelperRegedit.InstallRegModification(modifications);
+            Regedit.InstallRegModification(modifications);
         }
 
         /// <summary>
@@ -82,7 +83,7 @@ namespace DebloaterTool
                     3)
             };
 
-            HelperRegedit.InstallRegModification(modifications);
+            Regedit.InstallRegModification(modifications);
         }
 
         /// <summary>
@@ -126,7 +127,7 @@ namespace DebloaterTool
             };
 
             // Apply registry changes.
-            HelperRegedit.InstallRegModification(modifications);
+            Regedit.InstallRegModification(modifications);
         }
 
         /// <summary>
@@ -172,7 +173,7 @@ namespace DebloaterTool
                 new RegistryModification(Registry.LocalMachine, @"System\CurrentControlSet\Services\lfsvc\Service\Configuration", "Status", RegistryValueKind.DWord, 0)
             };
 
-            HelperRegedit.InstallRegModification(modifications);
+            Regedit.InstallRegModification(modifications);
         }
     }
 }

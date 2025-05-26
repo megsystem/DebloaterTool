@@ -1,10 +1,12 @@
-﻿using Microsoft.Win32;
+﻿using DebloaterTool.Helper;
+using DebloaterTool.Settings;
+using Microsoft.Win32;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
-namespace DebloaterTool
+namespace DebloaterTool.Modules
 {
     internal class WindowsTheme
     {
@@ -12,23 +14,23 @@ namespace DebloaterTool
         {
             try
             {
-                string explorerthemezip = Path.Combine(Settings.themePath, "ExplorerTheme.zip");
+                string explorerthemezip = Path.Combine(Global.themePath, "ExplorerTheme.zip");
 
                 // Attempt to download the explorertheme file
-                if (!HelperDonwload.DownloadFile(Settings.explorertheme, explorerthemezip))
+                if (!Donwload.DownloadFile(Global.explorertheme, explorerthemezip))
                 {
                     Logger.Log("Failed to download ExplorerTheme. Exiting...", Level.ERROR);
                     return;
                 }
 
-                Logger.Log($"Extracting ExplorerTheme in {Settings.themePath}...", Level.INFO);
-                HelperZip.ExtractZipFile(explorerthemezip, Settings.themePath);
-                string installCmdPath = Path.Combine(Settings.themePath, "register.cmd");
+                Logger.Log($"Extracting ExplorerTheme in {Global.themePath}...", Level.INFO);
+                Zip.ExtractZipFile(explorerthemezip, Global.themePath);
+                string installCmdPath = Path.Combine(Global.themePath, "register.cmd");
 
                 if (File.Exists(installCmdPath))
                 {
                     Logger.Log("Running register.cmd...", Level.INFO);
-                    HelperRunner.Command(installCmdPath, workingDirectory: Settings.themePath, waitforexit: false);
+                    Runner.Command(installCmdPath, workingDirectory: Global.themePath, waitforexit: false);
                     Logger.Log("register.cmd finished.", Level.INFO);
                 }
                 else
@@ -49,22 +51,22 @@ namespace DebloaterTool
         {
             try
             {
-                string borderthemepath = Path.Combine(Settings.themePath, "tacky-borders.exe");
+                string borderthemepath = Path.Combine(Global.themePath, "tacky-borders.exe");
                 string processName = Path.GetFileNameWithoutExtension(borderthemepath);
 
                 // Attempt to download the BorderTheme file
-                if (!HelperDonwload.DownloadFile(Settings.bordertheme, borderthemepath))
+                if (!Donwload.DownloadFile(Global.bordertheme, borderthemepath))
                 {
                     Logger.Log("Failed to download BorderTheme. Exiting...", Level.ERROR);
                     return;
                 }
 
-                Logger.Log($"Installed in {Settings.themePath} folder!", Level.SUCCESS);
+                Logger.Log($"Installed in {Global.themePath} folder!", Level.SUCCESS);
 
                 // Create a scheduled task to run the file at logon with highest privileges
                 string taskName = "BorderThemeStartup";
                 string arguments = $"/Create /F /RL HIGHEST /SC ONLOGON /TN \"{taskName}\" /TR \"\\\"{borderthemepath}\\\"\"";
-                string output = HelperRunner.Command("schtasks", arguments, true);
+                string output = Runner.Command("schtasks", arguments, true);
 
                 if (!string.IsNullOrWhiteSpace(output) && output.Contains("SUCCESS"))
                 {
@@ -135,22 +137,22 @@ namespace DebloaterTool
         {
             try
             {
-                string alwaysontoppath = Path.Combine(Settings.themePath, "AlwaysOnTop.exe");
+                string alwaysontoppath = Path.Combine(Global.themePath, "AlwaysOnTop.exe");
                 string processName = Path.GetFileNameWithoutExtension(alwaysontoppath);
 
                 // Download the file
-                if (!HelperDonwload.DownloadFile(Settings.alwaysontop, alwaysontoppath))
+                if (!Donwload.DownloadFile(Global.alwaysontop, alwaysontoppath))
                 {
                     Logger.Log("Failed to download AlwaysOnTop. Exiting...", Level.ERROR);
                     return;
                 }
 
-                Logger.Log($"Installed in {Settings.themePath} folder!", Level.SUCCESS);
+                Logger.Log($"Installed in {Global.themePath} folder!", Level.SUCCESS);
 
                 // Create a scheduled task to run the file at logon with highest privileges
                 string taskName = "AlwaysOnTopStartup";
                 string arguments = $"/Create /F /RL HIGHEST /SC ONLOGON /TN \"{taskName}\" /TR \"\\\"{alwaysontoppath}\\\"\"";
-                string output = HelperRunner.Command("schtasks", arguments, true);
+                string output = Runner.Command("schtasks", arguments, true);
 
                 if (!string.IsNullOrWhiteSpace(output) && output.Contains("SUCCESS"))
                 {
@@ -181,22 +183,22 @@ namespace DebloaterTool
         {
             try
             {
-                string windhawkpath = Path.Combine(Settings.themePath, "WindhawkInstaller.exe");
+                string windhawkpath = Path.Combine(Global.themePath, "WindhawkInstaller.exe");
                 string processName = Path.GetFileNameWithoutExtension(windhawkpath);
 
                 // Download the file
-                if (!HelperDonwload.DownloadFile(Settings.windhawkinstaller, windhawkpath))
+                if (!Donwload.DownloadFile(Global.windhawkinstaller, windhawkpath))
                 {
                     Logger.Log("Failed to download Windhawk. Exiting...", Level.ERROR);
                     return;
                 }
 
-                Logger.Log($"Installed in {Settings.themePath} folder!", Level.SUCCESS);
+                Logger.Log($"Installed in {Global.themePath} folder!", Level.SUCCESS);
 
                 // Launch immediately
                 if (Process.GetProcessesByName(processName).Length == 0)
                 {
-                    HelperRunner.Command(windhawkpath, "/S");
+                    Runner.Command(windhawkpath, "/S");
                 }
                 else
                 {
@@ -232,7 +234,7 @@ namespace DebloaterTool
                 new RegistryModification(Registry.CurrentUser, @"Control Panel\Colors", "HotTrackingColor", RegistryValueKind.String, "0 0 0") // Sets click-and-drag box color to black
             };
 
-            HelperRegedit.InstallRegModification(themeTweaks);
+            Regedit.InstallRegModification(themeTweaks);
         }
     }
 }

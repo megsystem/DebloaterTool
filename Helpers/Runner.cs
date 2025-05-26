@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
+using DebloaterTool.Settings;
 
-namespace DebloaterTool
+namespace DebloaterTool.Helper
 {
-    internal class HelperRunner
+    internal class Runner
     {
         public static string Command(
             string path, 

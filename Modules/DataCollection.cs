@@ -1,6 +1,7 @@
-﻿using Microsoft.Win32;
+﻿using DebloaterTool.Helper;
+using Microsoft.Win32;
 
-namespace DebloaterTool
+namespace DebloaterTool.Modules
 {
     internal class DataCollection
     {
@@ -18,7 +19,7 @@ namespace DebloaterTool
                 new RegistryModification(Registry.LocalMachine, @"SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\SQMLogger", "Start", RegistryValueKind.DWord, 0)
             };
 
-            HelperRegedit.InstallRegModification(modifications);
+            Regedit.InstallRegModification(modifications);
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace DebloaterTool
                 new RegistryModification(Registry.CurrentUser, @"SOFTWARE\Microsoft\Windows\CurrentVersion\AppHost\EnableWebContentEvaluation", "Enabled", RegistryValueKind.DWord, 0)
             };
 
-            HelperRegedit.InstallRegModification(modifications);
+            Regedit.InstallRegModification(modifications);
         }
 
         /// <summary>
@@ -98,7 +99,7 @@ namespace DebloaterTool
                 new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Feeds", "ShellFeedsTaskbarOpenOnHover", RegistryValueKind.DWord, 0)
             };
 
-            HelperRegedit.InstallRegModification(modifications);
+            Regedit.InstallRegModification(modifications);
         }
     }
 }

@@ -45,30 +45,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\Settings.cs" />
-    <Compile Include="Config\Resource.Designer.cs">
+    <Compile Include="Properties\Dependencies.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Resource.resx</DependentUpon>
+      <DependentUpon>Dependencies.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Logger.cs" />
+    <Compile Include="Settings\Global.cs" />
+    <Compile Include="Helpers\Admins.cs" />
     <Compile Include="Modules\BootLogo.cs" />
     <Compile Include="Modules\Compression.cs" />
-    <Compile Include="Modules\Helpers\HelperDisplay.cs" />
-    <Compile Include="Modules\Helpers\HelperDonwload.cs" />
-    <Compile Include="Modules\Helpers\HelperRunner.cs" />
-    <Compile Include="Logger\LevelHelper.cs" />
-    <Compile Include="Logger\Logger.cs" />
-    <Compile Include="Modules\Helpers\HelperRegedit.cs" />
-    <Compile Include="Config\ModuleRegistry.cs" />
-    <Compile Include="Modules\Helpers\HelperWallpaper.cs" />
-    <Compile Include="Modules\Helpers\HelperZip.cs" />
+    <Compile Include="Helpers\Display.cs" />
+    <Compile Include="Helpers\Donwload.cs" />
+    <Compile Include="Helpers\Runner.cs" />
+    <Compile Include="Helpers\Logger.cs" />
+    <Compile Include="Helpers\Regedit.cs" />
+    <Compile Include="Settings\Modules.cs" />
+    <Compile Include="Helpers\Wallpaper.cs" />
+    <Compile Include="Helpers\Zip.cs" />
     <Compile Include="Modules\DebloaterTools.cs" />
     <Compile Include="Modules\DataCollection.cs" />
     <Compile Include="Modules\WindowsTheme.cs" />
     <Compile Include="Modules\RemoveUnnecessary.cs" />
     <Compile Include="Modules\SecurityPerformance.cs" />
     <Compile Include="Modules\Ungoogled.cs" />
-    <Compile Include="Modules\Wallpaper.cs" />
+    <Compile Include="Modules\CustomWallpapers.cs" />
     <Compile Include="Modules\WinCustomization.cs" />
     <Compile Include="Modules\WinDefender.cs" />
     <Compile Include="Modules\WinStore.cs" />
@@ -78,8 +79,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="configmodule.txt" />
-    <Content Include="Config\Welcome.vbs" />
     <Content Include="Icon.ico" />
+    <Content Include="Settings\welcome.vbs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="IWshRuntimeLibrary">
@@ -93,15 +94,14 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Config\Resource.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <None Include="README.md" />
+    <None Include="Settings\christitus.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Config\christitus.json" />
-    <None Include="Config\defender.reg" />
-    <None Include="README.md" />
+    <EmbeddedResource Include="Properties\Dependencies.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Dependencies.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,7 +1,8 @@
-﻿using Microsoft.Win32;
+﻿using DebloaterTool.Settings;
+using Microsoft.Win32;
 using System;
 
-namespace DebloaterTool
+namespace DebloaterTool.Helper
 {
     public class RegistryModification
     {
@@ -21,11 +22,11 @@ namespace DebloaterTool
         }
     }
 
-    internal class HelperRegedit
+    internal class Regedit
     {
-        public static void InstallRegModification(RegistryModification[] registryModifications)
+        public static void InstallRegModification(RegistryModification[] RegistryModifications)
         {
-            if (registryModifications == null || registryModifications.Length == 0)
+            if (RegistryModifications == null || RegistryModifications.Length == 0)
             {
                 Logger.Log("No registry modifications to apply.", Level.WARNING);
                 return;
@@ -33,7 +34,7 @@ namespace DebloaterTool
 
             Logger.Log("Applying registry changes...", Level.WARNING);
 
-            foreach (var mod in registryModifications)
+            foreach (var mod in RegistryModifications)
             {
                 ApplyModification(mod);
             }

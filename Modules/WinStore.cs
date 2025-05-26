@@ -1,4 +1,6 @@
-﻿namespace DebloaterTool
+﻿using DebloaterTool.Helper;
+
+namespace DebloaterTool.Modules
 {
     internal class WinStore
     {
@@ -9,10 +11,10 @@
         public static void Uninstall()
         {
             // Remove Microsoft Store for the current user.
-            HelperRunner.Command("powershell", "-NoProfile -Command \"Get-AppxPackage *WindowsStore* | Remove-AppxPackage\"");
+            Runner.Command("powershell", "-NoProfile -Command \"Get-AppxPackage *WindowsStore* | Remove-AppxPackage\"");
 
             // Remove Microsoft Store for all users.
-            HelperRunner.Command("powershell", "-NoProfile -Command \"Get-AppxPackage -AllUsers *WindowsStore* | Remove-AppxPackage\"");
+            Runner.Command("powershell", "-NoProfile -Command \"Get-AppxPackage -AllUsers *WindowsStore* | Remove-AppxPackage\"");
         }
     }
 }

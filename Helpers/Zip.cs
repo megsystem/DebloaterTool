@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 
-namespace DebloaterTool
+namespace DebloaterTool.Helper
 {
-    internal class HelperZip
+    internal class Zip
     {
         // Make sure that any method calling this runs on an STA thread.
         public static void ExtractZipFile(string zipFilePath, string extractPath)

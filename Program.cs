@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Security.Principal;
 using System.Net;
 using System.Linq;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using DebloaterTool.Helper;
+using DebloaterTool.Settings;
+using DebloaterTool.Properties;
 
 // Created by @_giovannigiannone and ChatGPT
 // Inspired from the Talon's Project!
@@ -19,22 +21,22 @@ namespace DebloaterTool
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)768 | (SecurityProtocolType)3072;
 
             // Run the Welcome Screen and EULA
-            Console.Title = $"{(IsAdministrator() ? "[Administrator]: " : "")}DebloaterTool {Settings.Version}";
-            foreach (string line in Settings.Logo) HelperDisplay.DisplayMessage(line.CenterInConsole(), ConsoleColor.Magenta);
+            Console.Title = $"{(Admins.IsAdministrator() ? "[Administrator]: " : "")}DebloaterTool {Global.Version}";
+            foreach (string line in Global.Logo) Display.DisplayMessage(line.CenterInConsole(), ConsoleColor.Magenta);
             Console.WriteLine();
-            HelperDisplay.DisplayMessage("+=============================================================+".CenterInConsole(), ConsoleColor.DarkCyan);
-            HelperDisplay.DisplayMessage("|              End User License Agreement (EULA)              |".CenterInConsole(), ConsoleColor.DarkCyan);
-            HelperDisplay.DisplayMessage("+=============================================================+".CenterInConsole(), ConsoleColor.DarkCyan);
-            HelperDisplay.DisplayMessage("| By using this software, you agree to the following terms:   |".CenterInConsole(), ConsoleColor.DarkCyan);
-            HelperDisplay.DisplayMessage("| 1. This software is open source under the MIT License.      |".CenterInConsole(), ConsoleColor.DarkCyan);
-            HelperDisplay.DisplayMessage("| 2. You may not distribute modified versions without         |".CenterInConsole(), ConsoleColor.DarkCyan);
-            HelperDisplay.DisplayMessage("|    including the original license.                          |".CenterInConsole(), ConsoleColor.DarkCyan);
-            HelperDisplay.DisplayMessage("| 3. The developers are not responsible for any damages.      |".CenterInConsole(), ConsoleColor.Red);
-            HelperDisplay.DisplayMessage("| 4. Please disable your antivirus before proceeding.         |".CenterInConsole(), ConsoleColor.DarkYellow);
-            HelperDisplay.DisplayMessage("| 5. No warranty is provided; use at your own risk.           |".CenterInConsole(), ConsoleColor.DarkCyan);
-            HelperDisplay.DisplayMessage("| 6. Use --help to see all available automation options.      |".CenterInConsole(), ConsoleColor.DarkMagenta);
-            HelperDisplay.DisplayMessage("| 7. Support at https://megsystem.github.io/DebloaterTool/    |".CenterInConsole(), ConsoleColor.DarkCyan);
-            HelperDisplay.DisplayMessage("+=============================================================+".CenterInConsole(), ConsoleColor.DarkCyan);
+            Display.DisplayMessage("+=============================================================+".CenterInConsole(), ConsoleColor.DarkCyan);
+            Display.DisplayMessage("|              End User License Agreement (EULA)              |".CenterInConsole(), ConsoleColor.DarkCyan);
+            Display.DisplayMessage("+=============================================================+".CenterInConsole(), ConsoleColor.DarkCyan);
+            Display.DisplayMessage("| By using this software, you agree to the following terms:   |".CenterInConsole(), ConsoleColor.DarkCyan);
+            Display.DisplayMessage("| 1. This software is open source under the MIT License.      |".CenterInConsole(), ConsoleColor.DarkCyan);
+            Display.DisplayMessage("| 2. You may not distribute modified versions without         |".CenterInConsole(), ConsoleColor.DarkCyan);
+            Display.DisplayMessage("|    including the original license.                          |".CenterInConsole(), ConsoleColor.DarkCyan);
+            Display.DisplayMessage("| 3. The developers are not responsible for any damages.      |".CenterInConsole(), ConsoleColor.Red);
+            Display.DisplayMessage("| 4. Please disable your antivirus before proceeding.         |".CenterInConsole(), ConsoleColor.DarkYellow);
+            Display.DisplayMessage("| 5. No warranty is provided; use at your own risk.           |".CenterInConsole(), ConsoleColor.DarkCyan);
+            Display.DisplayMessage("| 6. Use --help to see all available automation options.      |".CenterInConsole(), ConsoleColor.DarkMagenta);
+            Display.DisplayMessage("| 7. Support at https://megsystem.github.io/DebloaterTool/    |".CenterInConsole(), ConsoleColor.DarkCyan);
+            Display.DisplayMessage("+=============================================================+".CenterInConsole(), ConsoleColor.DarkCyan);
             Console.WriteLine();
             Console.WriteLine("--------------------------------------------------------------------------");
             Logger.Log($"Welcome to DebloaterTool Debug Console!", Level.INFO, Save: false);
@@ -88,7 +90,7 @@ namespace DebloaterTool
             // EULA Confirmation (skipped if --skipEULA is provided)
             if (!skipEULA)
             {
-                if (!HelperDisplay.RequestYesOrNo("Do you accept the EULA?"))
+                if (!Display.RequestYesOrNo("Do you accept the EULA?"))
                 {
                     Logger.Log("EULA declined!", Level.CRITICAL);
                     Console.ReadKey();
@@ -99,12 +101,12 @@ namespace DebloaterTool
             }
 
             // Check if the program is runned with administrator rights!
-            if (!IsAdministrator())
+            if (!Admins.IsAdministrator())
             {
                 Logger.Log("Not runned as administrator!", Level.CRITICAL);
 
                 // Ask only in interactive mode; quit if they decline.
-                if (!autoUAC && !HelperDisplay.RequestYesOrNo("Do you want to run as administrator?"))
+                if (!autoUAC && !Display.RequestYesOrNo("Do you want to run as administrator?"))
                 {
                     Logger.Log("User declined elevation in interactive mode. Exiting application.");
                     Environment.Exit(0);
@@ -112,7 +114,7 @@ namespace DebloaterTool
 
                 // At this point we’re either in silent mode or the user said “yes”
                 Logger.Log("Restarting application with administrator privileges.");
-                RestartAsAdmin(args);
+                Admins.RestartAsAdmin(args);
             }
 
             bool restart;
@@ -123,11 +125,11 @@ namespace DebloaterTool
                     ? true
                     : restartValue == "N"
                         ? false
-                        : HelperDisplay.RequestYesOrNo("Do you want to restart after the process?");
+                        : Display.RequestYesOrNo("Do you want to restart after the process?");
             }
             else
             {
-                restart = HelperDisplay.RequestYesOrNo("Do you want to restart after the process?");
+                restart = Display.RequestYesOrNo("Do you want to restart after the process?");
             }
 
             // If the mode wasn't set via arguments, ask the user interactively.
@@ -153,11 +155,11 @@ namespace DebloaterTool
             }
 
             // Configure Folders
-            Directory.CreateDirectory(Settings.logsPath);
-            Directory.CreateDirectory(Settings.themePath);
-            Directory.CreateDirectory(Settings.bootlogoPath);
-            Directory.CreateDirectory(Settings.debloatersPath);
-            Directory.CreateDirectory(Settings.wallpapersPath);
+            Directory.CreateDirectory(Global.logsPath);
+            Directory.CreateDirectory(Global.themePath);
+            Directory.CreateDirectory(Global.bootlogoPath);
+            Directory.CreateDirectory(Global.debloatersPath);
+            Directory.CreateDirectory(Global.wallpapersPath);
 
             // Execute based on selection
             switch (choice)
@@ -168,7 +170,7 @@ namespace DebloaterTool
                     Logger.Log("+=====================================+", Level.VERBOSE);
                     Logger.Log("| DebloaterTool by @_giovannigiannone |", Level.VERBOSE);
                     Logger.Log("+=====================================+", Level.VERBOSE);
-                    foreach (var tweaks in ModuleRegistry.GetAllModules())
+                    foreach (var tweaks in Settings.Modules.GetAllModules())
                     {
                         tweaks.Action();
                     }
@@ -180,7 +182,7 @@ namespace DebloaterTool
                     Logger.Log("+=====================================+", Level.VERBOSE);
                     Logger.Log("| DebloaterTool by @_giovannigiannone |", Level.VERBOSE);
                     Logger.Log("+=====================================+", Level.VERBOSE);
-                    foreach (var tweaks in ModuleRegistry.GetAllModules())
+                    foreach (var tweaks in Settings.Modules.GetAllModules())
                     {
                         if (!tweaks.DefaultEnabled) continue; // Skip if not enabled
                         tweaks.Action(); // Run only enabled tweaks
@@ -193,7 +195,7 @@ namespace DebloaterTool
                     var skippedModules = new List<string>();
 
                     // Build dictionary with method names and corresponding TweakModule
-                    foreach (var tweaks in ModuleRegistry.GetAllModules())
+                    foreach (var tweaks in Settings.Modules.GetAllModules())
                     {
                         var method = tweaks.Action.Method;
                         var fullName = $"{method.DeclaringType.Name}.{method.Name}";
@@ -239,7 +241,7 @@ namespace DebloaterTool
                                 $"Description: {module.Value.Description} " +
                                 $"[DEFAULT ENABLED: {module.Value.DefaultEnabled.ToString().ToUpper()}]" +
                                 $"\nDo you want to run {module.Key}?";
-                            if (HelperDisplay.RequestYesOrNo(prompt))
+                            if (Display.RequestYesOrNo(prompt))
                                 selectedModules.Add(module.Key);
                             else
                                 skippedModules.Add(module.Key);
@@ -267,37 +269,34 @@ namespace DebloaterTool
                     break;
             }
 
-            // Run Wallpaper
-            Wallpaper.SetCustomWallpaper();
-
             // Save log
             string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
             string logFileName = $"DebloaterTool_{dateTime}.log";
-            string destinationPath = Path.Combine(Settings.logsPath, logFileName);
+            string destinationPath = Path.Combine(Global.logsPath, logFileName);
             Logger.Log($"Debloating complete!", Level.SUCCESS);
             Logger.Log($"Log file saved on {destinationPath}", Level.SUCCESS);
             Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
-            File.Copy(Settings.LogFilePath, destinationPath);
-            File.Delete(Settings.LogFilePath);
+            File.Copy(Global.LogFilePath, destinationPath);
+            File.Delete(Global.LogFilePath);
 
             // Delete empty folder in the RootFolder
-            DeleteEmptyFolders(Settings.InstallPath);
+            DeleteEmptyFolders(Global.InstallPath);
 
             // Restart
             if (restart)
             {
                 // Save Welcome Message to temporary file
-                string tempPath = Path.Combine(Settings.debloatersPath, "DebloaterWelcome.vbs");
-                string dataWelcome = Config.Resource.Welcome.Replace("[INSTALLPATH]", Settings.InstallPath);
+                string tempPath = Path.Combine(Global.debloatersPath, "DebloaterWelcome.vbs");
+                string dataWelcome = Dependencies.welcome.Replace("[INSTALLPATH]", Global.InstallPath);
                 File.WriteAllText(tempPath, dataWelcome, Encoding.Unicode); // Save the script
                 Process.Start("wscript.exe", $"\"{tempPath}\"")?.WaitForExit(); // Run the script
                 Process.Start("shutdown.exe", "-r -t 0"); // Restart the computer
             }
 
             // Wait for user to press Enter
-            HelperDisplay.DisplayMessage("+---------------------------------------------------------------------------------------------+", ConsoleColor.DarkYellow);
-            HelperDisplay.DisplayMessage("|  Press ENTER to close this window. Thank you for using our debloater. - @_giovannigiannone  |", ConsoleColor.DarkYellow);
-            HelperDisplay.DisplayMessage("+---------------------------------------------------------------------------------------------+", ConsoleColor.DarkYellow);
+            Display.DisplayMessage("+---------------------------------------------------------------------------------------------+", ConsoleColor.DarkYellow);
+            Display.DisplayMessage("|  Press ENTER to close this window. Thank you for using our debloater. - @_giovannigiannone  |", ConsoleColor.DarkYellow);
+            Display.DisplayMessage("+---------------------------------------------------------------------------------------------+", ConsoleColor.DarkYellow);
             Console.ReadKey(); 
 
             // End
@@ -318,37 +317,6 @@ namespace DebloaterTool
                     Directory.Delete(directory);
                 }
             }
-        }
-
-        static void RestartAsAdmin(string[] args)
-        {
-            ProcessStartInfo proc = new ProcessStartInfo()
-            {
-                FileName = Process.GetCurrentProcess().MainModule.FileName,
-                UseShellExecute = true,
-                Verb = "runas",
-                Arguments = string.Join(" ", args.Select(arg =>
-                    arg.Contains(" ") ? $"\"{arg}\"" : arg)) // Quote args with spaces
-            };
-
-            try
-            {
-                Process.Start(proc);
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Failed to start as administrator: {ex.Message}", Level.ERROR);
-            }
-
-            Environment.Exit(0);
-        }
-
-        // Checks if the current process is running as administrator.
-        static bool IsAdministrator()
-        {
-            var identity = WindowsIdentity.GetCurrent();
-            var principal = new WindowsPrincipal(identity);
-            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 }
