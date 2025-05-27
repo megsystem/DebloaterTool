@@ -1,4 +1,4 @@
-﻿using DebloaterTool.Helper;
+﻿using DebloaterTool.Helpers;
 
 namespace DebloaterTool.Modules
 {

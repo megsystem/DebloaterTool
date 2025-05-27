@@ -2,7 +2,7 @@
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 
-namespace DebloaterTool.Helper
+namespace DebloaterTool.Helpers
 {
     internal class Wallpaper
     {

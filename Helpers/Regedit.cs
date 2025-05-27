@@ -2,7 +2,7 @@
 using Microsoft.Win32;
 using System;
 
-namespace DebloaterTool.Helper
+namespace DebloaterTool.Helpers
 {
     public class RegistryModification
     {

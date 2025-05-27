@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading;
 using DebloaterTool.Logging;
 
-namespace DebloaterTool.Helper
+namespace DebloaterTool.Helpers
 {
     internal class Download
     {

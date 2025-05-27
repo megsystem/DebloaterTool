@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using DebloaterTool.Logging;
 
-namespace DebloaterTool.Helper
+namespace DebloaterTool.Helpers
 {
     internal class Runner
     {

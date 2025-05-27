@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DebloaterTool.Helper
+namespace DebloaterTool.Helpers
 {
     internal static class Display
     {

@@ -4,7 +4,7 @@ using System.Security.Principal;
 using DebloaterTool.Logging;
 using System;
 
-namespace DebloaterTool.Helper
+namespace DebloaterTool.Helpers
 {
     internal class Admins
     {

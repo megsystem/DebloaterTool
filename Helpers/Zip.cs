@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace DebloaterTool.Helper
+namespace DebloaterTool.Helpers
 {
     internal class Zip
     {

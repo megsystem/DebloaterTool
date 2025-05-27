@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using DebloaterTool.Helper;
+using DebloaterTool.Helpers;
 using DebloaterTool.Settings;
 using DebloaterTool.Logging;
 using System.Web.Script.Serialization;

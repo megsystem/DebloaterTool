@@ -5,10 +5,9 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
-using DebloaterTool.Helper;
+using DebloaterTool.Helpers;
 using DebloaterTool.Settings;
 using DebloaterTool.Logging;
-using DebloaterTool.Helpers;
 
 // Created by @_giovannigiannone and ChatGPT
 // Inspired from the Talon's Project!
