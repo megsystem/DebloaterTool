@@ -11,7 +11,7 @@ ExplorerTheme.zip
 
 PowerRun.exe
 -------------
-- Sourced from: https://github.com/ionuttbara/windows-defender-remover/issues/153
+- Sourced from: https://www.sordum.org/
 
 tacky-borders.exe
 ------------------
