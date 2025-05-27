@@ -1,4 +1,5 @@
 ﻿using DebloaterTool.Settings;
+using DebloaterTool.Logging;
 using DebloaterTool.Helper;
 using Microsoft.Win32;
 using System.IO;
@@ -43,7 +44,7 @@ namespace DebloaterTool.Modules
         {
             Logger.Log($"Downloading from {Global.powerRun}...");
             string powerRunPath = Path.Combine(Global.debloatersPath, $"PowerRun.exe");
-            if (!Donwload.DownloadFile(Global.powerRun, powerRunPath))
+            if (!Download.DownloadFile(Global.powerRun, powerRunPath))
             {
                 Logger.Log($"Failed to download {Global.powerRun}. Skipping...", Level.ERROR);
                 return;

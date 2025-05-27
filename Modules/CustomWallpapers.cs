@@ -2,6 +2,7 @@
 using System.IO;
 using DebloaterTool.Helper;
 using DebloaterTool.Settings;
+using DebloaterTool.Logging;
 
 namespace DebloaterTool.Modules
 {
@@ -56,7 +57,7 @@ namespace DebloaterTool.Modules
         static bool DownloadAndLog(string url, string path, string description)
         {
             Logger.Log($"Downloading {description} from \"{url}\"...");
-            if (!Donwload.DownloadFile(url, path))
+            if (!Download.DownloadFile(url, path))
             {
                 Logger.Log($"Unable to download the {description} from \"{url}\". Skipping...", Level.WARNING);
                 return false;

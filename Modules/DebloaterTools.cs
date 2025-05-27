@@ -1,4 +1,4 @@
-﻿using DebloaterTool.Helper;
+﻿using DebloaterTool.Logging;
 using DebloaterTool.Settings;
 using System;
 using System.Diagnostics;

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using DebloaterTool.Modules;
-using System.Collections.Generic;
+using DebloaterTool.Helpers;
 
 namespace DebloaterTool.Settings
 {
-    public class Modules 
+    public class ModuleList
     {
         // All tweaks list
         public static IList<TweakModule> GetAllModules() => new List<TweakModule>
@@ -39,19 +39,5 @@ namespace DebloaterTool.Settings
             new TweakModule(Compression.CleanupWinSxS, "Clean up WinSxS to reduce disk usage", false),
             new TweakModule(CustomWallpapers.InstallWallpapers, "Install custom wallpaper for lockscreen and desktop", false),
         };
-    }
-
-    public class TweakModule
-    {
-        public Action Action { get; }
-        public string Description { get; }
-        public bool DefaultEnabled { get; }
-
-        public TweakModule(Action action, string description, bool defaultEnabled)
-        {
-            Action = action;
-            Description = description;
-            DefaultEnabled = defaultEnabled;
-        }
     }
 }

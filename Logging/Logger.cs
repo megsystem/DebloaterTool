@@ -3,7 +3,7 @@ using DebloaterTool.Settings;
 using System.Collections.Generic;
 using System.IO;
 
-namespace DebloaterTool.Helper
+namespace DebloaterTool.Logging
 {
     public static class Logger
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DebloaterTool.Settings
+namespace DebloaterTool.Logging
 {
     public enum Level
     {

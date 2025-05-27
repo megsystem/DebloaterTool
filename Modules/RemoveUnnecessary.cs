@@ -1,5 +1,5 @@
 ﻿using DebloaterTool.Helper;
-using DebloaterTool.Settings;
+using DebloaterTool.Logging;
 using Microsoft.Win32;
 using System;
 using System.Diagnostics;

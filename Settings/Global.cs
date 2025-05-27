@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using DebloaterTool.Properties;
+using System.Reflection;
+using System.IO;
 using System;
 
 namespace DebloaterTool.Settings
@@ -28,7 +30,7 @@ namespace DebloaterTool.Settings
         );
 
         // Version Program
-        static readonly Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+        static readonly Version version = Assembly.GetExecutingAssembly().GetName().Version;
         public static readonly string Version = $"V{version.Major}.{version.Minor}.{version.Build}";
 
         // Downloads links - fork and put your urls
@@ -54,7 +56,10 @@ namespace DebloaterTool.Settings
 
         // ChrisTool Settings
         public static string christitusUrl = "christitus.com/win";
-        public static byte[] christitusConfig = Properties.Dependencies.christitus;
+        public static byte[] christitusConfig = Resources.christitus;
+
+        // Resources files
+        public static string welcome = Resources.welcome;
 
         // Paths vars
         public static string logsPath = $@"{InstallPath}\Saved Logs";

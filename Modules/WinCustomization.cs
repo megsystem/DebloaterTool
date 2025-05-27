@@ -1,4 +1,5 @@
 ﻿using DebloaterTool.Helper;
+using DebloaterTool.Logging;
 using Microsoft.Win32;
 
 namespace DebloaterTool.Modules

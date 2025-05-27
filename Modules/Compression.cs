@@ -1,5 +1,5 @@
 ﻿using DebloaterTool.Helper;
-using DebloaterTool.Settings;
+using DebloaterTool.Logging;
 
 namespace DebloaterTool.Modules
 {

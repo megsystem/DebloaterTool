@@ -7,7 +7,8 @@ using System.Text;
 using System.Collections.Generic;
 using DebloaterTool.Helper;
 using DebloaterTool.Settings;
-using DebloaterTool.Properties;
+using DebloaterTool.Logging;
+using DebloaterTool.Helpers;
 
 // Created by @_giovannigiannone and ChatGPT
 // Inspired from the Talon's Project!
@@ -170,7 +171,7 @@ namespace DebloaterTool
                     Logger.Log("+=====================================+", Level.VERBOSE);
                     Logger.Log("| DebloaterTool by @_giovannigiannone |", Level.VERBOSE);
                     Logger.Log("+=====================================+", Level.VERBOSE);
-                    foreach (var tweaks in Settings.Modules.GetAllModules())
+                    foreach (var tweaks in ModuleList.GetAllModules())
                     {
                         tweaks.Action();
                     }
@@ -182,7 +183,7 @@ namespace DebloaterTool
                     Logger.Log("+=====================================+", Level.VERBOSE);
                     Logger.Log("| DebloaterTool by @_giovannigiannone |", Level.VERBOSE);
                     Logger.Log("+=====================================+", Level.VERBOSE);
-                    foreach (var tweaks in Settings.Modules.GetAllModules())
+                    foreach (var tweaks in ModuleList.GetAllModules())
                     {
                         if (!tweaks.DefaultEnabled) continue; // Skip if not enabled
                         tweaks.Action(); // Run only enabled tweaks
@@ -195,7 +196,7 @@ namespace DebloaterTool
                     var skippedModules = new List<string>();
 
                     // Build dictionary with method names and corresponding TweakModule
-                    foreach (var tweaks in Settings.Modules.GetAllModules())
+                    foreach (var tweaks in ModuleList.GetAllModules())
                     {
                         var method = tweaks.Action.Method;
                         var fullName = $"{method.DeclaringType.Name}.{method.Name}";
@@ -287,7 +288,7 @@ namespace DebloaterTool
             {
                 // Save Welcome Message to temporary file
                 string tempPath = Path.Combine(Global.debloatersPath, "DebloaterWelcome.vbs");
-                string dataWelcome = Dependencies.welcome.Replace("[INSTALLPATH]", Global.InstallPath);
+                string dataWelcome = Global.welcome.Replace("[INSTALLPATH]", Global.InstallPath);
                 File.WriteAllText(tempPath, dataWelcome, Encoding.Unicode); // Save the script
                 Process.Start("wscript.exe", $"\"{tempPath}\"")?.WaitForExit(); // Run the script
                 Process.Start("shutdown.exe", "-r -t 0"); // Restart the computer

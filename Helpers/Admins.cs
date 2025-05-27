@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using System.Security.Principal;
-using DebloaterTool.Settings;
+using DebloaterTool.Logging;
 using System;
 
 namespace DebloaterTool.Helper

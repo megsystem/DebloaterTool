@@ -2,6 +2,7 @@
 using System.IO;
 using DebloaterTool.Helper;
 using DebloaterTool.Settings;
+using DebloaterTool.Logging;
 using System.Web.Script.Serialization;
 
 namespace DebloaterTool.Modules
@@ -85,7 +86,7 @@ namespace DebloaterTool.Modules
         {
             try
             {
-                string json = Donwload.FetchDataUrl("https://api.github.com/repos/ungoogled-software/ungoogled-chromium-windows/releases/latest");
+                string json = Download.FetchDataUrl("https://api.github.com/repos/ungoogled-software/ungoogled-chromium-windows/releases/latest");
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
                 dynamic release = serializer.Deserialize<dynamic>(json);
 
@@ -116,7 +117,7 @@ namespace DebloaterTool.Modules
 
                 string tempFile = Path.Combine(Path.GetTempPath(), assetName);
                 Logger.Log("Downloading installer to " + tempFile + "...", Level.INFO);
-                Donwload.DownloadFile(downloadUrl, tempFile);
+                Download.DownloadFile(downloadUrl, tempFile);
                 Logger.Log("Download completed.", Level.SUCCESS);
 
                 Logger.Log("Starting installer...", Level.SUCCESS);

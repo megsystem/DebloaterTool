@@ -1,5 +1,6 @@
 ﻿using DebloaterTool.Helper;
 using DebloaterTool.Settings;
+using DebloaterTool.Logging;
 using System.IO;
 
 namespace DebloaterTool.Modules
@@ -16,7 +17,7 @@ namespace DebloaterTool.Modules
         {
             Logger.Log($"Downloading from {Global.powerRun}...");
             string powerRunPath = Path.Combine(Global.debloatersPath, $"PowerRun.exe");
-            if (!Donwload.DownloadFile(Global.powerRun, powerRunPath))
+            if (!Download.DownloadFile(Global.powerRun, powerRunPath))
             {
                 Logger.Log($"Failed to download {Global.powerRun}. Skipping...", Level.ERROR);
                 return;
@@ -50,7 +51,7 @@ namespace DebloaterTool.Modules
             };
 
             string regFile = Path.Combine(Global.debloatersPath, "defenderkiller.reg");
-            if (!Donwload.DownloadFile(Global.defender, regFile))
+            if (!Download.DownloadFile(Global.defender, regFile))
             {
                 Logger.Log("Failed to download DefenderKiller.reg. Exiting...", Level.ERROR);
                 return;

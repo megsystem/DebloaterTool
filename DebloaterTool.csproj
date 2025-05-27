@@ -45,22 +45,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\Dependencies.Designer.cs">
+    <Compile Include="Helpers\TweakModule.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Dependencies.resx</DependentUpon>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Logger.cs" />
+    <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Settings\Global.cs" />
     <Compile Include="Helpers\Admins.cs" />
     <Compile Include="Modules\BootLogo.cs" />
     <Compile Include="Modules\Compression.cs" />
     <Compile Include="Helpers\Display.cs" />
-    <Compile Include="Helpers\Donwload.cs" />
+    <Compile Include="Helpers\Download.cs" />
     <Compile Include="Helpers\Runner.cs" />
-    <Compile Include="Helpers\Logger.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="Helpers\Regedit.cs" />
-    <Compile Include="Settings\Modules.cs" />
+    <Compile Include="Settings\ModuleList.cs" />
     <Compile Include="Helpers\Wallpaper.cs" />
     <Compile Include="Helpers\Zip.cs" />
     <Compile Include="Modules\DebloaterTools.cs" />
@@ -78,9 +79,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="configmodule.txt" />
+    <Content Include="ModuleList.txt" />
     <Content Include="Icon.ico" />
-    <Content Include="Settings\welcome.vbs" />
+    <Content Include="Settings\Resources\welcome.vbs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="IWshRuntimeLibrary">
@@ -95,12 +96,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="Settings\christitus.json" />
+    <None Include="Settings\Resources\christitus.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Dependencies.resx">
+    <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Dependencies.Designer.cs</LastGenOutput>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

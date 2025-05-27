@@ -2,11 +2,11 @@
 using System.IO;
 using System.Net;
 using System.Threading;
-using DebloaterTool.Settings;
+using DebloaterTool.Logging;
 
 namespace DebloaterTool.Helper
 {
-    internal class Donwload
+    internal class Download
     {
         public static bool DownloadFile(string url, string outputPath)
         {

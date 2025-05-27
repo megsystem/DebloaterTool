@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using DebloaterTool.Settings;
+using DebloaterTool.Logging;
 
 namespace DebloaterTool.Helper
 {
