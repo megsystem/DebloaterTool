@@ -13,13 +13,13 @@ namespace DebloaterTool.Modules
         /// </summary>
         public static void DisableSnapTools()
         {
-            RegistryModification[] RegistryModifications = new RegistryModification[]
+            TweakRegistry[] RegistryModifications = new TweakRegistry[]
             {
-                new RegistryModification(Registry.CurrentUser, @"Control Panel\Desktop", "WindowArrangementActive", RegistryValueKind.String, "0"),
-                new RegistryModification(Registry.CurrentUser, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "JointResize", RegistryValueKind.DWord, 0),
-                new RegistryModification(Registry.CurrentUser, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "SnapAssist", RegistryValueKind.DWord, 0),
-                new RegistryModification(Registry.CurrentUser, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "SnapFill", RegistryValueKind.DWord, 0),
-                new RegistryModification(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "EnableSnapAssistFlyout", RegistryValueKind.DWord, 0)
+                new TweakRegistry(Registry.CurrentUser, @"Control Panel\Desktop", "WindowArrangementActive", RegistryValueKind.String, "0"),
+                new TweakRegistry(Registry.CurrentUser, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "JointResize", RegistryValueKind.DWord, 0),
+                new TweakRegistry(Registry.CurrentUser, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "SnapAssist", RegistryValueKind.DWord, 0),
+                new TweakRegistry(Registry.CurrentUser, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "SnapFill", RegistryValueKind.DWord, 0),
+                new TweakRegistry(Registry.CurrentUser, @"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced", "EnableSnapAssistFlyout", RegistryValueKind.DWord, 0)
             };
 
             Regedit.InstallRegModification(RegistryModifications);

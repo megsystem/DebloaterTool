@@ -4,27 +4,9 @@ using System;
 
 namespace DebloaterTool.Helpers
 {
-    public class RegistryModification
-    {
-        public RegistryKey Root { get; }
-        public string SubKey { get; }
-        public string ValueName { get; }
-        public RegistryValueKind ValueKind { get; }
-        public object Value { get; }
-
-        public RegistryModification(RegistryKey root, string subKey, string valueName, RegistryValueKind valueKind, object value)
-        {
-            Root = root;
-            SubKey = subKey;
-            ValueName = valueName;
-            ValueKind = valueKind;
-            Value = value;
-        }
-    }
-
     internal class Regedit
     {
-        public static void InstallRegModification(RegistryModification[] RegistryModifications)
+        public static void InstallRegModification(TweakRegistry[] RegistryModifications)
         {
             if (RegistryModifications == null || RegistryModifications.Length == 0)
             {
@@ -42,13 +24,13 @@ namespace DebloaterTool.Helpers
             Logger.Log("Registry changes applied successfully.", Level.SUCCESS);
         }
 
-        public static void InstallRegModification(RegistryModification mod)
+        public static void InstallRegModification(TweakRegistry mod)
         {
             // Delegate single modification call to the array-based method.
             InstallRegModification(new[] { mod });
         }
 
-        private static void ApplyModification(RegistryModification mod)
+        private static void ApplyModification(TweakRegistry mod)
         {
             try
             {

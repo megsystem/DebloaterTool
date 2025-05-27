@@ -32,11 +32,11 @@ namespace DebloaterTool.Helpers
             string regSubKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\PersonalizationCSP";
 
             // Prepare the required registry modifications to set the lock screen image
-            RegistryModification[] mods = new[]
+            TweakRegistry[] mods = new[]
             {
-                new RegistryModification(Registry.LocalMachine, regSubKey, "LockScreenImagePath", RegistryValueKind.String, imagePath),
-                new RegistryModification(Registry.LocalMachine, regSubKey, "LockScreenImageUrl", RegistryValueKind.String, imagePath),
-                new RegistryModification(Registry.LocalMachine, regSubKey, "LockScreenImageStatus", RegistryValueKind.DWord, 1),
+                new TweakRegistry(Registry.LocalMachine, regSubKey, "LockScreenImagePath", RegistryValueKind.String, imagePath),
+                new TweakRegistry(Registry.LocalMachine, regSubKey, "LockScreenImageUrl", RegistryValueKind.String, imagePath),
+                new TweakRegistry(Registry.LocalMachine, regSubKey, "LockScreenImageStatus", RegistryValueKind.DWord, 1),
             };
 
             // Apply the registry changes and restart Explorer to enforce the new lock screen

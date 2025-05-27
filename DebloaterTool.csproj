@@ -45,7 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\TweakModule.cs" />
+    <Compile Include="Helpers\Tweakers\TweakRegistry.cs" />
+    <Compile Include="Helpers\Tweakers\TweakModule.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
