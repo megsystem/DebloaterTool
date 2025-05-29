@@ -36,8 +36,8 @@ namespace DebloaterTool.Settings
             new TweakModule(Ungoogled.Install, "Install Ungoogled Chromium", false),
             new TweakModule(BootLogo.Install, "Install custom boot logo", false),
             new TweakModule(Compression.CompressOS, "Compress the OS binaries with LZX", false),
-            new TweakModule(Compression.CleanupWinSxS, "Clean up WinSxS to reduce disk usage", false),
-            new TweakModule(CustomWallpapers.InstallWallpapers, "Install custom wallpaper for lockscreen and desktop", false),
+            new TweakModule(Compression.CleanupWinSxS, "Clean up WinSxS to reduce disk usage", true),
+            new TweakModule(CustomWallpapers.InstallWallpapers, "Install custom wallpaper for lockscreen and desktop", true),
         };
     }
 }

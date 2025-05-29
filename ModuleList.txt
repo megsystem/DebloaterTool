@@ -31,5 +31,5 @@ RemoveUnnecessary.CleanOutlookAndOneDrive
 // Ungoogled.Install: Install Ungoogled Chromium (default: false)
 // BootLogo.Install: Install custom boot logo (default: false)
 // Compression.CompressOS: Compress the OS binaries with LZX (default: false)
-// Compression.CleanupWinSxS: Clean up WinSxS to reduce disk usage (default: false)
-// CustomWallpapers.InstallWallpapers: Install custom wallpaper for lockscreen and desktop (default: false)
+// Compression.CleanupWinSxS: Clean up WinSxS to reduce disk usage (default: true)
+// CustomWallpapers.InstallWallpapers: Install custom wallpaper for lockscreen and desktop (default: true)
