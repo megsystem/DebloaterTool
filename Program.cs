@@ -17,10 +17,8 @@ namespace DebloaterTool
     {
         static void Main(string[] args)
         {
-            // For .NET Framework 4.0, enable TLS 1.2 by casting its numeric value.
-            ServicePointManager.SecurityProtocol = (SecurityProtocolType)768 | (SecurityProtocolType)3072;
-
             // Run the Welcome Screen and EULA
+            Internet.Inizialize();
             Console.Title = $"{(Admins.IsAdministrator() ? "[Administrator]: " : "")}DebloaterTool {Global.Version}";
             foreach (string line in Global.Logo) Display.DisplayMessage(line.CenterInConsole(), ConsoleColor.Magenta);
             Console.WriteLine();

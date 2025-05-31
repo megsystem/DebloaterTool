@@ -86,7 +86,7 @@ namespace DebloaterTool.Modules
         {
             try
             {
-                string json = Download.FetchDataUrl("https://api.github.com/repos/ungoogled-software/ungoogled-chromium-windows/releases/latest");
+                string json = Internet.FetchDataUrl("https://api.github.com/repos/ungoogled-software/ungoogled-chromium-windows/releases/latest");
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
                 dynamic release = serializer.Deserialize<dynamic>(json);
 
@@ -117,7 +117,11 @@ namespace DebloaterTool.Modules
 
                 string tempFile = Path.Combine(Path.GetTempPath(), assetName);
                 Logger.Log("Downloading installer to " + tempFile + "...", Level.INFO);
-                Download.DownloadFile(downloadUrl, tempFile);
+                if (!Internet.DownloadFile(downloadUrl, tempFile))
+                {
+                    Logger.Log($"Failed to download {downloadUrl}. Exiting...", Level.ERROR);
+                    return;
+                }
                 Logger.Log("Download completed.", Level.SUCCESS);
 
                 Logger.Log("Starting installer...", Level.SUCCESS);

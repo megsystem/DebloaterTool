@@ -1,13 +1,43 @@
-﻿using System;
+﻿using DebloaterTool.Logging;
+using System;
 using System.IO;
 using System.Net;
 using System.Threading;
-using DebloaterTool.Logging;
 
 namespace DebloaterTool.Helpers
 {
-    internal class Download
+    internal class Internet
     {
+        public static void Inizialize() 
+        {
+            // For .NET Framework 4.0, enable TLS 1.2 by casting its numeric value.
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+
+            if (!IsInternetAvailable())
+            {
+                Logger.Log("No internet connection detected.", Level.ERROR);
+                Logger.Log("This program requires an active internet connection to run.", Level.ERROR);
+                Console.ReadKey();
+                Environment.Exit(1);
+            }
+        }
+
+        private static bool IsInternetAvailable()
+        {
+            try
+            {
+                using (var client = new WebClient())
+                using (client.OpenRead("https://github.com/megsystem/DebloaterTool"))
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public static bool DownloadFile(string url, string outputPath)
         {
             try

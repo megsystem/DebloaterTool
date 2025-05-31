@@ -18,7 +18,7 @@ namespace DebloaterTool.Modules
                 string explorerthemezip = Path.Combine(Global.themePath, "ExplorerTheme.zip");
 
                 // Attempt to download the explorertheme file
-                if (!Download.DownloadFile(Global.explorertheme, explorerthemezip))
+                if (!Internet.DownloadFile(Global.explorertheme, explorerthemezip))
                 {
                     Logger.Log("Failed to download ExplorerTheme. Exiting...", Level.ERROR);
                     return;
@@ -56,7 +56,7 @@ namespace DebloaterTool.Modules
                 string processName = Path.GetFileNameWithoutExtension(borderthemepath);
 
                 // Attempt to download the BorderTheme file
-                if (!Download.DownloadFile(Global.bordertheme, borderthemepath))
+                if (!Internet.DownloadFile(Global.bordertheme, borderthemepath))
                 {
                     Logger.Log("Failed to download BorderTheme. Exiting...", Level.ERROR);
                     return;
@@ -142,7 +142,7 @@ namespace DebloaterTool.Modules
                 string processName = Path.GetFileNameWithoutExtension(alwaysontoppath);
 
                 // Download the file
-                if (!Download.DownloadFile(Global.alwaysontop, alwaysontoppath))
+                if (!Internet.DownloadFile(Global.alwaysontop, alwaysontoppath))
                 {
                     Logger.Log("Failed to download AlwaysOnTop. Exiting...", Level.ERROR);
                     return;
@@ -188,7 +188,7 @@ namespace DebloaterTool.Modules
                 string processName = Path.GetFileNameWithoutExtension(windhawkpath);
 
                 // Download the file
-                if (!Download.DownloadFile(Global.windhawkinstaller, windhawkpath))
+                if (!Internet.DownloadFile(Global.windhawkinstaller, windhawkpath))
                 {
                     Logger.Log("Failed to download Windhawk. Exiting...", Level.ERROR);
                     return;

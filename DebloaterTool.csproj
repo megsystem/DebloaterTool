@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\Internet.cs" />
     <Compile Include="Helpers\Tweakers\TweakRegistry.cs" />
     <Compile Include="Helpers\Tweakers\TweakModule.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -58,7 +59,6 @@
     <Compile Include="Modules\BootLogo.cs" />
     <Compile Include="Modules\Compression.cs" />
     <Compile Include="Helpers\Display.cs" />
-    <Compile Include="Helpers\Download.cs" />
     <Compile Include="Helpers\Runner.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Helpers\Regedit.cs" />
