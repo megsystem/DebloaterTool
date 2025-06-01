@@ -5,14 +5,12 @@ using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Threading;
+using System.Diagnostics;
 
 namespace DebloaterTool.Modules
 {
     internal class WindowsTheme
     {
-        /// <summary>
-        /// Installs and registers a Windows Explorer theme by downloading a ZIP, extracting it, running register.cmd, and cleaning up.
-        /// </summary>
         public static void ExplorerTheme()
         {
             try
@@ -36,7 +34,6 @@ namespace DebloaterTool.Modules
                     Logger.Log("register.cmd not found in extracted folder.", Level.ERROR);
                 }
 
-                // Clean up the ZIP file
                 try
                 {
                     File.Delete(zipPath);
@@ -52,9 +49,6 @@ namespace DebloaterTool.Modules
             }
         }
 
-        /// <summary>
-        /// Downloads a border‐themed executable, schedules it at logon, launches it, waits for its config, and patches border radius if running on Windows 10.
-        /// </summary>
         public static void BorderTheme()
         {
             try
@@ -67,7 +61,24 @@ namespace DebloaterTool.Modules
                 if (!DownloadFile(exeUrl, exePath)) return;
                 Logger.Log($"Installed '{exeName}' in '{Global.themePath}'.", Level.SUCCESS);
                 CreateLogonTask(taskName, exePath);
-                Runner.LaunchIfNotRunning(exePath);
+
+                // Check if is not running and run
+                string processName = Path.GetFileNameWithoutExtension(exePath);
+                if (Process.GetProcessesByName(processName).Length == 0)
+                {
+                    try
+                    {
+                        Runner.Command(exePath, waitforexit: false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"Failed to launch {exePath}: {ex.Message}", Level.ERROR);
+                    }
+                }
+                else
+                {
+                    Logger.Log($"Process '{processName}' is already running. Skipping launch.", Level.WARNING);
+                }
 
                 // Wait for the config file to appear
                 string configPath = Path.Combine(
@@ -116,9 +127,6 @@ namespace DebloaterTool.Modules
             }
         }
 
-        /// <summary>
-        /// Downloads an AlwaysOnTop executable, schedules it at logon, and launches it immediately.
-        /// </summary>
         public static void AlwaysOnTop()
         {
             try
@@ -131,7 +139,7 @@ namespace DebloaterTool.Modules
                 if (!DownloadFile(exeUrl, exePath)) return;
                 Logger.Log($"Installed '{exeName}' in '{Global.themePath}'.", Level.SUCCESS);
                 CreateLogonTask(taskName, exePath);
-                Runner.LaunchIfNotRunning(exePath);
+                Runner.Command(exePath, waitforexit: false);
             }
             catch (Exception ex)
             {
@@ -139,9 +147,6 @@ namespace DebloaterTool.Modules
             }
         }
 
-        /// <summary>
-        /// Downloads WindhawkInstaller and runs it silently if it isn’t already running.
-        /// </summary>
         public static void WindhawkInstaller()
         {
             try
@@ -152,7 +157,7 @@ namespace DebloaterTool.Modules
 
                 if (!DownloadFile(exeUrl, exePath)) return;
                 Logger.Log($"Installed '{exeName}' in '{Global.themePath}'.", Level.SUCCESS);
-                Runner.LaunchIfNotRunning(exePath, "/S");
+                Runner.Command(exePath, "/S");
             }
             catch (Exception ex)
             {
@@ -160,9 +165,6 @@ namespace DebloaterTool.Modules
             }
         }
 
-        /// <summary>
-        /// Downloads a .reg file and imports it via regedit.
-        /// </summary>
         public static void TakeOwnershipMenu()
         {
             try

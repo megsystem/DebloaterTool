@@ -1,36 +1,95 @@
 // This is an example of the module file
 // Project by @_giovannigiannone
-// These are enabled modules:
-RemoveUnnecessary.UninstallEdge
-RemoveUnnecessary.CleanOutlookAndOneDrive
+// Uncomment the modules that you want to enable
 
-// WinDefender.Uninstall: Uninstall Windows Defender (default: false)
-// WinUpdate.DisableWindowsUpdateV1: Disable Windows Update (Regedit Version) (default: true)
-// WinUpdate.DisableWindowsUpdateV2: Disable Windows Update (Overwriter Version) (default: false)
-// DebloaterTools.RunChrisTool: Run Chris Titus debloat tool (default: true)
-// DebloaterTools.RunRaphiTool: Run Raphi debloat tool (default: true)
-// RemoveUnnecessary.ApplyOptimizationTweaks: Apply system optimization tweaks (default: true)
-// RemoveUnnecessary.UninstallEdge: Uninstall Microsoft Edge (default: true)
-// RemoveUnnecessary.CleanOutlookAndOneDrive: Remove Outlook and OneDrive remnants (default: true)
-// SecurityPerformance.DisableRemAssistAndRemDesk: Disable Remote Assistance and Desktop (default: false)
-// SecurityPerformance.DisableSpectreAndMeltdown: Disable Spectre/Meltdown mitigations (default: false)
-// SecurityPerformance.DisableWinErrorReporting: Disable Windows Error Reporting (default: false)
-// SecurityPerformance.ApplySecurityPerformanceTweaks: Apply general security/performance tweaks (default: false)
-// SecurityPerformance.DisableSMBv1: Disable outdated SMBv1 protocol (default: false)
-// DataCollection.DisableAdvertisingAndContentDelivery: Disable ad/content delivery settings (default: true)
-// DataCollection.DisableDataCollectionPolicies: Disable data collection policies (default: true)
-// DataCollection.DisableTelemetryServices: Disable telemetry services (default: true)
-// WinStore.Uninstall: Uninstall Microsoft Store (default: false)
-// WinCustomization.DisableSnapTools: Disable Snap Assist tools (default: true)
-// WinCustomization.EnableUltimatePerformance: Enable Ultimate Performance mode (default: true)
-// WindowsTheme.ExplorerTheme: Apply custom File Explorer theme (default: false)
-// WindowsTheme.BorderTheme: Apply custom window border theme (default: false)
-// WindowsTheme.WindhawkInstaller: Installs Windhawk with silent installation (default: false)
-// WindowsTheme.AlwaysOnTop: Install AlwaysOnTop to add a 'Top' button to any program (default: true)
-// WindowsTheme.TakeOwnershipMenu: Adds a “Take Ownership” entry to the right-click context menu (default: true)
-// WindowsTheme.ApplyThemeTweaks: Apply general theme tweaks (default: true)
-// Ungoogled.Install: Install Ungoogled Chromium (default: false)
-// BootLogo.Install: Install custom boot logo (default: false)
-// Compression.CompressOS: Compress the OS binaries with LZX (default: false)
-// Compression.CleanupWinSxS: Clean up WinSxS to reduce disk usage (default: true)
-// CustomWallpapers.InstallWallpapers: Install custom wallpaper for lockscreen and desktop (default: true)
+// ------------------------------------------------------------------------------
+// Uninstall Windows Defender (default: false)
+// WinDefender.Uninstall
+// ------------------------------------------------------------------------------
+// Disable Windows Update (Regedit Version) (default: true)
+// WinUpdate.DisableWindowsUpdateV1
+// ------------------------------------------------------------------------------
+// Disable Windows Update (Overwriter Version) (default: false)
+// WinUpdate.DisableWindowsUpdateV2
+// ------------------------------------------------------------------------------
+// Run Chris Titus debloat tool (default: true)
+// DebloaterTools.RunChrisTool
+// ------------------------------------------------------------------------------
+// Run Raphi debloat tool (default: true)
+// DebloaterTools.RunRaphiTool
+// ------------------------------------------------------------------------------
+// Apply system optimization tweaks (default: true)
+// RemoveUnnecessary.ApplyOptimizationTweaks
+// ------------------------------------------------------------------------------
+// Uninstall Microsoft Edge (default: true)
+// RemoveUnnecessary.UninstallEdge
+// ------------------------------------------------------------------------------
+// Remove Outlook and OneDrive remnants (default: true)
+// RemoveUnnecessary.CleanOutlookAndOneDrive
+// ------------------------------------------------------------------------------
+// Disable Remote Assistance and Desktop (default: false)
+// SecurityPerformance.DisableRemAssistAndRemDesk
+// ------------------------------------------------------------------------------
+// Disable Spectre/Meltdown mitigations (default: false)
+// SecurityPerformance.DisableSpectreAndMeltdown
+// ------------------------------------------------------------------------------
+// Disable Windows Error Reporting (default: false)
+// SecurityPerformance.DisableWinErrorReporting
+// ------------------------------------------------------------------------------
+// Apply general security/performance tweaks (default: false)
+// SecurityPerformance.ApplySecurityPerformanceTweaks
+// ------------------------------------------------------------------------------
+// Disable outdated SMBv1 protocol (default: false)
+// SecurityPerformance.DisableSMBv1
+// ------------------------------------------------------------------------------
+// Disable ad/content delivery settings (default: true)
+// DataCollection.DisableAdvertisingAndContentDelivery
+// ------------------------------------------------------------------------------
+// Disable data collection policies (default: true)
+// DataCollection.DisableDataCollectionPolicies
+// ------------------------------------------------------------------------------
+// Disable telemetry services (default: true)
+// DataCollection.DisableTelemetryServices
+// ------------------------------------------------------------------------------
+// Uninstall Microsoft Store (default: false)
+// WinStore.Uninstall
+// ------------------------------------------------------------------------------
+// Disable Snap Assist tools (default: true)
+// WinCustomization.DisableSnapTools
+// ------------------------------------------------------------------------------
+// Enable Ultimate Performance mode (default: true)
+// WinCustomization.EnableUltimatePerformance
+// ------------------------------------------------------------------------------
+// Apply custom File Explorer theme (default: false)
+// WindowsTheme.ExplorerTheme
+// ------------------------------------------------------------------------------
+// Apply custom window border theme (default: false)
+// WindowsTheme.BorderTheme
+// ------------------------------------------------------------------------------
+// Installs Windhawk with silent installation (default: false)
+// WindowsTheme.WindhawkInstaller
+// ------------------------------------------------------------------------------
+// Install AlwaysOnTop to add a 'Top' button to any program (default: true)
+// WindowsTheme.AlwaysOnTop
+// ------------------------------------------------------------------------------
+// Adds a “Take Ownership” entry to the right-click context menu (default: true)
+// WindowsTheme.TakeOwnershipMenu
+// ------------------------------------------------------------------------------
+// Apply general theme tweaks (default: true)
+// WindowsTheme.ApplyThemeTweaks
+// ------------------------------------------------------------------------------
+// Install Ungoogled Chromium (default: false)
+// Ungoogled.Install
+// ------------------------------------------------------------------------------
+// Install custom boot logo (default: false)
+// BootLogo.Install
+// ------------------------------------------------------------------------------
+// Compress the OS binaries with LZX (default: false)
+// Compression.CompressOS
+// ------------------------------------------------------------------------------
+// Clean up WinSxS to reduce disk usage (default: true)
+// Compression.CleanupWinSxS
+// ------------------------------------------------------------------------------
+// Install custom wallpaper for lockscreen and desktop (default: true)
+// CustomWallpapers.InstallWallpapers
+// ------------------------------------------------------------------------------
