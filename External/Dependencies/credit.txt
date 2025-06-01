@@ -11,7 +11,15 @@ ExplorerTheme.zip
 
 PowerRun.exe
 -------------
-- Sourced from: https://www.sordum.org/
+- Sourced from: https://www.sordum.org/9416/powerrun-v1-4-run-with-highest-privileges/
+
+defender.reg
+------------
+- Sourced from: https://github.com/ionuttbara/windows-defender-remover
+
+TakeOwnershipMenu.reg
+---------------------
+- From: https://www.tenforums.com/tutorials/3841-add-take-ownership-context-menu-windows-10-a.html
 
 tacky-borders.exe
 ------------------

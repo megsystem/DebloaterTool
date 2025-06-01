@@ -3,7 +3,6 @@ using DebloaterTool.Settings;
 using DebloaterTool.Logging;
 using Microsoft.Win32;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
@@ -11,27 +10,25 @@ namespace DebloaterTool.Modules
 {
     internal class WindowsTheme
     {
+        /// <summary>
+        /// Installs and registers a Windows Explorer theme by downloading a ZIP, extracting it, running register.cmd, and cleaning up.
+        /// </summary>
         public static void ExplorerTheme()
         {
             try
             {
-                string explorerthemezip = Path.Combine(Global.themePath, "ExplorerTheme.zip");
+                string zipPath = Path.Combine(Global.themePath, "ExplorerTheme.zip");
+                string zipUrl = Global.explorertheme; // URL to the ZIP
 
-                // Attempt to download the explorertheme file
-                if (!Internet.DownloadFile(Global.explorertheme, explorerthemezip))
-                {
-                    Logger.Log("Failed to download ExplorerTheme. Exiting...", Level.ERROR);
-                    return;
-                }
+                if (!DownloadFile(zipUrl, zipPath)) return;
+                Logger.Log($"Extracting ExplorerTheme to '{Global.themePath}'...", Level.INFO);
+                Zip.ExtractZipFile(zipPath, Global.themePath);
 
-                Logger.Log($"Extracting ExplorerTheme in {Global.themePath}...", Level.INFO);
-                Zip.ExtractZipFile(explorerthemezip, Global.themePath);
-                string installCmdPath = Path.Combine(Global.themePath, "register.cmd");
-
-                if (File.Exists(installCmdPath))
+                string registerCmd = Path.Combine(Global.themePath, "register.cmd");
+                if (File.Exists(registerCmd))
                 {
                     Logger.Log("Running register.cmd...", Level.INFO);
-                    Runner.Command(installCmdPath, workingDirectory: Global.themePath, waitforexit: false);
+                    Runner.Command(registerCmd, workingDirectory: Global.themePath, waitforexit: false);
                     Logger.Log("register.cmd finished.", Level.INFO);
                 }
                 else
@@ -39,8 +36,15 @@ namespace DebloaterTool.Modules
                     Logger.Log("register.cmd not found in extracted folder.", Level.ERROR);
                 }
 
-                // Clean up the zip
-                File.Delete(explorerthemezip);
+                // Clean up the ZIP file
+                try
+                {
+                    File.Delete(zipPath);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log($"Failed to delete '{zipPath}': {ex.Message}", Level.WARNING);
+                }
             }
             catch (Exception ex)
             {
@@ -48,47 +52,24 @@ namespace DebloaterTool.Modules
             }
         }
 
+        /// <summary>
+        /// Downloads a border‐themed executable, schedules it at logon, launches it, waits for its config, and patches border radius if running on Windows 10.
+        /// </summary>
         public static void BorderTheme()
         {
             try
             {
-                string borderthemepath = Path.Combine(Global.themePath, "tacky-borders.exe");
-                string processName = Path.GetFileNameWithoutExtension(borderthemepath);
-
-                // Attempt to download the BorderTheme file
-                if (!Internet.DownloadFile(Global.bordertheme, borderthemepath))
-                {
-                    Logger.Log("Failed to download BorderTheme. Exiting...", Level.ERROR);
-                    return;
-                }
-
-                Logger.Log($"Installed in {Global.themePath} folder!", Level.SUCCESS);
-
-                // Create a scheduled task to run the file at logon with highest privileges
+                string exeName = "tacky-borders.exe";
+                string exePath = Path.Combine(Global.themePath, exeName);
+                string exeUrl = Global.bordertheme; // URL to the EXE
                 string taskName = "BorderThemeStartup";
-                string arguments = $"/Create /F /RL HIGHEST /SC ONLOGON /TN \"{taskName}\" /TR \"\\\"{borderthemepath}\\\"\"";
-                string output = Runner.Command("schtasks", arguments, true);
 
-                if (!string.IsNullOrWhiteSpace(output) && output.Contains("SUCCESS"))
-                {
-                    Logger.Log("BorderTheme task successfully added to startup!", Level.SUCCESS);
-                }
-                else
-                {
-                    Logger.Log($"Failed to create scheduled task for BorderTheme. Output: {output}", Level.ERROR);
-                }
+                if (!DownloadFile(exeUrl, exePath)) return;
+                Logger.Log($"Installed '{exeName}' in '{Global.themePath}'.", Level.SUCCESS);
+                CreateLogonTask(taskName, exePath);
+                Runner.LaunchIfNotRunning(exePath);
 
-                // Launch immediately
-                if (Process.GetProcessesByName(processName).Length == 0)
-                {
-                    Process.Start(borderthemepath);
-                }
-                else
-                {
-                    Logger.Log($"Process '{processName}' is already running. Skipping launch.", Level.WARNING);
-                }
-
-                // Set confuration
+                // Wait for the config file to appear
                 string configPath = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
                     ".config", "tacky-borders", "config.yaml"
@@ -108,6 +89,7 @@ namespace DebloaterTool.Modules
                     waited++;
                 }
 
+                // Only patch the config if not running on Windows 11
                 if (!IsWindows11())
                 {
                     string content = File.ReadAllText(configPath);
@@ -125,7 +107,7 @@ namespace DebloaterTool.Modules
                 }
                 else
                 {
-                    Logger.Log("Not running on Windows 10. No changes made.", Level.WARNING);
+                    Logger.Log("Detected Windows 11; no config changes applied.", Level.WARNING);
                 }
             }
             catch (Exception ex)
@@ -134,45 +116,22 @@ namespace DebloaterTool.Modules
             }
         }
 
+        /// <summary>
+        /// Downloads an AlwaysOnTop executable, schedules it at logon, and launches it immediately.
+        /// </summary>
         public static void AlwaysOnTop()
         {
             try
             {
-                string alwaysontoppath = Path.Combine(Global.themePath, "AlwaysOnTop.exe");
-                string processName = Path.GetFileNameWithoutExtension(alwaysontoppath);
-
-                // Download the file
-                if (!Internet.DownloadFile(Global.alwaysontop, alwaysontoppath))
-                {
-                    Logger.Log("Failed to download AlwaysOnTop. Exiting...", Level.ERROR);
-                    return;
-                }
-
-                Logger.Log($"Installed in {Global.themePath} folder!", Level.SUCCESS);
-
-                // Create a scheduled task to run the file at logon with highest privileges
+                string exeName = "AlwaysOnTop.exe";
+                string exePath = Path.Combine(Global.themePath, exeName);
+                string exeUrl = Global.alwaysontop;
                 string taskName = "AlwaysOnTopStartup";
-                string arguments = $"/Create /F /RL HIGHEST /SC ONLOGON /TN \"{taskName}\" /TR \"\\\"{alwaysontoppath}\\\"\"";
-                string output = Runner.Command("schtasks", arguments, true);
 
-                if (!string.IsNullOrWhiteSpace(output) && output.Contains("SUCCESS"))
-                {
-                    Logger.Log("AlwaysOnTop task successfully added to startup!", Level.SUCCESS);
-                }
-                else
-                {
-                    Logger.Log($"Failed to create scheduled task for AlwaysOnTop. Output: {output}", Level.ERROR);
-                }
-
-                // Launch immediately
-                if (Process.GetProcessesByName(processName).Length == 0)
-                {
-                    Process.Start(alwaysontoppath);
-                }
-                else
-                {
-                    Logger.Log($"Process '{processName}' is already running. Skipping launch.", Level.WARNING);
-                }
+                if (!DownloadFile(exeUrl, exePath)) return;
+                Logger.Log($"Installed '{exeName}' in '{Global.themePath}'.", Level.SUCCESS);
+                CreateLogonTask(taskName, exePath);
+                Runner.LaunchIfNotRunning(exePath);
             }
             catch (Exception ex)
             {
@@ -180,44 +139,46 @@ namespace DebloaterTool.Modules
             }
         }
 
+        /// <summary>
+        /// Downloads WindhawkInstaller and runs it silently if it isn’t already running.
+        /// </summary>
         public static void WindhawkInstaller()
         {
             try
             {
-                string windhawkpath = Path.Combine(Global.themePath, "WindhawkInstaller.exe");
-                string processName = Path.GetFileNameWithoutExtension(windhawkpath);
+                string exeName = "WindhawkInstaller.exe";
+                string exePath = Path.Combine(Global.themePath, exeName);
+                string exeUrl = Global.windhawkinstaller;
 
-                // Download the file
-                if (!Internet.DownloadFile(Global.windhawkinstaller, windhawkpath))
-                {
-                    Logger.Log("Failed to download Windhawk. Exiting...", Level.ERROR);
-                    return;
-                }
-
-                Logger.Log($"Installed in {Global.themePath} folder!", Level.SUCCESS);
-
-                // Launch immediately
-                if (Process.GetProcessesByName(processName).Length == 0)
-                {
-                    Runner.Command(windhawkpath, "/S");
-                }
-                else
-                {
-                    Logger.Log($"Process '{processName}' is already running. Skipping launch.", Level.WARNING);
-                }
+                if (!DownloadFile(exeUrl, exePath)) return;
+                Logger.Log($"Installed '{exeName}' in '{Global.themePath}'.", Level.SUCCESS);
+                Runner.LaunchIfNotRunning(exePath, "/S");
             }
             catch (Exception ex)
             {
-                Logger.Log($"Unexpected error in AlwaysOnTop: {ex.Message}", Level.ERROR);
+                Logger.Log($"Unexpected error in WindhawkInstaller: {ex.Message}", Level.ERROR);
             }
         }
 
-        public static bool IsWindows11()
+        /// <summary>
+        /// Downloads a .reg file and imports it via regedit.
+        /// </summary>
+        public static void TakeOwnershipMenu()
         {
-            var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-            var currentBuildStr = (string)reg.GetValue("CurrentBuild");
-            var currentBuild = int.Parse(currentBuildStr);
-            return currentBuild >= 22000;
+            try
+            {
+                string regName = "TakeOwnershipMenu.reg";
+                string regPath = Path.Combine(Global.themePath, regName);
+                string regUrl = Global.takeownershipmenu;
+
+                if (!DownloadFile(regUrl, regPath)) return;
+                Logger.Log($"Installed '{regName}' in '{Global.themePath}'.", Level.SUCCESS);
+                Runner.Command("regedit.exe", $"/s \"{regPath}\"");
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Unexpected error in TakeOwnershipMenu: {ex.Message}", Level.ERROR);
+            }
         }
 
         public static void ApplyThemeTweaks()
@@ -236,6 +197,43 @@ namespace DebloaterTool.Modules
             };
 
             Regedit.InstallRegModification(themeTweaks);
+        }
+
+        private static bool DownloadFile(string url, string destinationPath)
+        {
+            if (!Internet.DownloadFile(url, destinationPath))
+            {
+                Logger.Log($"Failed to download from {url}. Exiting...", Level.ERROR);
+                return false;
+            }
+            return true;
+        }
+
+        private static bool CreateLogonTask(string taskName, string exePath)
+        {
+            // Escape quotes around the exe path
+            string quotedPath = $"\"{exePath}\"";
+            string arguments = $"/Create /F /RL HIGHEST /SC ONLOGON /TN \"{taskName}\" /TR {quotedPath}";
+            string output = Runner.Command("schtasks", arguments, redirect: true);
+
+            if (!string.IsNullOrWhiteSpace(output) && output.Contains("SUCCESS"))
+            {
+                Logger.Log($"{taskName} task successfully added to startup!", Level.SUCCESS);
+                return true;
+            }
+            else
+            {
+                Logger.Log($"Failed to create scheduled task '{taskName}'. Output: {output}", Level.ERROR);
+                return false;
+            }
+        }
+
+        private static bool IsWindows11()
+        {
+            var reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+            var currentBuildStr = (string)reg.GetValue("CurrentBuild");
+            var currentBuild = int.Parse(currentBuildStr);
+            return currentBuild >= 22000;
         }
     }
 }

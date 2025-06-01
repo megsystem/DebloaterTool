@@ -1,13 +1,12 @@
-﻿using System;
+﻿using DebloaterTool.Helpers;
+using DebloaterTool.Settings;
+using DebloaterTool.Logging;
+using System;
 using System.Diagnostics;
-using System.Net;
 using System.Linq;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
-using DebloaterTool.Helpers;
-using DebloaterTool.Settings;
-using DebloaterTool.Logging;
 
 // Created by @_giovannigiannone and ChatGPT
 // Inspired from the Talon's Project!

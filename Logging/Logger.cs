@@ -1,7 +1,7 @@
-﻿using System;
-using DebloaterTool.Settings;
-using System.Collections.Generic;
+﻿using DebloaterTool.Settings;
+using System;
 using System.IO;
+using System.Collections.Generic;
 
 namespace DebloaterTool.Logging
 {

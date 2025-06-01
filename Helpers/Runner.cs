@@ -1,6 +1,7 @@
-﻿using System;
+﻿using DebloaterTool.Logging;
+using System;
 using System.Diagnostics;
-using DebloaterTool.Logging;
+using System.IO;
 
 namespace DebloaterTool.Helpers
 {
@@ -41,6 +42,35 @@ namespace DebloaterTool.Helpers
             {
                 Logger.Log($"Error: {ex.Message}", Level.ERROR);
                 return null;
+            }
+        }
+
+        public static void LaunchIfNotRunning(
+            string exePath,
+            string argument = null)
+        {
+            string processName = Path.GetFileNameWithoutExtension(exePath);
+            if (Process.GetProcessesByName(processName).Length == 0)
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(argument))
+                    {
+                        Process.Start(exePath);
+                    }
+                    else
+                    {
+                        Process.Start(exePath, argument);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log($"Failed to launch {exePath} {(argument != null ? $"with arguments '{argument}'" : "")}: {ex.Message}", Level.ERROR);
+                }
+            }
+            else
+            {
+                Logger.Log($"Process '{processName}' is already running. Skipping launch.", Level.WARNING);
             }
         }
     }

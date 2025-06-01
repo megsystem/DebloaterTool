@@ -1,8 +1,8 @@
-﻿using System;
-using System.IO;
-using DebloaterTool.Helpers;
+﻿using DebloaterTool.Helpers;
 using DebloaterTool.Settings;
 using DebloaterTool.Logging;
+using System;
+using System.IO;
 using System.Web.Script.Serialization;
 
 namespace DebloaterTool.Modules

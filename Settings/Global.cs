@@ -42,6 +42,7 @@ namespace DebloaterTool.Settings
         public static string explorertheme = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/ExplorerTheme.zip";
         public static string alwaysontop = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/AlwaysOnTop.exe";
         public static string defender = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/defender.reg";
+        public static string takeownershipmenu = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/TakeOwnershipMenu.reg";
         public static string windhawkinstaller = "https://ramensoftware.com/downloads/windhawk_setup.exe";
 
         // RaphiTool Settings
