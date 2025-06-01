@@ -118,9 +118,14 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 |-------------------|
 | ![Random Screenshot](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/random.png) |
 
+<div align="center">
+
 | AlwaysOnTop Screenshot | Take Ownership Menu Screenshot |
 |------------------------|--------------------------------|
 | ![AlwaysOnTop Screenshot](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/alwaysontop.png) | ![Take Ownership Menu Screenshot](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/takeownership.png) |
+
+</div>
+
 
 ---
 
