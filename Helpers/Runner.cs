@@ -1,6 +1,7 @@
 ﻿using DebloaterTool.Logging;
 using System;
 using System.Diagnostics;
+using System.Threading;
 
 namespace DebloaterTool.Helpers
 {
@@ -12,7 +13,8 @@ namespace DebloaterTool.Helpers
             bool redirect = false,
             bool redirectOutputLogger = false,
             string workingDirectory = null,
-            bool waitforexit = true)
+            bool waitforexit = true,
+            string customExitCheck = null)
         {
             try
             {
@@ -22,6 +24,7 @@ namespace DebloaterTool.Helpers
                     Arguments = arguments ?? string.Empty,
                     WindowStyle = ProcessWindowStyle.Hidden,
                     RedirectStandardOutput = redirect || redirectOutputLogger, // ensure redirection is on
+                    RedirectStandardError = redirectOutputLogger,
                     CreateNoWindow = true,
                     UseShellExecute = false // required for redirection
                 };
@@ -34,6 +37,7 @@ namespace DebloaterTool.Helpers
                 using (Process process = new Process { StartInfo = psi })
                 {
                     string output = string.Empty;
+                    bool shouldExit = false;
 
                     if (redirectOutputLogger)
                     {
@@ -42,6 +46,19 @@ namespace DebloaterTool.Helpers
                             if (!string.IsNullOrWhiteSpace(e.Data))
                             {
                                 Logger.Log(e.Data, Level.INFO);
+                                if (!string.IsNullOrEmpty(customExitCheck) && 
+                                    e.Data.Contains(customExitCheck))
+                                {
+                                    shouldExit = true; // Set exit flag
+                                }
+                            }
+                        };
+
+                        process.ErrorDataReceived += (sender, e) =>
+                        {
+                            if (!string.IsNullOrWhiteSpace(e.Data))
+                            {
+                                Logger.Log(e.Data, Level.ERROR);
                             }
                         };
                     }
@@ -51,11 +68,22 @@ namespace DebloaterTool.Helpers
                     if (redirectOutputLogger)
                     {
                         process.BeginOutputReadLine();
+                        process.BeginErrorReadLine();
                     }
 
                     if (waitforexit)
                     {
-                        process.WaitForExit();
+                        while (!process.HasExited)
+                        {
+                            if (shouldExit && !string.IsNullOrEmpty(customExitCheck)) // Custom exit
+                            {
+                                Logger.Log("Stopping process safely for custom exit...", Level.SUCCESS);
+                                process.Kill(); // Force kill
+                                return null;
+                            }
+
+                            Thread.Sleep(500); // Prevent high CPU usage
+                        }
 
                         // If redirect is enabled but logging is not, still capture the output
                         if (redirect && !redirectOutputLogger)

@@ -9,7 +9,7 @@ namespace DebloaterTool.Modules
         {
             string command = @"/c c:\windows\*.* /s /i /exe:lzx";
             Logger.Log($"Starting compression with arguments: {command}", Level.INFO);
-            Runner.Command("compact.exe", command);
+            Runner.Command("compact.exe", command, redirectOutputLogger: true);
             Logger.Log("Compression process completed.", Level.SUCCESS);
         }
 
