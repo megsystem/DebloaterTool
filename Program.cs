@@ -16,6 +16,30 @@ namespace DebloaterTool
     {
         static void Main(string[] args)
         {
+            // Generate modulelist.txt
+            if (args.Contains("--generate-module-list"))
+            {
+                string path = "modulelist.txt";
+                var modules = ModuleList.GetAllModules();
+                var sb = new StringBuilder();
+
+                sb.AppendLine("// ------------------------------------------------------------------------------");
+                sb.AppendLine("// This is an example of the module file");
+                sb.AppendLine("// Project by @_giovannigiannone");
+                sb.AppendLine("// Uncomment the modules that you want to enable");
+                sb.AppendLine("// ------------------------------------------------------------------------------");
+
+                foreach (var module in modules)
+                {
+                    sb.AppendLine($"// {module.Description} (default: {module.DefaultEnabled.ToString().ToLower()})");
+                    sb.AppendLine($"// {module.Action.Method.DeclaringType?.Name}.{module.Action.Method.Name}");
+                    sb.AppendLine("// ------------------------------------------------------------------------------");
+                }
+
+                File.WriteAllText(path, sb.ToString(), Encoding.Unicode);
+                Environment.Exit(0);
+            }
+
             // Run the Welcome Screen and EULA
             Internet.Inizialize();
             Console.Title = $"{(Admins.IsAdministrator() ? "[Administrator]: " : "")}DebloaterTool {Global.Version}";

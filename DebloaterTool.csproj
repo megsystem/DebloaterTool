@@ -107,4 +107,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(TargetPath)" --generate-module-list</PostBuildEvent>
+  </PropertyGroup>
 </Project>
