@@ -31,7 +31,7 @@ namespace DebloaterTool.Modules
                 if (File.Exists(installCmdPath))
                 {
                     Logger.Log("Running install.cmd...", Level.INFO);
-                    Runner.Command(installCmdPath, workingDirectory: Global.bootlogoPath, NoWindow: false);
+                    Runner.Command(installCmdPath, workingDirectory: Global.bootlogoPath, redirectOutputLogger: true);
                     Logger.Log("install.cmd finished.", Level.INFO);
                 }
                 else

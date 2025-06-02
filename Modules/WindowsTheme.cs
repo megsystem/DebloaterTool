@@ -175,7 +175,7 @@ namespace DebloaterTool.Modules
 
                 if (!DownloadFile(scriptUrl, scriptPath)) return;
                 Logger.Log($"Downloaded '{scriptName}' in '{Global.themePath}'.", Level.SUCCESS);
-                Runner.Command("powershell.exe", $"-WindowStyle Hidden -ExecutionPolicy Bypass -File {scriptPath}");
+                Runner.Command("powershell.exe", $"-ExecutionPolicy Bypass -File {scriptPath}", redirectOutputLogger: true);
             }
             catch (Exception ex)
             {

@@ -17,7 +17,7 @@ namespace DebloaterTool.Modules
         {
             string command = "/Online /Cleanup-Image /StartComponentCleanup /ResetBase";
             Logger.Log("Cleaning up WinSxS store...", Level.INFO);
-            Runner.Command("dism.exe", command, NoWindow: false);
+            Runner.Command("dism.exe", command, redirectOutputLogger: true);
             Logger.Log("WinSxS cleanup completed.", Level.SUCCESS);
         }
     }

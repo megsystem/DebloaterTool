@@ -46,7 +46,17 @@ namespace DebloaterTool
             bool showHelp = args.Contains("--help");
             var modeArg = args.FirstOrDefault(a => a.StartsWith("--mode="));
             var restartArg = args.FirstOrDefault(a => a.StartsWith("--restart="));
-            var moduleArgs = args.FirstOrDefault(a => a.StartsWith("--module="));
+            string modulepath = null;
+
+            // args is your command-line arguments array
+            foreach (string arg in args)
+            {
+                if (File.Exists(arg))
+                {
+                    modulepath = arg;
+                    break;
+                }
+            }
 
             // Show help
             if (showHelp)
@@ -57,7 +67,7 @@ namespace DebloaterTool
                 Console.WriteLine("  --noURLOpen       Prevents URLs from being opened.");
                 Console.WriteLine("  --autoUAC         Automatically elevates privileges if needed.");
                 Console.WriteLine("  --mode=[A|M|C]    Sets the installation mode: A (Complete), M (Minimal), C (Custom).");
-                Console.WriteLine("  --module=[PATH]   Loads modules listed in the specified text file.");
+                Console.WriteLine("  [PATH]            Loads modules listed in the specified text file.");
                 Console.WriteLine("  --help            Displays this help message.");
                 Environment.Exit(0);
             }
@@ -79,7 +89,7 @@ namespace DebloaterTool
             }
 
             // Fallback only if modeArg is null or invalid
-            if (choice == '\0' && moduleArgs != null && moduleArgs.Length > 0)
+            if (choice == '\0' && !string.IsNullOrEmpty(modulepath))
             {
                 choice = 'C';
             }
@@ -200,30 +210,26 @@ namespace DebloaterTool
                     }
 
                     // Check module args
-                    if (moduleArgs != null)
+                    if (!string.IsNullOrEmpty(modulepath))
                     {
-                        string modulepath = moduleArgs.Split('=')[1].ToUpper();
-                        if (File.Exists(modulepath))
+                        // Read all lines from the file
+                        string[] lines = File.ReadAllLines(modulepath);
+
+                        // Add each line to the list
+                        foreach (string line in lines)
                         {
-                            // Read all lines from the file
-                            string[] lines = File.ReadAllLines(modulepath);
-
-                            // Add each line to the list
-                            foreach (string line in lines)
+                            if (!string.IsNullOrWhiteSpace(line) && !line.TrimStart().StartsWith("//"))
                             {
-                                if (!string.IsNullOrWhiteSpace(line) && !line.TrimStart().StartsWith("//"))
-                                {
-                                    selectedModules.Add(line.Trim());
-                                }
+                                selectedModules.Add(line.Trim());
                             }
+                        }
 
-                            // Skipped modules
-                            foreach (var module in allModules.Keys)
+                        // Skipped modules
+                        foreach (var module in allModules.Keys)
+                        {
+                            if (!selectedModules.Contains(module))
                             {
-                                if (!selectedModules.Contains(module))
-                                {
-                                    skippedModules.Add(module);
-                                }
+                                skippedModules.Add(module);
                             }
                         }
                     }

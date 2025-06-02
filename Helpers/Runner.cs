@@ -1,18 +1,17 @@
 ﻿using DebloaterTool.Logging;
 using System;
 using System.Diagnostics;
-using System.IO;
 
 namespace DebloaterTool.Helpers
 {
     internal class Runner
     {
         public static string Command(
-            string path, 
-            string arguments = null, 
-            bool redirect = false, 
+            string path,
+            string arguments = null,
+            bool redirect = false,
+            bool redirectOutputLogger = false,
             string workingDirectory = null,
-            bool NoWindow = true,
             bool waitforexit = true)
         {
             try
@@ -20,10 +19,10 @@ namespace DebloaterTool.Helpers
                 ProcessStartInfo psi = new ProcessStartInfo
                 {
                     FileName = path,
-                    Arguments = arguments ?? string.Empty, // ensure it's not null
+                    Arguments = arguments ?? string.Empty,
                     WindowStyle = ProcessWindowStyle.Hidden,
-                    RedirectStandardOutput = redirect,
-                    CreateNoWindow = NoWindow,
+                    RedirectStandardOutput = redirect || redirectOutputLogger, // ensure redirection is on
+                    CreateNoWindow = true,
                     UseShellExecute = false // required for redirection
                 };
 
@@ -32,10 +31,40 @@ namespace DebloaterTool.Helpers
                     psi.WorkingDirectory = workingDirectory;
                 }
 
-                using (Process process = Process.Start(psi))
+                using (Process process = new Process { StartInfo = psi })
                 {
-                    if (waitforexit) process.WaitForExit();
-                    return (redirect) ? process.StandardOutput.ReadToEnd() : null;
+                    string output = string.Empty;
+
+                    if (redirectOutputLogger)
+                    {
+                        process.OutputDataReceived += (sender, e) =>
+                        {
+                            if (!string.IsNullOrWhiteSpace(e.Data))
+                            {
+                                Logger.Log(e.Data, Level.INFO);
+                            }
+                        };
+                    }
+
+                    process.Start();
+
+                    if (redirectOutputLogger)
+                    {
+                        process.BeginOutputReadLine();
+                    }
+
+                    if (waitforexit)
+                    {
+                        process.WaitForExit();
+
+                        // If redirect is enabled but logging is not, still capture the output
+                        if (redirect && !redirectOutputLogger)
+                        {
+                            output = process.StandardOutput.ReadToEnd();
+                        }
+                    }
+
+                    return (redirect && !redirectOutputLogger) ? output : null;
                 }
             }
             catch (Exception ex)
