@@ -31,6 +31,7 @@ namespace DebloaterTool.Settings
             new TweakModule(WindowsTheme.ExplorerTheme, "Apply custom File Explorer theme", false),
             new TweakModule(WindowsTheme.BorderTheme, "Apply custom window border theme", false),
             new TweakModule(WindowsTheme.WindhawkInstaller, "Installs Windhawk with silent installation", false),
+            new TweakModule(WindowsTheme.SevenZipInstaller, "Downloads and installs the 7-Zip file manager", true),
             new TweakModule(WindowsTheme.AlwaysOnTop, "Install AlwaysOnTop to add a 'Top' button to any program", true),
             new TweakModule(WindowsTheme.TakeOwnershipMenu, "Adds a “Take Ownership” entry to the right-click context menu", true),
             new TweakModule(WindowsTheme.ApplyThemeTweaks, "Apply general theme tweaks", true),

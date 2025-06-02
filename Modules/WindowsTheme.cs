@@ -156,12 +156,30 @@ namespace DebloaterTool.Modules
                 string exeUrl = Global.windhawkinstaller;
 
                 if (!DownloadFile(exeUrl, exePath)) return;
-                Logger.Log($"Installed '{exeName}' in '{Global.themePath}'.", Level.SUCCESS);
+                Logger.Log($"Downloaded '{exeName}' in '{Global.themePath}'.", Level.SUCCESS);
                 Runner.Command(exePath, "/S");
             }
             catch (Exception ex)
             {
                 Logger.Log($"Unexpected error in WindhawkInstaller: {ex.Message}", Level.ERROR);
+            }
+        }
+
+        public static void SevenZipInstaller()
+        {
+            try
+            {
+                string scriptName = "Install7Zip.ps1";
+                string scriptPath = Path.Combine(Global.themePath, scriptName);
+                string scriptUrl = Global.sevenzipscript;
+
+                if (!DownloadFile(scriptUrl, scriptPath)) return;
+                Logger.Log($"Downloaded '{scriptName}' in '{Global.themePath}'.", Level.SUCCESS);
+                Runner.Command("powershell.exe", $"-WindowStyle Hidden -ExecutionPolicy Bypass -File {scriptPath}");
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Unexpected error in SevenZipInstaller: {ex.Message}", Level.ERROR);
             }
         }
 
@@ -174,7 +192,7 @@ namespace DebloaterTool.Modules
                 string regUrl = Global.takeownershipmenu;
 
                 if (!DownloadFile(regUrl, regPath)) return;
-                Logger.Log($"Installed '{regName}' in '{Global.themePath}'.", Level.SUCCESS);
+                Logger.Log($"Downloaded '{regName}' in '{Global.themePath}'.", Level.SUCCESS);
                 Runner.Command("regedit.exe", $"/s \"{regPath}\"");
             }
             catch (Exception ex)
