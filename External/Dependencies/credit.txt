@@ -17,10 +17,6 @@ defender.reg
 ------------
 - Sourced from: https://github.com/ionuttbara/windows-defender-remover
 
-TakeOwnershipMenu.reg
----------------------
-- From: https://www.tenforums.com/tutorials/3841-add-take-ownership-context-menu-windows-10-a.html
-
 tacky-borders.exe
 ------------------
 - From: https://github.com/lukeyou05/tacky-borders
@@ -29,3 +25,11 @@ AlwaysOnTop.exe
 ---------------
 - Source: https://github.com/ClusterM/AlwaysOnTopper/blob/master/Program.cs
 - Modified by @_giovannigiannone to be compatible with .NET Framework 4.0
+
+TakeOwnershipMenu.reg
+---------------------
+- From: https://www.tenforums.com/tutorials/3841-add-take-ownership-context-menu-windows-10-a.html
+
+Install7Zip.ps1
+---------------
+- By @_giovannigiannone (me)
