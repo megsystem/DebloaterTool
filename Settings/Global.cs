@@ -46,6 +46,10 @@ namespace DebloaterTool.Settings
         public static string sevenzipscript = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/Install7Zip.ps1";
         public static string windhawkinstaller = "https://ramensoftware.com/downloads/windhawk_setup.exe";
 
+        // Updater
+        public static string lastversionurl = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/DebloaterTool.exe";
+        public static string updaterbat = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/apply_update.bat";
+
         // RaphiTool Settings
         public static string raphiToolUrl = "https://win11debloat.raphi.re/";
         public static string raphiToolArgs = "-Silent " +
