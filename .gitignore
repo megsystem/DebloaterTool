@@ -2,5 +2,6 @@ obj/
 .vs/
 bin/
 DebloaterTool.log
+DebloaterTool.debug.exe
 External/Wallpapers/optipng.exe
 External/Wallpapers/Template.psd
