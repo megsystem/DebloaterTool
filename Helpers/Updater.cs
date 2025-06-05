@@ -54,6 +54,9 @@ namespace DebloaterTool.Helpers
             {
                 Logger.Log($"Updater failed: {ex.Message}", Level.ERROR);
             }
+
+            // Cleanup console
+            Console.Clear();
         }
 
         private static bool FilesAreEqual(string path1, string path2)
