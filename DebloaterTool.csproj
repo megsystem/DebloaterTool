@@ -12,7 +12,7 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-	<AssemblyName>DebloaterTool.debug</AssemblyName>
+    <AssemblyName>DebloaterTool.debug</AssemblyName>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
@@ -23,7 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-	<AssemblyName>DebloaterTool</AssemblyName>
+    <AssemblyName>DebloaterTool</AssemblyName>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
