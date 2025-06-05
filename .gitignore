@@ -1,6 +1,7 @@
 obj/
 .vs/
 bin/
+builder.bat
 DebloaterTool.log
 DebloaterTool.debug.exe
 External/Wallpapers/optipng.exe
