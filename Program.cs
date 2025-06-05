@@ -56,6 +56,7 @@ namespace DebloaterTool
 
             // Run the Welcome Screen and EULA
             Internet.Inizialize();
+            Updater.CheckForUpdates();
             Console.Title = $"{(Admins.IsAdministrator() ? "[Administrator]: " : "")}DebloaterTool {Global.Version}";
             foreach (string line in Global.Logo) Display.DisplayMessage(line.CenterInConsole(), ConsoleColor.Magenta);
             Console.WriteLine();
@@ -76,23 +77,6 @@ namespace DebloaterTool
             Console.WriteLine("--------------------------------------------------------------------------");
             Logger.Log($"Welcome to DebloaterTool Debug Console!", Level.INFO, Save: false);
             Console.WriteLine("--------------------------------------------------------------------------");
-
-            // Check updates
-            #if !DEBUG
-                string exePath = Assembly.GetExecutingAssembly().Location;
-                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(exePath);
-                string updatedFileName = fileNameWithoutExt + ".update.exe";
-                string updatedPath = Path.Combine(Path.GetTempPath(), updatedFileName);
-                string batPath = Path.Combine(Path.GetTempPath(), "apply_update.bat");
-                if (!Internet.DownloadFile(Global.lastversionurl, updatedPath)) return;
-                if (!Internet.DownloadFile(Global.updaterbat, batPath)) return;
-                if (!FilesAreEqual(exePath, updatedPath))
-                {
-                    Logger.Log($"Update found: {Path.GetFileName(updatedPath)} differs from current executable. Starting updater...");
-                    Runner.Command(batPath, $"\"{exePath}\" \"{updatedPath}\"", waitforexit: false);
-                    Environment.Exit(0);
-                }
-            #endif
 
             // Parse arguments
             bool skipEULA = args.Contains("--skipEULA");
@@ -373,22 +357,6 @@ namespace DebloaterTool
                     Directory.GetDirectories(directory).Length == 0)
                 {
                     Directory.Delete(directory);
-                }
-            }
-        }
-
-        static bool FilesAreEqual(string file1, string file2)
-        {
-            if (!File.Exists(file1) || !File.Exists(file2)) return false;
-
-            using (var hashAlg = SHA256.Create())
-            {
-                using (var stream1 = File.OpenRead(file1))
-                using (var stream2 = File.OpenRead(file2))
-                {
-                    byte[] hash1 = hashAlg.ComputeHash(stream1);
-                    byte[] hash2 = hashAlg.ComputeHash(stream2);
-                    return StructuralComparisons.StructuralEqualityComparer.Equals(hash1, hash2);
                 }
             }
         }
