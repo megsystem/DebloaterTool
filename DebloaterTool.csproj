@@ -72,7 +72,7 @@
     <Compile Include="Modules\WindowsTheme.cs" />
     <Compile Include="Modules\RemoveUnnecessary.cs" />
     <Compile Include="Modules\SecurityPerformance.cs" />
-    <Compile Include="Modules\Ungoogled.cs" />
+    <Compile Include="Modules\BrowserDownloader.cs" />
     <Compile Include="Modules\CustomWallpapers.cs" />
     <Compile Include="Modules\WinCustomization.cs" />
     <Compile Include="Modules\WinDefender.cs" />
