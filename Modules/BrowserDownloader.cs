@@ -1,7 +1,9 @@
 ﻿using DebloaterTool.Helpers;
-using DebloaterTool.Settings;
 using DebloaterTool.Logging;
+using DebloaterTool.Settings;
+using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Web.Script.Serialization;
 
@@ -9,6 +11,79 @@ namespace DebloaterTool.Modules
 {
     internal class BrowserDownloader
     {
+        public static void Installer()
+        {
+            if (TweakBrowser.browsers.ContainsKey(TweakBrowser.requestBrowser))
+            {
+                var browser = TweakBrowser.browsers[TweakBrowser.requestBrowser];
+                Logger.Log("Selected: " + browser.Name);
+                browser.InstallAction(); // Run the action
+            }
+        }
+
+        public static void FireFox()
+        {
+            bool is64Bit = Environment.Is64BitOperatingSystem;
+            string firefoxUrl;
+
+            if (is64Bit)
+            {
+                // Direct link to 64-bit installer
+                firefoxUrl = "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US";
+            }
+            else
+            {
+                // Direct link to 32-bit installer
+                firefoxUrl = "https://download.mozilla.org/?product=firefox-latest-ssl&os=win&lang=en-US";
+            }
+
+            Logger.Log("Firefox download URL: " + firefoxUrl);
+            string installerPath = Path.Combine(Path.GetTempPath(), "FirefoxInstaller.exe");
+            string homepageUrl = Global.tabLink;
+
+            Logger.Log("Downloading Firefox...");
+            if (!Internet.DownloadFile(firefoxUrl, installerPath)) return;
+
+            Logger.Log("Installing Firefox silently...");
+            Runner.Command(installerPath, "/S");
+
+            Logger.Log("Setting custom Firefox homepage...");
+            var tweaks = new List<TweakRegistry>
+            {
+                new TweakRegistry(
+                    Registry.LocalMachine,
+                    @"SOFTWARE\Policies\Mozilla\Firefox",
+                    "ShowHomeButton",
+                    RegistryValueKind.DWord,
+                    1
+                ),
+                new TweakRegistry(
+                    Registry.LocalMachine,
+                    @"SOFTWARE\Policies\Mozilla\Firefox\Homepage",
+                    "URL",
+                    RegistryValueKind.String,
+                    homepageUrl
+                ),
+                new TweakRegistry(
+                    Registry.LocalMachine,
+                    @"SOFTWARE\Policies\Mozilla\Firefox\Homepage",
+                    "StartPage",
+                    RegistryValueKind.String,
+                    "homepage"
+                ),
+                new TweakRegistry(
+                    Registry.LocalMachine,
+                    @"SOFTWARE\Policies\Mozilla\Firefox\Homepage",
+                    "Locked",
+                    RegistryValueKind.DWord,
+                    0
+                )
+            };
+
+            Regedit.InstallRegModification(tweaks.ToArray());
+            Logger.Log("Done.");
+        }
+
         public static void Ungoogled()
         {
             UngoogledInstaller();

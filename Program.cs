@@ -81,6 +81,7 @@ namespace DebloaterTool
             bool autoUAC = args.Contains("--autoUAC");
             bool showHelp = args.Contains("--help");
             var modeArg = args.FirstOrDefault(a => a.StartsWith("--mode="));
+            var browserArg = args.FirstOrDefault(a => a.StartsWith("--browser="));
             var restartArg = args.FirstOrDefault(a => a.StartsWith("--restart="));
             string modulepath = null;
 
@@ -102,6 +103,7 @@ namespace DebloaterTool
                 Console.WriteLine("  --restart=[Y/N]   Automatically restarts the computer after debloating.");
                 Console.WriteLine("  --noURLOpen       Prevents URLs from being opened.");
                 Console.WriteLine("  --autoUAC         Automatically elevates privileges if needed.");
+                Console.WriteLine("  --browser=[NAME]  Sets the installation browser (firefox, ungoogled, ecc...)");
                 Console.WriteLine("  --mode=[A|M|C]    Sets the installation mode: A (Complete), M (Minimal), C (Custom).");
                 Console.WriteLine("  [PATH]            Loads modules listed in the specified text file.");
                 Console.WriteLine("  --help            Displays this help message.");
@@ -160,6 +162,57 @@ namespace DebloaterTool
                 Admins.RestartAsAdmin(args);
             }
 
+            // Browser installer
+            while (true)
+            {
+                if (browserArg != null)
+                {
+                    var browservalue = browserArg.Split('=')[1].Trim(); // Extract value, trim spaces
+                    var browserValueUpper = browservalue.ToUpperInvariant(); // Convert to uppercase for case-insensitive match
+
+                    // Search the dictionary for a matching browser name (case-insensitive)
+                    int foundKey = -1; // default "not found" indicator
+                    foreach (var kvp in TweakBrowser.browsers)
+                    {
+                        if (kvp.Value.Name.ToUpperInvariant() == browserValueUpper)
+                        {
+                            foundKey = kvp.Key;
+                            break;
+                        }
+                    }
+
+                    if (foundKey != -1)
+                    {
+                        TweakBrowser.requestBrowser = foundKey;
+                        break;
+                    }
+                }
+
+                Console.WriteLine("What browser do you want to install?");
+                foreach (var browser in TweakBrowser.browsers)
+                {
+                    Console.WriteLine($"{browser.Key} - {browser.Value.Name}");
+                }
+                Console.Write("Type the number to install: ");
+
+                var keyInfo = Console.ReadKey();
+                Console.WriteLine(); // to move to the next line after key press
+                string input = keyInfo.KeyChar.ToString();
+
+                if (int.TryParse(input, out int browserchoice) &&
+                    TweakBrowser.browsers.ContainsKey(browserchoice))
+                {
+                    Console.WriteLine($"Selected {TweakBrowser.browsers[browserchoice].Name}!");
+                    TweakBrowser.requestBrowser = browserchoice;
+                    break; // exit loop after valid selection
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please try again.\n");
+                }
+            }
+
+            // Restart request
             bool restart;
             if (!string.IsNullOrWhiteSpace(restartArg) && restartArg.Contains("="))
             {

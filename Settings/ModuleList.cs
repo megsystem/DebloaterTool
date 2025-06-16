@@ -35,7 +35,7 @@ namespace DebloaterTool.Settings
             new TweakModule(WindowsTheme.AlwaysOnTop, "Install AlwaysOnTop to add a 'Top' button to any program", true),
             new TweakModule(WindowsTheme.TakeOwnershipMenu, "Adds a “Take Ownership” entry to the right-click context menu", true),
             new TweakModule(WindowsTheme.ApplyThemeTweaks, "Apply general theme tweaks", true),
-            new TweakModule(BrowserDownloader.Ungoogled, "Install Ungoogled Chromium", false),
+            new TweakModule(BrowserDownloader.Installer, "Install your custom Browser", true),
             new TweakModule(BootLogo.Install, "Install custom boot logo", false),
             new TweakModule(Compression.CompressOS, "Compress the OS binaries with LZX", false),
             new TweakModule(Compression.CleanupWinSxS, "Clean up WinSxS to reduce disk usage", true),

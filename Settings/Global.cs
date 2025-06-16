@@ -1,7 +1,7 @@
 ﻿using DebloaterTool.Properties;
-using System.Reflection;
-using System.IO;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace DebloaterTool.Settings
 {
