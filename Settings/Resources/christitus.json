@@ -25,7 +25,10 @@
                       "WPFTweaksRecallOff",
                       "WPFTweaksDisableBGapps",
                       "WPFTweaksEndTaskOnTaskbar",
-                      "WPFTweaksStorage"
+                      "WPFTweaksStorage",
+                      "WPFTweaksRemoveGallery",
+                      "WPFTweaksDisableWpbtExecution",
+                      "WPFTweaksDisableExplorerAutoDiscovery"
                   ],
     "WPFFeature":  [
                        "WPFFeaturesSandbox",

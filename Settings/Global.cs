@@ -50,8 +50,10 @@ namespace DebloaterTool.Settings
         public static string lastversionurl = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/DebloaterTool.exe";
         public static string updaterbat = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/apply_update.bat";
 
-        // RaphiTool Settings
+        // Debloaters Settings
+        public static string christitusUrl = "https://christitus.com/win";
         public static string raphiToolUrl = "https://win11debloat.raphi.re/";
+        public static byte[] christitusConfig = Resources.christitus;
         public static string raphiToolArgs = "-Silent " +
             "-RemoveApps -RemoveAppsCustom -RemoveGamingApps -RemoveCommApps -RemoveDevApps -RemoveW11Outlook -ForceRemoveEdge " +
             "-DisableDVR -DisableTelemetry -DisableBingSearches -DisableBing -DisableDesktopSpotlight -DisableLockscrTips -DisableLockscreenTips " +
@@ -59,10 +61,6 @@ namespace DebloaterTool.Settings
             "-HideTaskview -DisableStartRecommended -DisableCopilot -DisableRecall -DisableWidgets -HideWidgets -DisableChat -HideChat " +
             "-EnableEndTask -ClearStart -ClearStartAllUsers -RevertContextMenu -DisableMouseAcceleration -DisableStickyKeys " +
             "-ExplorerToThisPC -DisableOnedrive -HideOnedrive ";
-
-        // ChrisTool Settings
-        public static string christitusUrl = "christitus.com/win";
-        public static byte[] christitusConfig = Resources.christitus;
 
         // Resources files
         public static string welcome = Resources.welcome;

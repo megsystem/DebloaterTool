@@ -162,6 +162,22 @@ namespace DebloaterTool
                 Admins.RestartAsAdmin(args);
             }
 
+            // Restart request
+            bool restart;
+            if (!string.IsNullOrWhiteSpace(restartArg) && restartArg.Contains("="))
+            {
+                var restartValue = restartArg.Split('=')[1].ToUpper();
+                restart = restartValue == "Y"
+                    ? true
+                    : restartValue == "N"
+                        ? false
+                        : Display.RequestYesOrNo("Do you want to restart after the process?");
+            }
+            else
+            {
+                restart = Display.RequestYesOrNo("Do you want to restart after the process?");
+            }
+
             // Browser installer
             while (true)
             {
@@ -189,6 +205,7 @@ namespace DebloaterTool
                 }
 
                 Console.WriteLine("What browser do you want to install?");
+                Console.WriteLine($"N - Skip installing the browser");
                 foreach (var browser in TweakBrowser.browsers)
                 {
                     Console.WriteLine($"{browser.Key} - {browser.Value.Name}");
@@ -199,6 +216,8 @@ namespace DebloaterTool
                 Console.WriteLine(); // to move to the next line after key press
                 string input = keyInfo.KeyChar.ToString();
 
+                if (input.ToUpper() == "N") break;
+
                 if (int.TryParse(input, out int browserchoice) &&
                     TweakBrowser.browsers.ContainsKey(browserchoice))
                 {
@@ -206,26 +225,8 @@ namespace DebloaterTool
                     TweakBrowser.requestBrowser = browserchoice;
                     break; // exit loop after valid selection
                 }
-                else
-                {
-                    Console.WriteLine("Invalid input. Please try again.\n");
-                }
-            }
 
-            // Restart request
-            bool restart;
-            if (!string.IsNullOrWhiteSpace(restartArg) && restartArg.Contains("="))
-            {
-                var restartValue = restartArg.Split('=')[1].ToUpper();
-                restart = restartValue == "Y"
-                    ? true
-                    : restartValue == "N"
-                        ? false
-                        : Display.RequestYesOrNo("Do you want to restart after the process?");
-            }
-            else
-            {
-                restart = Display.RequestYesOrNo("Do you want to restart after the process?");
+                Console.WriteLine("Invalid input. Please try again.");
             }
 
             // If the mode wasn't set via arguments, ask the user interactively.
