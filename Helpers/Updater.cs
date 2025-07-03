@@ -34,9 +34,19 @@ namespace DebloaterTool.Helpers
                 {
                     Logger.Log("New update detected.");
 
+                    if (!Display.RequestYesOrNo("A new update is available. Do you want to update now?"))
+                    {
+                        Logger.Log("User chose to skip the update.");
+                        File.Delete(tempUpdatedPath);
+                        Console.Clear();
+                        return;
+                    }
+
                     if (!Internet.DownloadFile(Global.updaterbat, updaterScriptPath))
                     {
                         Logger.Log("Failed to download updater script.", Level.ERROR);
+                        File.Delete(tempUpdatedPath);
+                        Console.Clear();
                         return;
                     }
 
