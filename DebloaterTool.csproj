@@ -47,7 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\Internet.cs" />
-    <Compile Include="Helpers\Tweakers\TweakBrowser.cs" />
     <Compile Include="Helpers\Tweakers\TweakRegistry.cs" />
     <Compile Include="Helpers\Tweakers\TweakModule.cs" />
     <Compile Include="Helpers\Updater.cs" />

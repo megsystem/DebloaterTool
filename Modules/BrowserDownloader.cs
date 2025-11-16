@@ -11,16 +11,6 @@ namespace DebloaterTool.Modules
 {
     internal class BrowserDownloader
     {
-        public static void Installer()
-        {
-            if (TweakBrowser.browsers.ContainsKey(TweakBrowser.requestBrowser))
-            {
-                var browser = TweakBrowser.browsers[TweakBrowser.requestBrowser];
-                Logger.Log("Selected: " + browser.Name);
-                browser.InstallAction(); // Run the action
-            }
-        }
-
         public static void FireFox()
         {
             bool is64Bit = Environment.Is64BitOperatingSystem;
