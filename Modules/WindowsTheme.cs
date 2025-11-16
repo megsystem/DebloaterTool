@@ -231,25 +231,23 @@ namespace DebloaterTool.Modules
 
         private static bool CreateLogonTask(string taskName, string exePath)
         {
-            string quotedPath = $"\"{exePath}\"";
-            string arguments = $"/Create /F /RL HIGHEST /SC ONLOGON /TN \"{taskName}\" /TR {quotedPath} /RU \"{Environment.UserName}\" /IT";
-            string output = Runner.Command("schtasks", arguments, redirect: true);
+            string ps = $@"
+$action = New-ScheduledTaskAction -Execute '{exePath}'
+$trigger = New-ScheduledTaskTrigger -AtLogon
+$settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+Register-ScheduledTask -Action $action -Trigger $trigger -TaskName '{taskName}' -Description 'Auto-run task' -Settings $settings -RunLevel Highest -Force
+";
 
-            if (!string.IsNullOrWhiteSpace(output) && output.Contains("SUCCESS"))
+            string output = Runner.Command("powershell", ps, redirect: true);
+
+            if (!string.IsNullOrWhiteSpace(output) && output.Contains("TaskPath"))
             {
-                // Consenti esecuzione anche su batteria
-                Runner.Command("powershell",
-                    $"(Get-ScheduledTask -TaskName '{taskName}').Settings.DisallowStartIfOnBatteries = $false; " +
-                    $"(Get-ScheduledTask -TaskName '{taskName}').Settings.StopIfGoingOnBatteries = $false; " +
-                    $"Set-ScheduledTask -TaskName '{taskName}'",
-                    redirect: true);
-
-                Logger.Log($"{taskName} task successfully added to startup and allowed on battery!", Level.SUCCESS);
+                Logger.Log($"{taskName} created successfully and runs on battery.", Level.SUCCESS);
                 return true;
             }
             else
             {
-                Logger.Log($"Failed to create scheduled task '{taskName}'. Output: {output}", Level.ERROR);
+                Logger.Log($"Failed to create task '{taskName}'. Output: {output}", Level.ERROR);
                 return false;
             }
         }
