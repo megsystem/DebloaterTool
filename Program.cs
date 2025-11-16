@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading;
 using System.Web.Script.Serialization;
 
 // Created by @_giovannigiannone and ChatGPT
@@ -43,25 +42,12 @@ namespace DebloaterTool
             {
                 Console.WriteLine("Usage:");
                 Console.WriteLine("  [PATH]            Loads custom modules listed in the specified text file.");
-                Console.WriteLine("  --skipEULA        Skips the EULA prompt.");
+                Console.WriteLine("  --skipEULA        Skips the EULA prompt - only in the console");
                 Console.WriteLine("  --autoUAC         Automatically elevates privileges if needed.");
                 Console.WriteLine("  --autoRestart     Automatically restarts the computer after debloating.");
                 Console.WriteLine("  --fullDebloat     Performs a full debloat without selecting modules (all modules will be run).");
                 Console.WriteLine("  --help            Displays this help message.");
                 Environment.Exit(0);
-            }
-
-            // EULA Confirmation (skipped if --skipEULA is provided)
-            if (!skipEULA)
-            {
-                if (!Display.RequestYesOrNo("Do you accept the EULA?"))
-                {
-                    Logger.Log("EULA declined!", Level.CRITICAL);
-                    Console.ReadKey();
-                    Environment.Exit(0);
-                }
-
-                Logger.Log("EULA Accepted!", Level.SUCCESS);
             }
 
             // Check if the program is runned with administrator rights!
@@ -83,19 +69,22 @@ namespace DebloaterTool
 
             InitializeFolders();
 
+            string result = null;
             var modules = ModuleList.GetAllModules().ToList();
 
             if (fullDebloat)
             {
+                EULAConsole(skipEULA);
                 RunFullModules(modules);
             }
             else if (!string.IsNullOrEmpty(modulePath))
             {
+                EULAConsole(skipEULA);
                 RunModulesFromFile(modulePath, modules);
             }
             else
             {
-                StartWebInterface(modules);
+                result = StartWebInterface(modules);
             }
 
             string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
@@ -109,7 +98,9 @@ namespace DebloaterTool
             File.Copy(Global.LogFilePath, destinationPath, overwrite: true);
             File.Delete(Global.LogFilePath);
 
-            bool shouldRestart = autoRestart
+            if (result.Contains("finished")) return;
+
+            bool shouldRestart = autoRestart || result.Contains("enabledrestart")
                     || Display.RequestYesOrNo("Do you want to restart to apply changes?");
 
             if (shouldRestart)
@@ -130,6 +121,22 @@ namespace DebloaterTool
 
             // End
             return;
+        }
+
+        static void EULAConsole(bool skipEULA)
+        {
+            // EULA Confirmation
+            if (!skipEULA)
+            {
+                if (!Display.RequestYesOrNo("Do you accept the EULA?"))
+                {
+                    Logger.Log("EULA declined!", Level.CRITICAL);
+                    Console.ReadKey();
+                    Environment.Exit(0);
+                }
+
+                Logger.Log("EULA Accepted!", Level.SUCCESS);
+            }
         }
 
         static void GenerateModuleList()
@@ -268,15 +275,12 @@ namespace DebloaterTool
             Logger.Log("+=====================================+", Level.VERBOSE);
         }
 
-        static void StartWebInterface(List<TweakModule> modules)
+        static string StartWebInterface(List<TweakModule> modules)
         {
             var webServer = new SimpleWebServer("http://localhost:8080/", modules);
-            new Thread(webServer.Start).Start();
             Process.Start("http://localhost:8080/");
-
-            Console.WriteLine("DebloaterTool Web UI running at http://localhost:8080/");
-            Console.WriteLine("Press ENTER to exit the program.");
-            Console.ReadLine();
+            Console.WriteLine("DebloaterTool running at http://localhost:8080/");
+            return webServer.Start();
         }
 
         public class SimpleWebServer
@@ -293,7 +297,7 @@ namespace DebloaterTool
                 listener.Prefixes.Add(url);
             }
 
-            public void Start()
+            public string Start()
             {
                 listener.Start();
                 Console.WriteLine("Web server started at " + url);
@@ -308,6 +312,10 @@ namespace DebloaterTool
                     try
                     {
                         if (req.Url.AbsolutePath == "/")
+                        {
+                            Respond(resp, GetHtmlEULA(), "text/html");
+                        }
+                        else if(req.Url.AbsolutePath == "/settings")
                         {
                             Respond(resp, GetHtmlPage(), "text/html");
                         }
@@ -324,14 +332,14 @@ namespace DebloaterTool
                         }
                         else if (req.Url.AbsolutePath == "/restart")
                         {
-                            Respond(resp, "Finish", "text/plain");
-
-                            string tempPath = Path.Combine(Global.debloatersPath, "DebloaterWelcome.vbs");
-                            File.WriteAllText(tempPath, Global.welcome.Replace("[INSTALLPATH]", Global.InstallPath), Encoding.Unicode);
-
-                            Process.Start("wscript.exe", $"\"{tempPath}\"")?.WaitForExit();
-                            Process.Start("shutdown.exe", "-r -t 0");
-                            Environment.Exit(0);
+                            Respond(resp, "Finish - Restart Enabled", "text/plain");
+                            return "enabledrestart";
+                        }
+                        else if (req.Url.AbsolutePath == "/finished")
+                        {
+                            string data = File.ReadAllText(Global.LogFilePath);
+                            Respond(resp, $"Finished - Logs:\n{data}", "text/plain");
+                            return "finished";
                         }
                         else if (req.Url.AbsolutePath == "/run")
                         {
@@ -360,18 +368,6 @@ namespace DebloaterTool
 
                             // Risposta al browser
                             Respond(resp, serializer.Serialize(new { status = "done" }), "application/json");
-
-                            // Save Log
-                            string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-                            string logFileName = $"DebloaterTool_{dateTime}.log";
-                            string destinationPath = Path.Combine(Global.logsPath, logFileName);
-
-                            Logger.Log($"Debloating complete!", Level.SUCCESS);
-                            Logger.Log($"Log file saved on {destinationPath}", Level.SUCCESS);
-                            Logger.Log($"[DebloaterTool by @_giovannigiannone]", Level.VERBOSE);
-
-                            File.Copy(Global.LogFilePath, destinationPath, overwrite: true);
-                            File.Delete(Global.LogFilePath);
                         }
                         else
                         {
@@ -563,12 +559,133 @@ document.getElementById('yesBtn').onclick = function(){
     window.location.href = '/restart';
 };
 document.getElementById('noBtn').onclick = function(){
-    document.getElementById('restart-popup').style.display = 'none';
+    window.location.href = '/finished';
 };
 
 loadModules();
 </script>
 
+</body>
+</html>";
+            }
+
+            private string GetHtmlEULA()
+            {
+                return @"<!DOCTYPE html>
+<html lang=""en"">
+<head>
+    <meta charset=""UTF-8"" />
+    <title>EULA</title>
+    <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"" />
+
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* IE-friendly centering using table-cell */
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-color: #1e1e1e;
+            font-family: Arial, sans-serif;
+            color: #ffffff;
+            display: table;
+            width: 100%;
+        }
+
+        .center-wrapper {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 450px;
+            max-width: 90%;
+            border: 2px solid #4a4a4a;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #2c2c2c;
+            margin: auto;
+            text-align: center;
+        }
+
+        .banner {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin-top: 15px;
+            font-size: 1.2rem;
+        }
+
+        p {
+            margin: 8px 0;
+        }
+
+        /* Button */
+        .btn-settings {
+            background-color: #4caf50;
+            border: none;
+            padding: 12px 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .btn-settings:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div class=""center-wrapper"">
+        <div class=""container"">
+
+            <img class=""banner""
+                 src=""https://raw.githubusercontent.com/megsystem/megsystem/refs/heads/main/banner.png""
+                 alt=""Page Banner"" />
+
+            <h1>End User License Agreement (EULA) 📜</h1>
+            <p>Last Updated: April 7, 2025</p>
+
+            <h2>1. Introduction 👋</h2>
+            <p>
+                Thank you for choosing our software! By downloading, installing, or using this application,
+                you agree to be bound by the terms of this End User License Agreement (""Agreement"").
+                If you do not agree, please do not use the software. 🙅
+            </p>
+
+            <h2>2. License Grant 🔑</h2>
+            <p>
+                We grant you a limited, non-exclusive, non-transferable, revocable license to use the software
+                for personal or commercial purposes, in accordance with this EULA.
+            </p>
+
+            <button class=""btn-settings"" onclick=""window.location.href='/settings'"">
+                Continue to Settings →
+            </button>
+
+        </div>
+    </div>
 </body>
 </html>";
             }
