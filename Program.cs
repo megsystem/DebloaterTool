@@ -279,7 +279,6 @@ namespace DebloaterTool
         {
             var webServer = new SimpleWebServer("http://localhost:8080/", modules);
             Process.Start("http://localhost:8080/");
-            Console.WriteLine("DebloaterTool running at http://localhost:8080/");
             return webServer.Start();
         }
 
@@ -300,7 +299,7 @@ namespace DebloaterTool
             public string Start()
             {
                 listener.Start();
-                Console.WriteLine("Web server started at " + url);
+                Logger.Log("Server running: " + url);
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
 
                 while (true)
