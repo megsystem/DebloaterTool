@@ -109,7 +109,10 @@ namespace DebloaterTool
             File.Copy(Global.LogFilePath, destinationPath, overwrite: true);
             File.Delete(Global.LogFilePath);
 
-            if (autoRestart)
+            bool shouldRestart = autoRestart
+                    || Display.RequestYesOrNo("Do you want to restart to apply changes?");
+
+            if (shouldRestart)
             {
                 string tempPath = Path.Combine(Global.debloatersPath, "DebloaterWelcome.vbs");
                 File.WriteAllText(tempPath, Global.welcome.Replace("[INSTALLPATH]", Global.InstallPath), Encoding.Unicode);
@@ -118,6 +121,15 @@ namespace DebloaterTool
                 Process.Start("shutdown.exe", "-r -t 0");
                 Environment.Exit(0);
             }
+
+            // Wait for user to press Enter
+            Display.DisplayMessage("+---------------------------------------------------------------------------------------------+", ConsoleColor.DarkYellow);
+            Display.DisplayMessage("|  Press ENTER to close this window. Thank you for using our debloater. - @_giovannigiannone  |", ConsoleColor.DarkYellow);
+            Display.DisplayMessage("+---------------------------------------------------------------------------------------------+", ConsoleColor.DarkYellow);
+            Console.ReadKey();
+
+            // End
+            return;
         }
 
         static void GenerateModuleList()
@@ -405,8 +417,9 @@ input[type='checkbox'] { width:16px; height:16px; margin-right:8px; vertical-ali
 button { background:#4caf50; color:#fff; font-weight:bold; border:none; border-radius:6px; padding:10px 20px; font-size:14px; cursor:pointer; margin:5px;}
 button:hover { background:#45a049;}
 #button-container { text-align:center; margin-bottom:15px; }
+
 #loading-overlay {
-    display:none; /* hidden by default */
+    display:none;
     position:fixed;
     top:0; left:0;
     width:100%; height:100%;
@@ -418,9 +431,42 @@ button:hover { background:#45a049;}
     align-items:center;
     z-index:9999;
 }
+
+/* Restart popup */
+#restart-popup {
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.75);
+    justify-content:center;
+    align-items:center;
+    z-index:10000;
+}
+#restart-box {
+    background:#1e1e1e;
+    padding:25px;
+    border-radius:10px;
+    text-align:center;
+    width:300px;
+    box-shadow:0 0 12px rgba(0,0,0,0.6);
+}
+#restart-box h2 { margin-top:0; color:#fff; }
+.popup-btn {
+    margin:10px;
+    padding:10px 20px;
+    cursor:pointer;
+    font-weight:bold;
+    border:none;
+    border-radius:6px;
+    font-size:14px;
+}
+#yesBtn { background:#4caf50; color:#fff; }
+#noBtn { background:#b33a3a; color:#fff; }
 </style>
 </head>
 <body>
+
 <img id='banner' src='https://raw.githubusercontent.com/megsystem/megsystem/refs/heads/main/banner.png' alt='DebloaterTool Banner' />
 
 <h1>DebloaterTool</h1>
@@ -433,20 +479,32 @@ button:hover { background:#45a049;}
 
 <div id='modules'></div>
 
-<!-- Overlay hidden by default -->
 <div id='loading-overlay'>Running modules...</div>
+
+<!-- Restart popup -->
+<div id='restart-popup'>
+    <div id='restart-box'>
+        <h2>Do you want to restart?</h2>
+        <button class='popup-btn' id='yesBtn'>Yes</button>
+        <button class='popup-btn' id='noBtn'>No</button>
+    </div>
+</div>
 
 <script>
 function ajaxGet(url, callback) {
     var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() { if(xhr.readyState==4 && xhr.status==200) callback(xhr.responseText); };
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState==4 && xhr.status==200) callback(xhr.responseText);
+    };
     xhr.open('GET', url,true);
     xhr.send();
 }
 
 function ajaxPost(url, data, callback) {
     var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange=function(){ if(xhr.readyState==4) callback(xhr.responseText); };
+    xhr.onreadystatechange=function(){
+        if(xhr.readyState==4) callback(xhr.responseText);
+    };
     xhr.open('POST', url,true);
     xhr.setRequestHeader('Content-Type','application/json');
     xhr.send(data);
@@ -485,25 +543,32 @@ function deselectAll(){
 function runSelected(){
     var checkboxes=document.getElementById('modules').getElementsByTagName('input');
     var selected=[];
-    for(var i=0;i<checkboxes.length;i++) if(checkboxes[i].checked) selected.push(checkboxes[i].value);
+    for(var i=0;i<checkboxes.length;i++)
+        if(checkboxes[i].checked) selected.push(checkboxes[i].value);
 
-    // Show overlay only now
-    var overlay = document.getElementById('loading-overlay');
-    overlay.style.display = 'flex';
+    // Show loading overlay
+    document.getElementById('loading-overlay').style.display = 'flex';
 
     ajaxPost('/run', JSON.stringify(selected), function(response){
-        // Hide overlay after completion
-        overlay.style.display = 'none';
 
-        // Show confirmation dialog
-        if(confirm('Do you want to restart?')){
-            window.location.href = '/restart';
-        }
+        // Hide loading overlay
+        document.getElementById('loading-overlay').style.display = 'none';
+
+        // Show popup overlay
+        document.getElementById('restart-popup').style.display = 'flex';
     });
 }
 
+document.getElementById('yesBtn').onclick = function(){
+    window.location.href = '/restart';
+};
+document.getElementById('noBtn').onclick = function(){
+    document.getElementById('restart-popup').style.display = 'none';
+};
+
 loadModules();
 </script>
+
 </body>
 </html>";
             }
