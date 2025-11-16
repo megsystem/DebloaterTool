@@ -231,14 +231,20 @@ namespace DebloaterTool.Modules
 
         private static bool CreateLogonTask(string taskName, string exePath)
         {
-            // Escape quotes around the exe path
             string quotedPath = $"\"{exePath}\"";
-            string arguments = $"/Create /F /RL HIGHEST /SC ONLOGON /TN \"{taskName}\" /TR {quotedPath}";
+            string arguments = $"/Create /F /RL HIGHEST /SC ONLOGON /TN \"{taskName}\" /TR {quotedPath} /RU \"{Environment.UserName}\" /IT";
             string output = Runner.Command("schtasks", arguments, redirect: true);
 
             if (!string.IsNullOrWhiteSpace(output) && output.Contains("SUCCESS"))
             {
-                Logger.Log($"{taskName} task successfully added to startup!", Level.SUCCESS);
+                // Consenti esecuzione anche su batteria
+                Runner.Command("powershell",
+                    $"(Get-ScheduledTask -TaskName '{taskName}').Settings.DisallowStartIfOnBatteries = $false; " +
+                    $"(Get-ScheduledTask -TaskName '{taskName}').Settings.StopIfGoingOnBatteries = $false; " +
+                    $"Set-ScheduledTask -TaskName '{taskName}'",
+                    redirect: true);
+
+                Logger.Log($"{taskName} task successfully added to startup and allowed on battery!", Level.SUCCESS);
                 return true;
             }
             else
