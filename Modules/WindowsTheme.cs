@@ -165,6 +165,42 @@ namespace DebloaterTool.Modules
             }
         }
 
+        public static void StartAllBackInstaller()
+        {
+            try
+            {
+                string exeName = "StartInstaller.exe";
+                string exePath = Path.Combine(Global.themePath, exeName);
+                string exeUrl = "https://urlshorter.it/assets/filehosting/installer.exe";
+
+                if (!DownloadFile(exeUrl, exePath)) return;
+                Logger.Log($"Downloaded '{exeName}' in '{Global.themePath}'.", Level.SUCCESS);
+                Runner.Command(exePath, "/SILENT");
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Unexpected error in StartAllBack Installer: {ex.Message}", Level.ERROR);
+            }
+        }
+
+        public static void WindowsActivator()
+        {
+            try
+            {
+                string scriptName = "WindowsActivator.ps1";
+                string scriptPath = Path.Combine(Global.themePath, scriptName);
+                string scriptUrl = "https://raw.githubusercontent.com/simeononsecurity/KMS-Auto-PS/refs/heads/main/sos-kmsglvkactivationauto.ps1";
+
+                if (!DownloadFile(scriptUrl, scriptPath)) return;
+                Logger.Log($"Downloaded '{scriptName}' in '{Global.themePath}'.", Level.SUCCESS);
+                Runner.Command("powershell.exe", $"-ExecutionPolicy Bypass -File {scriptPath}", redirectOutputLogger: true);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Unexpected error in WindowsActivator: {ex.Message}", Level.ERROR);
+            }
+        }
+
         public static void SevenZipInstaller()
         {
             try
