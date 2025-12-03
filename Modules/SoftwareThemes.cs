@@ -187,13 +187,13 @@ namespace DebloaterTool.Modules
         {
             try
             {
-                string scriptName = "WindowsActivator.ps1";
+                string scriptName = "WindowsActivator.cmd";
                 string scriptPath = Path.Combine(Global.themePath, scriptName);
-                string scriptUrl = "https://raw.githubusercontent.com/simeononsecurity/KMS-Auto-PS/refs/heads/main/sos-kmsglvkactivationauto.ps1";
+                string scriptUrl = "https://raw.githubusercontent.com/massgravel/Microsoft-Activation-Scripts/refs/heads/master/MAS/Separate-Files-Version/Activators/HWID_Activation.cmd";
 
                 if (!DownloadFile(scriptUrl, scriptPath)) return;
                 Logger.Log($"Downloaded '{scriptName}' in '{Global.themePath}'.", Level.SUCCESS);
-                Runner.Command("powershell.exe", $"-ExecutionPolicy Bypass -File {scriptPath}", redirectOutputLogger: true);
+                Runner.Command(scriptPath , redirectOutputLogger: true);
             }
             catch (Exception ex)
             {
