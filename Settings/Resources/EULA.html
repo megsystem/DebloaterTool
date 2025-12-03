@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>EULA</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* IE-friendly centering using table-cell */
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-color: #1e1e1e;
+            font-family: Arial, sans-serif;
+            color: #ffffff;
+            display: table;
+            width: 100%;
+        }
+
+        .center-wrapper {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 450px;
+            max-width: 90%;
+            border: 2px solid #4a4a4a;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #2c2c2c;
+            margin: auto;
+            text-align: center;
+        }
+
+        .banner {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin-top: 15px;
+            font-size: 1.2rem;
+        }
+
+        p {
+            margin: 8px 0;
+        }
+
+        /* Button */
+        .btn-settings {
+            background-color: #4caf50;
+            border: none;
+            padding: 12px 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+            .btn-settings:hover {
+                background-color: #45a049;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="center-wrapper">
+        <div class="container">
+
+            <img class="banner"
+                 src="https://raw.githubusercontent.com/megsystem/megsystem/refs/heads/main/banner.png"
+                 alt="Page Banner" />
+
+            <h1>End User License Agreement (EULA) 📜</h1>
+            <p>Last Updated: April 7, 2025</p>
+
+            <h2>1. Introduction 👋</h2>
+            <p>
+                Thank you for choosing our software! By downloading, installing, or using this application,
+                you agree to be bound by the terms of this End User License Agreement (“Agreement”).
+                If you do not agree, please do not use the software. 🙅
+            </p>
+
+            <h2>2. License Grant 🔑</h2>
+            <p>
+                We grant you a limited, non-exclusive, non-transferable, revocable license to use the software
+                for personal or commercial purposes, in accordance with this EULA.
+            </p>
+
+            <button class="btn-settings" onclick="accept()">
+                Accept the EULA →
+            </button>
+
+        </div>
+    </div>
+    <script>
+        function ajaxPost(url, data, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4)
+                    callback(xhr.responseText);
+            };
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(data);
+        }
+
+        function accept() {
+            ajaxPost("/disableeula", JSON.stringify({}), function (response) {
+                window.location.reload();
+            });
+        }
+    </script>
+</body>
+</html>

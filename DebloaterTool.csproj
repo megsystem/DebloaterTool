@@ -69,21 +69,21 @@
     <Compile Include="Helpers\Zip.cs" />
     <Compile Include="Modules\DebloaterTools.cs" />
     <Compile Include="Modules\DataCollection.cs" />
-    <Compile Include="Modules\WindowsTheme.cs" />
+    <Compile Include="Modules\SoftwareThemes.cs" />
     <Compile Include="Modules\RemoveUnnecessary.cs" />
     <Compile Include="Modules\SecurityPerformance.cs" />
     <Compile Include="Modules\BrowserDownloader.cs" />
     <Compile Include="Modules\CustomWallpapers.cs" />
     <Compile Include="Modules\WinCustomization.cs" />
-    <Compile Include="Modules\WinDefender.cs" />
-    <Compile Include="Modules\WinStore.cs" />
-    <Compile Include="Modules\WinUpdate.cs" />
+    <Compile Include="Modules\WinComponent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ModuleList.txt" />
     <Content Include="Icon.ico" />
+    <Content Include="Settings\Resources\EULA.html" />
+    <Content Include="Settings\Resources\SETTINGS.html" />
     <Content Include="Settings\Resources\welcome.vbs" />
   </ItemGroup>
   <ItemGroup>

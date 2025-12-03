@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace DebloaterTool.Modules
 {
-    internal class WindowsTheme
+    internal class SoftwareThemes
     {
         public static void ExplorerTheme()
         {

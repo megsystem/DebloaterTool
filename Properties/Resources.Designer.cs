@@ -71,6 +71,69 @@ namespace DebloaterTool.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html lang=&quot;&quot; en&quot;&quot;&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;&quot; UTF-8&quot;&quot; /&gt;
+        ///    &lt;title&gt;EULA&lt;/title&gt;
+        ///    &lt;meta http-equiv=&quot;&quot; X-UA-Compatible&quot;&quot; content=&quot;&quot; IE=edge&quot;&quot; /&gt;
+        ///
+        ///    &lt;style&gt;
+        ///        /* Reset */
+        ///        * {
+        ///            margin: 0;
+        ///            padding: 0;
+        ///            box-sizing: border-box;
+        ///        }
+        ///
+        ///        /* IE-friendly centering using table-cell */
+        ///        html, body {
+        ///            height: 100%;
+        ///        }
+        ///
+        ///        body {
+        ///            background-color: #1e1e1e;
+        ///            font-fami [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string EULA {
+            get {
+                return ResourceManager.GetString("EULA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;html lang=&apos;en&apos;&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&apos;UTF-8&apos;&gt;
+        ///    &lt;title&gt;DebloaterTool&lt;/title&gt;
+        ///    &lt;style&gt;
+        ///        body {
+        ///            margin: 0;
+        ///            font-family: Arial,sans-serif;
+        ///            background: #121212;
+        ///            color: #e0e0e0;
+        ///            padding: 20px;
+        ///            text-align: center;
+        ///        }
+        ///
+        ///        img#banner {
+        ///            max-width: 100%;
+        ///            height: auto;
+        ///            border-radius: 8px;
+        ///            margin-bottom: 20px;
+        ///        }
+        ///
+        ///        h1 {
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SETTINGS {
+            get {
+                return ResourceManager.GetString("SETTINGS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set fso = CreateObject(&quot;Scripting.FileSystemObject&quot;)
         ///Set shell = CreateObject(&quot;WScript.Shell&quot;)
         ///

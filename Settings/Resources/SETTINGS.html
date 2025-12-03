@@ -1,0 +1,410 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DebloaterTool</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: #e0e0e0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        img#banner {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        #modules {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+            text-align: left;
+        }
+
+        .module-card {
+            background: #1e1e1e;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+            display: block;
+            cursor: pointer;
+        }
+
+        .module-card:hover {
+            background: #2a2a2a;
+        }
+
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        button {
+            background: #4caf50;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        #button-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .group-box {
+            background: #1e1e1e;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+        }
+
+        .group-header {
+            padding: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            background: #252525;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .group-header:hover {
+            background: #2f2f2f;
+            color: #4caf50;
+        }
+
+        .group-arrow {
+            font-size: 18px;
+            transition: transform 0.25s ease;
+        }
+
+        .group-content {
+            padding: 10px 15px;
+            display: block;
+        }
+
+        #loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #restart-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        #restart-box {
+            background: #1e1e1e;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.6);
+        }
+
+        #restart-box h2 {
+            margin-top: 0;
+            color: #fff;
+        }
+
+        .popup-btn {
+            margin: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        #yesBtn {
+            background: #4caf50;
+            color: #fff;
+        }
+
+        #noBtn {
+            background: #b33a3a;
+            color: #fff;
+        }
+
+        /* Modern scroll-to-top button */
+        #scrollTopBtn {
+            display: none; /* hidden by default */
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 9999;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            border: none;
+            outline: none;
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        #scrollTopBtn:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #45a049, #1b5e20);
+        }
+    </style>
+</head>
+
+<body>
+
+    <img id="banner" src="https://raw.githubusercontent.com/megsystem/megsystem/refs/heads/main/banner.png" alt="DebloaterTool Banner">
+
+    <h1>DebloaterTool</h1>
+
+    <div id="button-container">
+        <button onclick="selectAll()">Select All</button>
+        <button onclick="deselectAll()">Deselect All</button>
+        <button onclick="runSelected()">Run Debloater</button>
+        <button onclick="killserver()" style="background: #af4c4c;">Kill Server</button>
+    </div>
+
+    <div id="modules"></div>
+
+    <div id="loading-overlay">Running modules...</div>
+
+    <!-- Restart popup -->
+    <div id="restart-popup">
+        <div id="restart-box">
+            <h2>Do you want to restart?</h2>
+            <button class="popup-btn" id="yesBtn">Yes</button>
+            <button class="popup-btn" id="noBtn">No</button>
+        </div>
+    </div>
+
+    <button id="scrollTopBtn" title="Go to top">↑</button>
+
+    <script>
+        // Get the button
+        var scrollBtn = document.getElementById("scrollTopBtn");
+
+        // Show button when scrolling down
+        window.onscroll = function () {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                scrollBtn.style.display = "block";
+            } else {
+                scrollBtn.style.display = "none";
+            }
+        };
+
+        // Scroll to top on click
+        scrollBtn.onclick = function () {
+            // For older browsers (IE)
+            var scrollToTop = window.setInterval(function () {
+                var pos = document.documentElement.scrollTop || document.body.scrollTop;
+                if (pos > 0) {
+                    window.scrollTo(0, pos - 90); // scroll up by 90px
+                } else {
+                    window.clearInterval(scrollToTop);
+                }
+            }, 10); // adjust speed here
+        };
+
+        function ajaxGet(url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200)
+                    callback(xhr.responseText);
+            };
+            xhr.open("GET", url, true);
+            xhr.send();
+        }
+
+        function ajaxPost(url, data, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4)
+                    callback(xhr.responseText);
+            };
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(data);
+        }
+
+        function loadModules() {
+            ajaxGet("/modules", function (response) {
+                var modules = JSON.parse(response);
+                var container = document.getElementById("modules");
+                container.innerHTML = "";
+
+                var groups = {};
+
+                modules.forEach(function (m) {
+                    var category = m.Name.split(".")[0];
+                    if (!groups[category]) groups[category] = [];
+                    groups[category].push(m);
+                });
+
+                for (var category in groups) {
+                    var groupDiv = document.createElement("div");
+                    groupDiv.className = "group-box";
+
+                    var header = document.createElement("div");
+                    header.className = "group-header";
+
+                    var titleSpan = document.createElement("span");
+                    titleSpan.innerText = category;
+
+                    var arrow = document.createElement("span");
+                    arrow.className = "group-arrow";
+                    arrow.innerHTML = "&#9654;";
+                    arrow.style.transform = "rotate(90deg)";
+
+                    header.appendChild(titleSpan);
+                    header.appendChild(arrow);
+
+                    var content = document.createElement("div");
+                    content.className = "group-content";
+
+                    groups[category].forEach(function (m) {
+                        var cleanName = m.Name.replace(category + ".", "");
+
+                        var label = document.createElement("label");
+                        label.className = "module-card";
+
+                        var checkbox = document.createElement("input");
+                        checkbox.type = "checkbox";
+                        checkbox.value = m.Name;
+                        if (m.Default) checkbox.checked = true;
+
+                        label.appendChild(checkbox);
+                        label.appendChild(document.createTextNode(cleanName + " - " + m.Description));
+
+                        content.appendChild(label);
+                    });
+
+                    header.onclick = function () {
+                        var c = this.nextElementSibling;
+                        var a = this.querySelector(".group-arrow");
+
+                        if (c.style.display === "none") {
+                            c.style.display = "block";
+                            a.style.transform = "rotate(90deg)";
+                        } else {
+                            c.style.display = "none";
+                            a.style.transform = "rotate(0deg)";
+                        }
+                    };
+
+                    groupDiv.appendChild(header);
+                    groupDiv.appendChild(content);
+                    container.appendChild(groupDiv);
+                }
+            });
+        }
+
+        function selectAll() {
+            var boxes = document.getElementById("modules").getElementsByTagName("input");
+            for (var i = 0; i < boxes.length; i++)
+                boxes[i].checked = true;
+        }
+
+        function killserver() {
+            ajaxPost("/kill", JSON.stringify({}), function (response) {
+                document.body.innerHTML = "<h2>Server has been stopped. You can safely close this tab.</h2>";
+            });
+        }
+
+        function deselectAll() {
+            var boxes = document.getElementById("modules").getElementsByTagName("input");
+            for (var i = 0; i < boxes.length; i++)
+                boxes[i].checked = false;
+        }
+
+        function runSelected() {
+            var boxes = document.getElementById("modules").getElementsByTagName("input");
+            var selected = [];
+
+            for (var i = 0; i < boxes.length; i++)
+                if (boxes[i].checked)
+                    selected.push(boxes[i].value);
+
+            document.getElementById("loading-overlay").style.display = "flex";
+
+            ajaxPost("/run", JSON.stringify(selected), function () {
+                document.getElementById("loading-overlay").style.display = "none";
+                document.getElementById("restart-popup").style.display = "flex";
+            });
+        }
+
+        document.getElementById("yesBtn").onclick = function () {
+            ajaxPost("/restart", JSON.stringify({}), function (response) {
+                document.getElementById("restart-popup").style.display = "none";
+            });
+        };
+
+        document.getElementById("noBtn").onclick = function () {
+            ajaxPost("/log", JSON.stringify({}), function (response) {
+                // Clear the entire page
+                document.body.innerHTML = "";
+
+                // Create a container for the logs
+                var container = document.createElement("pre");
+                container.style.whiteSpace = "pre-wrap";
+                container.style.padding = "20px";
+                container.style.background = "#1e1e1e";
+                container.style.color = "#e0e0e0";
+                container.style.overflow = "auto";
+                container.style.fontFamily = "monospace";
+                container.textContent = response;
+
+                document.body.appendChild(container);
+            });
+        };
+
+        loadModules();
+    </script>
+</body>
+</html>

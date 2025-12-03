@@ -43,7 +43,6 @@ namespace DebloaterTool
                 Console.WriteLine("Usage:");
                 Console.WriteLine("  [PATH]            Loads custom modules listed in the specified text file.");
                 Console.WriteLine("  --skipEULA        Skips the EULA prompt - only in the console");
-                Console.WriteLine("  --autoUAC         Automatically elevates privileges if needed.");
                 Console.WriteLine("  --autoRestart     Automatically restarts the computer after debloating.");
                 Console.WriteLine("  --fullDebloat     Performs a full debloat without selecting modules (all modules will be run).");
                 Console.WriteLine("  --help            Displays this help message.");
@@ -54,22 +53,13 @@ namespace DebloaterTool
             if (!Admins.IsAdministrator())
             {
                 Logger.Log("Not runned as administrator!", Level.CRITICAL);
-
-                // Ask only in interactive mode; quit if they decline.
-                if (!autoUAC && !Display.RequestYesOrNo("Do you want to run as administrator?"))
-                {
-                    Logger.Log("User declined elevation in interactive mode. Exiting application.");
-                    Environment.Exit(0);
-                }
-
-                // At this point we’re either in silent mode or the user said “yes”
                 Logger.Log("Restarting application with administrator privileges.");
                 Admins.RestartAsAdmin(args);
             }
 
             InitializeFolders();
 
-            string result = null;
+            ApiResponse result = new ApiResponse();
             var modules = ModuleList.GetAllModules().ToList();
 
             if (fullDebloat)
@@ -87,6 +77,8 @@ namespace DebloaterTool
                 result = StartWebInterface(modules);
             }
 
+            if (result.status == "kill") return;
+
             string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
             string logFileName = $"DebloaterTool_{dateTime}.log";
             string destinationPath = Path.Combine(Global.logsPath, logFileName);
@@ -98,17 +90,17 @@ namespace DebloaterTool
             File.Copy(Global.LogFilePath, destinationPath, overwrite: true);
             File.Delete(Global.LogFilePath);
 
-            if (result.Contains("finished")) return;
+            string tempPath = Path.Combine(Global.debloatersPath, "DebloaterWelcome.vbs");
+            File.WriteAllText(tempPath, Global.welcome.Replace("[INSTALLPATH]", Global.InstallPath), Encoding.Unicode);
+            Process.Start("wscript.exe", $"\"{tempPath}\"")?.WaitForExit();
 
-            bool shouldRestart = autoRestart || result.Contains("enabledrestart")
+            if (!result.restart) return;
+
+            bool shouldRestart = autoRestart || result.restart
                     || Display.RequestYesOrNo("Do you want to restart to apply changes?");
 
             if (shouldRestart)
             {
-                string tempPath = Path.Combine(Global.debloatersPath, "DebloaterWelcome.vbs");
-                File.WriteAllText(tempPath, Global.welcome.Replace("[INSTALLPATH]", Global.InstallPath), Encoding.Unicode);
-
-                Process.Start("wscript.exe", $"\"{tempPath}\"")?.WaitForExit();
                 Process.Start("shutdown.exe", "-r -t 0");
                 Environment.Exit(0);
             }
@@ -275,11 +267,17 @@ namespace DebloaterTool
             Logger.Log("+=====================================+", Level.VERBOSE);
         }
 
-        static string StartWebInterface(List<TweakModule> modules)
+        static ApiResponse StartWebInterface(List<TweakModule> modules)
         {
             var webServer = new SimpleWebServer("http://localhost:8080/", modules);
             Process.Start("http://localhost:8080/");
             return webServer.Start();
+        }
+
+        public class ApiResponse
+        {
+            public string status { get; set; }
+            public bool restart { get; set; }
         }
 
         public class SimpleWebServer
@@ -296,11 +294,13 @@ namespace DebloaterTool
                 listener.Prefixes.Add(url);
             }
 
-            public string Start()
+            public ApiResponse Start()
             {
                 listener.Start();
                 Logger.Log("Server running: " + url);
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
+                ApiResponse responseObj = new ApiResponse();
+                bool eula = true;
 
                 while (true)
                 {
@@ -312,11 +312,14 @@ namespace DebloaterTool
                     {
                         if (req.Url.AbsolutePath == "/")
                         {
-                            Respond(resp, GetHtmlEULA(), "text/html");
+                            if (eula)
+                                Respond(resp, Properties.Resources.EULA, "text/html");
+                            else
+                                Respond(resp, Properties.Resources.SETTINGS, "text/html");
                         }
-                        else if(req.Url.AbsolutePath == "/settings")
+                        else if(req.Url.AbsolutePath == "/disableeula")
                         {
-                            Respond(resp, GetHtmlPage(), "text/html");
+                            eula = false;
                         }
                         else if (req.Url.AbsolutePath == "/modules")
                         {
@@ -331,14 +334,22 @@ namespace DebloaterTool
                         }
                         else if (req.Url.AbsolutePath == "/restart")
                         {
-                            Respond(resp, "Finish - Restart Enabled", "text/plain");
-                            return "enabledrestart";
+                            responseObj.status = "finished";
+                            responseObj.restart = true;
+                            return responseObj;
                         }
-                        else if (req.Url.AbsolutePath == "/finished")
+                        else if (req.Url.AbsolutePath == "/log")
                         {
                             string data = File.ReadAllText(Global.LogFilePath);
-                            Respond(resp, $"Finished - Logs:\n{data}", "text/plain");
-                            return "finished";
+                            Respond(resp, data, "text/plain");
+                            responseObj.status = "finished";
+                            responseObj.restart = false;
+                            return responseObj;
+                        }
+                        else if (req.Url.AbsolutePath == "/kill")
+                        {
+                            responseObj.status = "kill";
+                            return responseObj;
                         }
                         else if (req.Url.AbsolutePath == "/run")
                         {
@@ -391,302 +402,6 @@ namespace DebloaterTool
                 resp.ContentType = contentType;
                 resp.ContentLength64 = data.Length;
                 resp.OutputStream.Write(data, 0, data.Length);
-            }
-
-            private string GetHtmlPage()
-            {
-                return @"
-<!DOCTYPE html>
-<html lang='en'>
-<head>
-<meta charset='UTF-8'>
-<title>DebloaterTool</title>
-<style>
-body { margin:0; font-family:Arial,sans-serif; background:#121212; color:#e0e0e0; padding:20px; text-align:center;}
-img#banner { max-width:100%; height:auto; border-radius:8px; margin-bottom:20px; }
-h1 { font-weight:bold; margin-bottom:20px;}
-#modules { width:100%; max-width:800px; margin:0 auto 20px auto; text-align:left;}
-.module-card { background:#1e1e1e; padding:10px 15px; border-radius:8px; box-shadow:0 3px 10px rgba(0,0,0,0.5); margin-bottom:10px; display:block; cursor:pointer;}
-.module-card:hover { background:#2a2a2a; }
-input[type='checkbox'] { width:16px; height:16px; margin-right:8px; vertical-align:middle; }
-button { background:#4caf50; color:#fff; font-weight:bold; border:none; border-radius:6px; padding:10px 20px; font-size:14px; cursor:pointer; margin:5px;}
-button:hover { background:#45a049;}
-#button-container { text-align:center; margin-bottom:15px; }
-
-#loading-overlay {
-    display:none;
-    position:fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background: rgba(0,0,0,0.85);
-    color:#fff;
-    font-size:24px;
-    font-weight:bold;
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-}
-
-/* Restart popup */
-#restart-popup {
-    display:none;
-    position:fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background: rgba(0,0,0,0.75);
-    justify-content:center;
-    align-items:center;
-    z-index:10000;
-}
-#restart-box {
-    background:#1e1e1e;
-    padding:25px;
-    border-radius:10px;
-    text-align:center;
-    width:300px;
-    box-shadow:0 0 12px rgba(0,0,0,0.6);
-}
-#restart-box h2 { margin-top:0; color:#fff; }
-.popup-btn {
-    margin:10px;
-    padding:10px 20px;
-    cursor:pointer;
-    font-weight:bold;
-    border:none;
-    border-radius:6px;
-    font-size:14px;
-}
-#yesBtn { background:#4caf50; color:#fff; }
-#noBtn { background:#b33a3a; color:#fff; }
-</style>
-</head>
-<body>
-
-<img id='banner' src='https://raw.githubusercontent.com/megsystem/megsystem/refs/heads/main/banner.png' alt='DebloaterTool Banner' />
-
-<h1>DebloaterTool</h1>
-
-<div id='button-container'>
-    <button onclick='selectAll()'>Select All</button>
-    <button onclick='deselectAll()'>Deselect All</button>
-    <button onclick='runSelected()'>Run Selected Modules</button>
-</div>
-
-<div id='modules'></div>
-
-<div id='loading-overlay'>Running modules...</div>
-
-<!-- Restart popup -->
-<div id='restart-popup'>
-    <div id='restart-box'>
-        <h2>Do you want to restart?</h2>
-        <button class='popup-btn' id='yesBtn'>Yes</button>
-        <button class='popup-btn' id='noBtn'>No</button>
-    </div>
-</div>
-
-<script>
-function ajaxGet(url, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-        if(xhr.readyState==4 && xhr.status==200) callback(xhr.responseText);
-    };
-    xhr.open('GET', url,true);
-    xhr.send();
-}
-
-function ajaxPost(url, data, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange=function(){
-        if(xhr.readyState==4) callback(xhr.responseText);
-    };
-    xhr.open('POST', url,true);
-    xhr.setRequestHeader('Content-Type','application/json');
-    xhr.send(data);
-}
-
-function loadModules(){
-    ajaxGet('/modules', function(response){
-        var modules = JSON.parse(response);
-        var container=document.getElementById('modules');
-        container.innerHTML='';
-        for(var i=0;i<modules.length;i++){
-            var m = modules[i];
-            var label=document.createElement('label');
-            label.className='module-card';
-            var checkbox=document.createElement('input');
-            checkbox.type='checkbox';
-            checkbox.value=m.Name;
-            if(m.Default) checkbox.checked=true;
-            label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(m.Name+' - '+m.Description));
-            container.appendChild(label);
-        }
-    });
-}
-
-function selectAll(){
-    var checkboxes=document.getElementById('modules').getElementsByTagName('input');
-    for(var i=0;i<checkboxes.length;i++){ checkboxes[i].checked=true; }
-}
-
-function deselectAll(){
-    var checkboxes=document.getElementById('modules').getElementsByTagName('input');
-    for(var i=0;i<checkboxes.length;i++){ checkboxes[i].checked=false; }
-}
-
-function runSelected(){
-    var checkboxes=document.getElementById('modules').getElementsByTagName('input');
-    var selected=[];
-    for(var i=0;i<checkboxes.length;i++)
-        if(checkboxes[i].checked) selected.push(checkboxes[i].value);
-
-    // Show loading overlay
-    document.getElementById('loading-overlay').style.display = 'flex';
-
-    ajaxPost('/run', JSON.stringify(selected), function(response){
-
-        // Hide loading overlay
-        document.getElementById('loading-overlay').style.display = 'none';
-
-        // Show popup overlay
-        document.getElementById('restart-popup').style.display = 'flex';
-    });
-}
-
-document.getElementById('yesBtn').onclick = function(){
-    window.location.href = '/restart';
-};
-document.getElementById('noBtn').onclick = function(){
-    window.location.href = '/finished';
-};
-
-loadModules();
-</script>
-
-</body>
-</html>";
-            }
-
-            private string GetHtmlEULA()
-            {
-                return @"<!DOCTYPE html>
-<html lang=""en"">
-<head>
-    <meta charset=""UTF-8"" />
-    <title>EULA</title>
-    <meta http-equiv=""X-UA-Compatible"" content=""IE=edge"" />
-
-    <style>
-        /* Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* IE-friendly centering using table-cell */
-        html, body {
-            height: 100%;
-        }
-
-        body {
-            background-color: #1e1e1e;
-            font-family: Arial, sans-serif;
-            color: #ffffff;
-            display: table;
-            width: 100%;
-        }
-
-        .center-wrapper {
-            display: table-cell;
-            vertical-align: middle;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .container {
-            width: 450px;
-            max-width: 90%;
-            border: 2px solid #4a4a4a;
-            border-radius: 5px;
-            padding: 20px;
-            background-color: #2c2c2c;
-            margin: auto;
-            text-align: center;
-        }
-
-        .banner {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-
-        h2 {
-            margin-top: 15px;
-            font-size: 1.2rem;
-        }
-
-        p {
-            margin: 8px 0;
-        }
-
-        /* Button */
-        .btn-settings {
-            background-color: #4caf50;
-            border: none;
-            padding: 12px 20px;
-            color: white;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: bold;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-
-        .btn-settings:hover {
-            background-color: #45a049;
-        }
-    </style>
-</head>
-
-<body>
-    <div class=""center-wrapper"">
-        <div class=""container"">
-
-            <img class=""banner""
-                 src=""https://raw.githubusercontent.com/megsystem/megsystem/refs/heads/main/banner.png""
-                 alt=""Page Banner"" />
-
-            <h1>End User License Agreement (EULA) 📜</h1>
-            <p>Last Updated: April 7, 2025</p>
-
-            <h2>1. Introduction 👋</h2>
-            <p>
-                Thank you for choosing our software! By downloading, installing, or using this application,
-                you agree to be bound by the terms of this End User License Agreement (""Agreement"").
-                If you do not agree, please do not use the software. 🙅
-            </p>
-
-            <h2>2. License Grant 🔑</h2>
-            <p>
-                We grant you a limited, non-exclusive, non-transferable, revocable license to use the software
-                for personal or commercial purposes, in accordance with this EULA.
-            </p>
-
-            <button class=""btn-settings"" onclick=""window.location.href='/settings'"">
-                Continue to Settings →
-            </button>
-
-        </div>
-    </div>
-</body>
-</html>";
             }
         }
     }
