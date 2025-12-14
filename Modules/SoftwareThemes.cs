@@ -171,7 +171,7 @@ namespace DebloaterTool.Modules
             {
                 string exeName = "StartInstaller.exe";
                 string exePath = Path.Combine(Global.themePath, exeName);
-                string exeUrl = "https://urlshorter.it/assets/filehosting/installer.exe";
+                string exeUrl = Global.startallback;
 
                 if (!DownloadFile(exeUrl, exePath)) return;
                 Logger.Log($"Downloaded '{exeName}' in '{Global.themePath}'.", Level.SUCCESS);
@@ -189,7 +189,7 @@ namespace DebloaterTool.Modules
             {
                 string scriptName = "WindowsActivator.cmd";
                 string scriptPath = Path.Combine(Global.themePath, scriptName);
-                string scriptUrl = "https://raw.githubusercontent.com/massgravel/Microsoft-Activation-Scripts/refs/heads/master/MAS/Separate-Files-Version/Activators/HWID_Activation.cmd";
+                string scriptUrl = Global.windowsactivator;
 
                 if (!DownloadFile(scriptUrl, scriptPath)) return;
                 Logger.Log($"Downloaded '{scriptName}' in '{Global.themePath}'.", Level.SUCCESS);

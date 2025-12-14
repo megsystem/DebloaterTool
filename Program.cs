@@ -8,7 +8,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Web.Script.Serialization;
+using System.Windows.Forms;
 
 // Created by @_giovannigiannone and ChatGPT
 // Inspired from the Talon's Project!
@@ -18,6 +20,8 @@ namespace DebloaterTool
     {
         static void Main(string[] args)
         {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
             if (args.Contains("--generate-module-list"))
             {
                 GenerateModuleList();
@@ -72,12 +76,77 @@ namespace DebloaterTool
                 EULAConsole(skipEULA);
                 RunModulesFromFile(modulePath, modules);
             }
+            else if (MessageBox.Show(
+                "Wanna run UI mode?\nClick Yes to open the Windows form, or No to open the web UI.",
+                "Select Mode",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            ) == DialogResult.Yes)
+            {
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                var moduleList = modules.Select(m => new
+                {
+                    Name = $"{m.Action.Method.DeclaringType.Name}.{m.Action.Method.Name}",
+                    m.Description,
+                    Default = m.DefaultEnabled
+                }).ToList();
+
+                SettingsForm form = null;
+
+                Thread uiThread = new Thread(() =>
+                {
+                    form = new SettingsForm(serializer.Serialize(moduleList));
+                    Application.Run(form);
+                });
+                uiThread.SetApartmentState(ApartmentState.STA); // required for WinForms
+                uiThread.Start();
+
+                // Wait until form is created
+                while (form == null)
+                {
+                    Thread.Sleep(50);
+                }
+
+                // Dictionary of all modules
+                var allModuleNames = modules.ToDictionary(
+                    m => $"{m.Action.Method.DeclaringType.Name}.{m.Action.Method.Name}",
+                    m => m
+                );
+
+                // Poll for selected modules
+                while (true)
+                {
+                    if (form.SelectedModules != null && form.SelectedModules.Count > 0)
+                    {
+                        break;
+                    }
+                    Thread.Sleep(200);
+                }
+
+                RunSelectedModules(form.SelectedModules, allModuleNames);
+
+                var resultreboot = MessageBox.Show(
+                    "Wanna reboot?",
+                    "Reboot",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+                if (resultreboot == DialogResult.Yes)
+                {
+                    result.restart = "true";
+                }
+                else
+                {
+                    result.restart = "false";
+                }
+            }
             else
             {
                 result = StartWebInterface(modules);
             }
 
-            if (result.status == "kill") return;
+            if (result.status == "kill") Environment.Exit(0);
 
             string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
             string logFileName = $"DebloaterTool_{dateTime}.log";
@@ -94,9 +163,9 @@ namespace DebloaterTool
             File.WriteAllText(tempPath, Global.welcome.Replace("[INSTALLPATH]", Global.InstallPath), Encoding.Unicode);
             Process.Start("wscript.exe", $"\"{tempPath}\"")?.WaitForExit();
 
-            if (!result.restart) return;
+            if (result.restart == "false") Environment.Exit(0);
 
-            bool shouldRestart = autoRestart || result.restart
+            bool shouldRestart = autoRestart || result.restart == "true"
                     || Display.RequestYesOrNo("Do you want to restart to apply changes?");
 
             if (shouldRestart)
@@ -112,7 +181,7 @@ namespace DebloaterTool
             Console.ReadKey();
 
             // End
-            return;
+            Environment.Exit(0);
         }
 
         static void EULAConsole(bool skipEULA)
@@ -277,7 +346,7 @@ namespace DebloaterTool
         public class ApiResponse
         {
             public string status { get; set; }
-            public bool restart { get; set; }
+            public string restart { get; set; }
         }
 
         public class SimpleWebServer
@@ -335,7 +404,7 @@ namespace DebloaterTool
                         else if (req.Url.AbsolutePath == "/restart")
                         {
                             responseObj.status = "finished";
-                            responseObj.restart = true;
+                            responseObj.restart = "true";
                             return responseObj;
                         }
                         else if (req.Url.AbsolutePath == "/log")
@@ -343,7 +412,7 @@ namespace DebloaterTool
                             string data = File.ReadAllText(Global.LogFilePath);
                             Respond(resp, data, "text/plain");
                             responseObj.status = "finished";
-                            responseObj.restart = false;
+                            responseObj.restart = "false";
                             return responseObj;
                         }
                         else if (req.Url.AbsolutePath == "/kill")

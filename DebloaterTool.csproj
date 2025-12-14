@@ -38,7 +38,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,6 +48,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\EULAForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EULAForm.Designer.cs">
+      <DependentUpon>EULAForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SettingsForm.Designer.cs">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\Internet.cs" />
     <Compile Include="Helpers\Tweakers\TweakRegistry.cs" />
     <Compile Include="Helpers\Tweakers\TweakModule.cs" />
@@ -102,6 +116,12 @@
     <None Include="Settings\Resources\christitus.json" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\EULAForm.resx">
+      <DependentUpon>EULAForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SettingsForm.resx">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
