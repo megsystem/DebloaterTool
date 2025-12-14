@@ -160,7 +160,7 @@ namespace DebloaterTool
             File.WriteAllText(tempPath, Global.welcome.Replace("[INSTALLPATH]", Global.InstallPath), Encoding.Unicode);
             Process.Start("wscript.exe", $"\"{tempPath}\"")?.WaitForExit();
 
-            if (result.restart == "false") Environment.Exit(0);
+            if (result.restart == "false") return;
 
             bool shouldRestart = autoRestart || result.restart == "true"
                     || Display.RequestYesOrNo("Do you want to restart to apply changes?");
