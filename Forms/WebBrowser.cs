@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace DebloaterTool
@@ -19,6 +15,14 @@ namespace DebloaterTool
         private void Local_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
+        }
+
+        private void winFormButton_click(object sender, EventArgs e)
+        {
+            string exePath = Assembly.GetExecutingAssembly().Location;
+            string args = "--winform";
+            Process.Start(exePath, args);
+            Environment.Exit(0);
         }
     }
 }

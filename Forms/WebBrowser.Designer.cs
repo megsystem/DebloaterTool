@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
+            this.winFormButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // webBrowser1
@@ -41,15 +42,32 @@
             this.webBrowser1.TabIndex = 0;
             this.webBrowser1.Url = new System.Uri("http://localhost:8080/", System.UriKind.Absolute);
             // 
-            // Local
+            // winFormButton
+            // 
+            this.winFormButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.winFormButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
+            this.winFormButton.FlatAppearance.BorderSize = 0;
+            this.winFormButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.winFormButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.winFormButton.ForeColor = System.Drawing.Color.White;
+            this.winFormButton.Location = new System.Drawing.Point(12, 563);
+            this.winFormButton.Name = "winFormButton";
+            this.winFormButton.Size = new System.Drawing.Size(155, 36);
+            this.winFormButton.TabIndex = 4;
+            this.winFormButton.Text = "Page doesn\'t load?";
+            this.winFormButton.UseVisualStyleBackColor = false;
+            this.winFormButton.Click += new System.EventHandler(this.winFormButton_click);
+            // 
+            // WebBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(862, 611);
+            this.Controls.Add(this.winFormButton);
             this.Controls.Add(this.webBrowser1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Local";
+            this.Name = "WebBrowser";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -62,5 +80,6 @@
         #endregion
 
         private System.Windows.Forms.WebBrowser webBrowser1;
+        private System.Windows.Forms.Button winFormButton;
     }
 }

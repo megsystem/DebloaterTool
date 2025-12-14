@@ -38,6 +38,7 @@ namespace DebloaterTool
             bool autoUAC = args.Contains("--autoUAC");
             bool autoRestart = args.Contains("--autoRestart");
             bool fullDebloat = args.Contains("--fullDebloat");
+            bool winform = args.Contains("--winform");
             string modulePath = args.FirstOrDefault(File.Exists);
             bool showHelp = args.Contains("--help");
 
@@ -49,6 +50,7 @@ namespace DebloaterTool
                 Console.WriteLine("  --skipEULA        Skips the EULA prompt - only in the console");
                 Console.WriteLine("  --autoRestart     Automatically restarts the computer after debloating.");
                 Console.WriteLine("  --fullDebloat     Performs a full debloat without selecting modules (all modules will be run).");
+                Console.WriteLine("  --winform         Launch the application with the WinForms UI.");
                 Console.WriteLine("  --help            Displays this help message.");
                 Environment.Exit(0);
             }
@@ -76,11 +78,7 @@ namespace DebloaterTool
                 EULAConsole(skipEULA);
                 RunModulesFromFile(modulePath, modules);
             }
-            else if (Display.RequestYesOrNo("Do you want to run WebMode? If you have problems (server error) press N."))
-            {
-                result = StartWebInterface(modules);
-            }
-            else
+            else if (winform)
             {
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
                 var moduleList = modules.Select(m => new
@@ -139,6 +137,10 @@ namespace DebloaterTool
                 {
                     result.restart = "false";
                 }
+            }
+            else
+            {
+                result = StartWebInterface(modules);
             }
 
             if (result.status == "kill") Environment.Exit(0);
