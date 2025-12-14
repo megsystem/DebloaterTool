@@ -40,7 +40,7 @@
             this.webBrowser1.Name = "webBrowser1";
             this.webBrowser1.Size = new System.Drawing.Size(862, 611);
             this.webBrowser1.TabIndex = 0;
-            this.webBrowser1.Url = new System.Uri("http://localhost:8080/", System.UriKind.Absolute);
+            this.webBrowser1.Url = new System.Uri("", System.UriKind.Relative);
             // 
             // winFormButton
             // 

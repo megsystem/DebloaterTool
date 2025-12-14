@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Web.Script.Serialization;
@@ -140,7 +142,24 @@ namespace DebloaterTool
             }
             else
             {
-                result = StartWebInterface(modules);
+                try
+                {
+                    result = StartWebInterface(modules, 8080);
+                } 
+                catch
+                {
+                    try
+                    {
+                        result = StartWebInterface(modules, GetFreePort());
+                    }
+                    catch
+                    {
+                        string exePath = Assembly.GetExecutingAssembly().Location;
+                        string argsNew = "--winform";
+                        Process.Start(exePath, argsNew);
+                        Environment.Exit(0);
+                    }
+                }
             }
 
             if (result.status == "kill") Environment.Exit(0);
@@ -179,6 +198,15 @@ namespace DebloaterTool
 
             // End
             Environment.Exit(0);
+        }
+
+        static int GetFreePort()
+        {
+            TcpListener listener = new TcpListener(IPAddress.Loopback, 0);
+            listener.Start();
+            int port = ((IPEndPoint)listener.LocalEndpoint).Port;
+            listener.Stop();
+            return port;
         }
 
         static void EULAConsole(bool skipEULA)
@@ -333,16 +361,9 @@ namespace DebloaterTool
             Logger.Log("+=====================================+", Level.VERBOSE);
         }
 
-        static ApiResponse StartWebInterface(List<TweakModule> modules)
+        static ApiResponse StartWebInterface(List<TweakModule> modules, int port)
         {
-            var webServer = new SimpleWebServer("http://localhost:8080/", modules);
-            Thread thread = new Thread(() =>
-            {
-                var form = new WebBrowser("http://localhost:8080/");
-                Application.Run(form);
-            });
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
+            var webServer = new SimpleWebServer($"http://localhost:{port}/", modules);
             return webServer.Start();
         }
 
@@ -370,6 +391,13 @@ namespace DebloaterTool
             {
                 listener.Start();
                 Logger.Log("Server running: " + url);
+                Thread thread = new Thread(() =>
+                {
+                    var form = new WebBrowser(url);
+                    Application.Run(form);
+                });
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
                 ApiResponse responseObj = new ApiResponse();
                 bool eula = true;

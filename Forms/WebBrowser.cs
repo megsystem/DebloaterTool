@@ -10,6 +10,7 @@ namespace DebloaterTool
         public WebBrowser(string url)
         {
             InitializeComponent();
+            webBrowser1.Url = new Uri(url);
         }
 
         private void Local_FormClosing(object sender, FormClosingEventArgs e)
