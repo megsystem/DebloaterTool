@@ -76,12 +76,11 @@ namespace DebloaterTool
                 EULAConsole(skipEULA);
                 RunModulesFromFile(modulePath, modules);
             }
-            else if (MessageBox.Show(
-                "Wanna run UI mode?\nClick Yes to open the Windows form, or No to open the web UI.",
-                "Select Mode",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            ) == DialogResult.Yes)
+            else if (Display.RequestYesOrNo("Do you want to run WebMode? If you have problems (server error) press N."))
+            {
+                result = StartWebInterface(modules);
+            }
+            else
             {
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
                 var moduleList = modules.Select(m => new
@@ -140,10 +139,6 @@ namespace DebloaterTool
                 {
                     result.restart = "false";
                 }
-            }
-            else
-            {
-                result = StartWebInterface(modules);
             }
 
             if (result.status == "kill") Environment.Exit(0);
@@ -339,7 +334,13 @@ namespace DebloaterTool
         static ApiResponse StartWebInterface(List<TweakModule> modules)
         {
             var webServer = new SimpleWebServer("http://localhost:8080/", modules);
-            Process.Start("http://localhost:8080/");
+            Thread thread = new Thread(() =>
+            {
+                var form = new WebBrowser("http://localhost:8080/");
+                Application.Run(form);
+            });
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
             return webServer.Start();
         }
 
