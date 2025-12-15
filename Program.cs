@@ -137,7 +137,7 @@ namespace DebloaterTool
                 }
                 else
                 {
-                    result.restart = "false";
+                    result.restart = "false_close";
                 }
             }
             else
@@ -180,6 +180,7 @@ namespace DebloaterTool
             Process.Start("wscript.exe", $"\"{tempPath}\"")?.WaitForExit();
 
             if (result.restart == "false") return;
+            if (result.restart == "false_close") Environment.Exit(0);
 
             bool shouldRestart = autoRestart || result.restart == "true"
                     || Display.RequestYesOrNo("Do you want to restart to apply changes?");

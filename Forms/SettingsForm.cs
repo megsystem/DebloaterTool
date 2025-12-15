@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
@@ -69,6 +71,7 @@ namespace DebloaterTool
                     Text = module.Name,
                     AutoSize = true,
                     Font = new Font(Font, FontStyle.Bold),
+                    ForeColor = Color.White,
                     Location = new Point(30, 5)
                 };
 
@@ -121,6 +124,43 @@ namespace DebloaterTool
         private void SettingsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            foreach (CheckBox cb in flowLayoutPanel1.Controls
+                .OfType<Control>()
+                .SelectMany(c => c.Controls.OfType<CheckBox>()))
+            {
+                cb.Checked = false;
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            foreach (CheckBox cb in flowLayoutPanel1.Controls
+                .OfType<Control>()
+                .SelectMany(c => c.Controls.OfType<CheckBox>()))
+            {
+                cb.Checked = true;
+            }
+        }
+
+        private void SettingsForm_Load(object sender, EventArgs e)
+        {
+            using (WebClient wc = new WebClient())
+            {
+                byte[] bytes = wc.DownloadData("https://raw.githubusercontent.com/megsystem/megsystem/refs/heads/main/banner.png");
+                using (MemoryStream ms = new MemoryStream(bytes))
+                {
+                    pictureBox1.Image = Image.FromStream(ms);
+                }
+            }
         }
     }
 }

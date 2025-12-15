@@ -28,5 +28,10 @@ namespace DebloaterTool
             allowClose = true; // mark that closing is allowed
             this.Close();      // triggers FormClosing event
         }
+
+        private void dontacceptButton_Click(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
     }
 }

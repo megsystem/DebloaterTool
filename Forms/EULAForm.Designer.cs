@@ -33,6 +33,7 @@
             this.eulaTextBox = new System.Windows.Forms.TextBox();
             this.titleLabel = new System.Windows.Forms.Label();
             this.updatedLabel = new System.Windows.Forms.Label();
+            this.dontacceptButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // acceptButton
@@ -85,12 +86,29 @@
             this.updatedLabel.TabIndex = 1;
             this.updatedLabel.Text = "Last Updated: December 14, 2025";
             // 
+            // dontacceptButton
+            // 
+            this.dontacceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.dontacceptButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(53)))), ((int)(((byte)(69)))));
+            this.dontacceptButton.FlatAppearance.BorderSize = 0;
+            this.dontacceptButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.dontacceptButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.dontacceptButton.ForeColor = System.Drawing.Color.White;
+            this.dontacceptButton.Location = new System.Drawing.Point(20, 409);
+            this.dontacceptButton.Name = "dontacceptButton";
+            this.dontacceptButton.Size = new System.Drawing.Size(120, 36);
+            this.dontacceptButton.TabIndex = 5;
+            this.dontacceptButton.Text = "Don\'t Accept";
+            this.dontacceptButton.UseVisualStyleBackColor = false;
+            this.dontacceptButton.Click += new System.EventHandler(this.dontacceptButton_Click);
+            // 
             // EULAForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.ClientSize = new System.Drawing.Size(625, 457);
+            this.Controls.Add(this.dontacceptButton);
             this.Controls.Add(this.acceptButton);
             this.Controls.Add(this.eulaTextBox);
             this.Controls.Add(this.updatedLabel);
@@ -115,5 +133,6 @@
         private System.Windows.Forms.TextBox eulaTextBox;
         private System.Windows.Forms.Label titleLabel;
         private System.Windows.Forms.Label updatedLabel;
+        private System.Windows.Forms.Button dontacceptButton;
     }
 }

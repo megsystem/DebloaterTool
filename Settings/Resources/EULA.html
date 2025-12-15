@@ -77,9 +77,26 @@
             margin-top: 20px;
         }
 
-            .btn-settings:hover {
-                background-color: #45a049;
-            }
+        .btn-settings:hover {
+            background-color: #45a049;
+        }
+
+        .btn-decline {
+            background-color: #f44336;
+            border: none;
+            padding: 12px 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-top: 20px;
+            margin-left: 10px;
+        }
+
+        .btn-decline:hover {
+            background-color: #d32f2f;
+        }
     </style>
 </head>
 
@@ -107,10 +124,13 @@
                 for personal or commercial purposes, in accordance with this EULA.
             </p>
 
+            <button class="btn-decline" onclick="decline()">
+                Don’t Accept
+            </button>
+
             <button class="btn-settings" onclick="accept()">
                 Accept the EULA →
             </button>
-
         </div>
     </div>
     <script>
@@ -127,6 +147,12 @@
 
         function accept() {
             ajaxPost("/disableeula", JSON.stringify({}), function (response) {
+                window.location.reload();
+            });
+        }
+
+        function decline() {
+            ajaxPost("/kill", JSON.stringify({}), function (response) {
                 window.location.reload();
             });
         }
