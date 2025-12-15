@@ -15,7 +15,7 @@ namespace DebloaterTool
         {
             if (!allowClose) // only allow close when the button is clicked
             {
-                e.Cancel = true;
+                Environment.Exit(0);
             }
         }
 

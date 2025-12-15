@@ -118,12 +118,21 @@ namespace DebloaterTool
             }
 
             SelectedModules = selectedModules;
-            this.Enabled = false;
+            allowClose = false;
+            Enabled = false;
         }
 
+        private bool allowClose = true;
         private void SettingsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = true;
+            if (allowClose)
+            {
+                Environment.Exit(0);
+            } 
+            else
+            {
+                e.Cancel = true;
+            }
         }
 
         private void button1_Click_1(object sender, EventArgs e)
