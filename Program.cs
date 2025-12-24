@@ -82,63 +82,7 @@ namespace DebloaterTool
             }
             else if (winform)
             {
-                JavaScriptSerializer serializer = new JavaScriptSerializer();
-                var moduleList = modules.Select(m => new
-                {
-                    Name = $"{m.Action.Method.DeclaringType.Name}.{m.Action.Method.Name}",
-                    m.Description,
-                    Default = m.DefaultEnabled
-                }).ToList();
-
-                SettingsForm form = null;
-
-                Thread uiThread = new Thread(() =>
-                {
-                    form = new SettingsForm(serializer.Serialize(moduleList));
-                    Application.Run(form);
-                });
-                uiThread.SetApartmentState(ApartmentState.STA); // required for WinForms
-                uiThread.Start();
-
-                // Wait until form is created
-                while (form == null)
-                {
-                    Thread.Sleep(50);
-                }
-
-                // Dictionary of all modules
-                var allModuleNames = modules.ToDictionary(
-                    m => $"{m.Action.Method.DeclaringType.Name}.{m.Action.Method.Name}",
-                    m => m
-                );
-
-                // Poll for selected modules
-                while (true)
-                {
-                    if (form.SelectedModules != null && form.SelectedModules.Count > 0)
-                    {
-                        break;
-                    }
-                    Thread.Sleep(200);
-                }
-
-                RunSelectedModules(form.SelectedModules, allModuleNames);
-
-                var resultreboot = MessageBox.Show(
-                    "Wanna reboot?",
-                    "Reboot",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                );
-
-                if (resultreboot == DialogResult.Yes)
-                {
-                    result.restart = "true";
-                }
-                else
-                {
-                    result.restart = "false_close";
-                }
+                result = WinFormUI(modules);
             }
             else
             {
@@ -180,7 +124,7 @@ namespace DebloaterTool
             Process.Start("wscript.exe", $"\"{tempPath}\"")?.WaitForExit();
 
             if (result.restart == "false") return;
-            if (result.restart == "false_close") Environment.Exit(0);
+            if (result.restart == "close") Environment.Exit(0);
 
             bool shouldRestart = autoRestart || result.restart == "true"
                     || Display.RequestYesOrNo("Do you want to restart to apply changes?");
@@ -199,6 +143,71 @@ namespace DebloaterTool
 
             // End
             Environment.Exit(0);
+        }
+
+        static ApiResponse WinFormUI(List<TweakModule> modules)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            ApiResponse responseObj = new ApiResponse();
+
+            var moduleList = modules.Select(m => new
+            {
+                Name = $"{m.Action.Method.DeclaringType.Name}.{m.Action.Method.Name}",
+                m.Description,
+                Default = m.DefaultEnabled
+            }).ToList();
+
+            SettingsForm form = null;
+
+            Thread uiThread = new Thread(() =>
+            {
+                form = new SettingsForm(serializer.Serialize(moduleList));
+                Application.Run(form);
+            });
+            uiThread.SetApartmentState(ApartmentState.STA); // required for WinForms
+            uiThread.Start();
+
+            // Wait until form is created
+            while (form == null)
+            {
+                Thread.Sleep(50);
+            }
+
+            // Dictionary of all modules
+            var allModuleNames = modules.ToDictionary(
+                m => $"{m.Action.Method.DeclaringType.Name}.{m.Action.Method.Name}",
+                m => m
+            );
+
+            // Poll for selected modules
+            while (true)
+            {
+                if (form.SelectedModules != null && form.SelectedModules.Count > 0)
+                {
+                    break;
+                }
+                Thread.Sleep(200);
+            }
+
+            RunSelectedModules(form.SelectedModules, allModuleNames);
+
+            var resultreboot = MessageBox.Show(
+                "Wanna reboot?",
+                "Reboot",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (resultreboot == DialogResult.Yes)
+            {
+                responseObj.restart = "true";
+            }
+            else
+            {
+                responseObj.restart = "close";
+            }
+
+            return responseObj;
         }
 
         static int GetFreePort()
@@ -364,7 +373,7 @@ namespace DebloaterTool
 
         static ApiResponse StartWebInterface(List<TweakModule> modules, int port)
         {
-            var webServer = new SimpleWebServer($"http://localhost:{port}/", modules);
+            var webServer = new ApplicationWebServer($"http://localhost:{port}/", modules);
             return webServer.Start();
         }
 
@@ -374,13 +383,14 @@ namespace DebloaterTool
             public string restart { get; set; }
         }
 
-        public class SimpleWebServer
+        public class ApplicationWebServer
         {
             private readonly HttpListener listener;
             private readonly string url;
             private readonly List<TweakModule> modules;
+            public static bool runningDebloating = false;
 
-            public SimpleWebServer(string url, List<TweakModule> modules)
+            public ApplicationWebServer(string url, List<TweakModule> modules)
             {
                 this.url = url;
                 this.modules = modules;
@@ -459,6 +469,7 @@ namespace DebloaterTool
                             List<string> selected = serializer.Deserialize<List<string>>(body);
 
                             Logger.Log("=== Running Modules ===");
+                            runningDebloating = true;
 
                             foreach (string name in selected)
                             {
@@ -476,6 +487,7 @@ namespace DebloaterTool
                             }
 
                             Logger.Log("=== Finished ===");
+                            runningDebloating = false;
 
                             // Risposta al browser
                             Respond(resp, serializer.Serialize(new { status = "done" }), "application/json");

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using static DebloaterTool.Program;
 
 namespace DebloaterTool
 {
@@ -28,7 +29,10 @@ namespace DebloaterTool
 
         private void Local_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = true;
+            if (ApplicationWebServer.runningDebloating) 
+                { e.Cancel = true; }
+            else 
+                { Environment.Exit(0); }
         }
 
         private void winFormButton_click(object sender, EventArgs e)
