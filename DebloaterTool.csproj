@@ -54,6 +54,12 @@
     <Compile Include="Forms\EULAForm.Designer.cs">
       <DependentUpon>EULAForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\WaitingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WaitingForm.Designer.cs">
+      <DependentUpon>WaitingForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\WebBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -124,6 +130,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Forms\EULAForm.resx">
       <DependentUpon>EULAForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WaitingForm.resx">
+      <DependentUpon>WaitingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WebBrowser.resx">
       <DependentUpon>WebBrowser.cs</DependentUpon>

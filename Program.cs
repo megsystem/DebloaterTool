@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Web.Script.Serialization;
@@ -20,6 +21,23 @@ namespace DebloaterTool
 {
     class Program
     {
+        // Import Win32 functions
+        [DllImport("kernel32.dll", ExactSpelling = true)]
+        private static extern IntPtr GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        private static extern bool SetWindowPos(
+            IntPtr hWnd,
+            IntPtr hWndInsertAfter,
+            int X, int Y, int cx, int cy,
+            uint uFlags);
+
+        private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+        private static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
+        private const uint SWP_NOMOVE = 0x0002;
+        private const uint SWP_NOSIZE = 0x0001;
+        private const uint SWP_SHOWWINDOW = 0x0040;
+
         static void Main(string[] args)
         {
             Application.EnableVisualStyles();
@@ -123,10 +141,15 @@ namespace DebloaterTool
             File.WriteAllText(tempPath, Global.welcome.Replace("[INSTALLPATH]", Global.InstallPath), Encoding.Unicode);
             Process.Start("wscript.exe", $"\"{tempPath}\"")?.WaitForExit();
 
-            if (result.restart == "false") return;
-            if (result.restart == "close") Environment.Exit(0);
+            if (!result.restart)
+            {
+                if (result.status == "close")
+                    Environment.Exit(0);
 
-            bool shouldRestart = autoRestart || result.restart == "true"
+                return;
+            }
+
+            bool shouldRestart = autoRestart || result.restart
                     || Display.RequestYesOrNo("Do you want to restart to apply changes?");
 
             if (shouldRestart)
@@ -189,22 +212,56 @@ namespace DebloaterTool
                 Thread.Sleep(200);
             }
 
+            WaitingForm _waitingForm = null;
+            Thread _waitingThread = new Thread(() =>
+            {
+                _waitingForm = new WaitingForm();
+                _waitingForm.AllowClose = false;
+                _waitingForm.StartPosition = FormStartPosition.CenterScreen;
+                Application.Run(_waitingForm);
+            });
+            _waitingThread.SetApartmentState(ApartmentState.STA);
+            _waitingThread.Start();
+            IntPtr consoleHandle = GetConsoleWindow();
+            SetWindowPos(consoleHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+
             RunSelectedModules(form.SelectedModules, allModuleNames);
+            SetWindowPos(consoleHandle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+            _waitingForm.AllowClose = true;
+            _waitingForm.Close();
+            form.Enabled = true;
+            form.allowClose = true;
+            form.Opacity = 1;
+            form.Enabled = false;
 
-            var resultreboot = MessageBox.Show(
-                "Wanna reboot?",
-                "Reboot",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
+            using (Form topmostForm = new Form())
+            {
+                topmostForm.TopMost = true;
+                topmostForm.StartPosition = FormStartPosition.Manual;
+                topmostForm.Location = new System.Drawing.Point(-1000, -1000);
+                topmostForm.ShowInTaskbar = false;
+                topmostForm.Show();
 
-            if (resultreboot == DialogResult.Yes)
-            {
-                responseObj.restart = "true";
-            }
-            else
-            {
-                responseObj.restart = "close";
+                var resultreboot = MessageBox.Show(
+                    topmostForm,
+                    "Wanna reboot?",
+                    "Reboot",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
+
+                if (resultreboot == DialogResult.Yes)
+                {
+                    responseObj.status = "finished";
+                    responseObj.restart = true;
+                }
+                else
+                {
+                    responseObj.status = "close";
+                    responseObj.restart = false;
+                }
+
+                topmostForm.Close();
             }
 
             return responseObj;
@@ -380,7 +437,7 @@ namespace DebloaterTool
         public class ApiResponse
         {
             public string status { get; set; }
-            public string restart { get; set; }
+            public bool restart { get; set; }
         }
 
         public class ApplicationWebServer
@@ -446,7 +503,7 @@ namespace DebloaterTool
                         else if (req.Url.AbsolutePath == "/restart")
                         {
                             responseObj.status = "finished";
-                            responseObj.restart = "true";
+                            responseObj.restart = true;
                             return responseObj;
                         }
                         else if (req.Url.AbsolutePath == "/log")
@@ -454,7 +511,7 @@ namespace DebloaterTool
                             string data = File.ReadAllText(Global.LogFilePath);
                             Respond(resp, data, "text/plain");
                             responseObj.status = "finished";
-                            responseObj.restart = "false";
+                            responseObj.restart = false;
                             return responseObj;
                         }
                         else if (req.Url.AbsolutePath == "/kill")
@@ -469,6 +526,8 @@ namespace DebloaterTool
                             List<string> selected = serializer.Deserialize<List<string>>(body);
 
                             Logger.Log("=== Running Modules ===");
+                            IntPtr consoleHandle = GetConsoleWindow();
+                            SetWindowPos(consoleHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
                             runningDebloating = true;
 
                             foreach (string name in selected)
@@ -487,6 +546,7 @@ namespace DebloaterTool
                             }
 
                             Logger.Log("=== Finished ===");
+                            SetWindowPos(consoleHandle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
                             runningDebloating = false;
 
                             // Risposta al browser

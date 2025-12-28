@@ -101,5 +101,32 @@ namespace DebloaterTool
                 }
             }
         }
+
+        private WaitingForm _waitingForm;
+        private void checkInfo_Tick(object sender, EventArgs e)
+        {
+            if (ApplicationWebServer.runningDebloating)
+            {
+                Opacity = 0.5;
+
+                if (_waitingForm == null || _waitingForm.IsDisposed)
+                {
+                    _waitingForm = new WaitingForm();
+                    _waitingForm.AllowClose = false;
+                    _waitingForm.ShowDialog(this);
+                    _waitingForm = null;
+                }
+            }
+            else
+            {
+                Opacity = 1;
+
+                if (_waitingForm != null && !_waitingForm.IsDisposed)
+                {
+                    _waitingForm.AllowClose = true;
+                    _waitingForm.Close();
+                }
+            }
+        }
     }
 }

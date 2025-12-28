@@ -119,10 +119,11 @@ namespace DebloaterTool
 
             SelectedModules = selectedModules;
             allowClose = false;
+            Opacity = 0.5;
             Enabled = false;
         }
 
-        private bool allowClose = true;
+        public bool allowClose = true;
         private void SettingsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (allowClose)

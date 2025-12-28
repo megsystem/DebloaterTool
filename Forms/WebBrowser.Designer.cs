@@ -32,6 +32,7 @@
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.winFormButton = new System.Windows.Forms.Button();
             this.animationTimer = new System.Windows.Forms.Timer(this.components);
+            this.checkInfo = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // webBrowser1
@@ -68,6 +69,11 @@
             this.animationTimer.Interval = 1;
             this.animationTimer.Tick += new System.EventHandler(this.AnimationTimer_Tick);
             // 
+            // checkInfo
+            // 
+            this.checkInfo.Enabled = true;
+            this.checkInfo.Tick += new System.EventHandler(this.checkInfo_Tick);
+            // 
             // WebBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -92,5 +98,6 @@
         private System.Windows.Forms.WebBrowser webBrowser1;
         private System.Windows.Forms.Button winFormButton;
         private System.Windows.Forms.Timer animationTimer;
+        private System.Windows.Forms.Timer checkInfo;
     }
 }
