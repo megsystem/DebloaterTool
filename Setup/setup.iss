@@ -3,55 +3,60 @@
 #include "C:\Program Files (x86)\Inno Download Plugin\idp.iss"
 
 #define MyAppName "DebloaterTool"
-#define MyAppVersion "1.0"
+#define MyAppVersion "1.1"
 #define MyAppPublisher "megsystem"
 #define MyAppURL "https://github.com/megsystem"
 #define MyAppExeName "DebloaterTool.exe"
-#define MyAppIcon "DebloaterTool.ico" ; <-- Use your icon file here
+#define MyAppIcon "DebloaterTool.ico" ; icon file in script folder
 
 [Setup]
-AppId={{84C3FD7D-2128-40E9-90BF-F9054235C7C3}
+; AppId requires double braces format; make sure GUID is stable between versions
+AppId={{84C3FD7D-2128-40E9-90BF-F9054235C7C3}}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-
-DefaultDirName={autopf}\DebloaterTool
-DefaultGroupName=DebloaterTool
-AllowNoIcons=yes
+DefaultDirName=C:\{#MyAppName}
+DefaultGroupName={#MyAppName}
+OutputDir=.
 OutputBaseFilename=DebloaterToolSetup
 Compression=lzma
 SolidCompression=yes
-WizardStyle=modern dark windows11
+WizardStyle=modern
 PrivilegesRequired=admin
-
-; --- Set Control Panel icon ---
 UninstallDisplayIcon={app}\{#MyAppIcon}
+LicenseFile=LICENSE.txt
+AllowNoIcons=no
+DisableProgramGroupPage=no
+MinVersion=6.1
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-; Include the ICO in the installer
+; Keep the ICO and README packaged with the installer
 Source: "{#MyAppIcon}"; DestDir: "{app}"; Flags: ignoreversion
-
-; Include README.txt in the installer
 Source: "README.txt"; DestDir: "{app}"; Flags: ignoreversion
-
-; Download the EXE at runtime using Inno Download Plugin
+Source: "LICENSE.txt"; DestDir: "{app}"; Flags: ignoreversion
+; The EXE is downloaded at runtime by the Inno Download Plugin
 Source: "{tmp}\{#MyAppExeName}"; DestDir: "{app}"; Flags: external ignoreversion
 
 [Icons]
-Name: "{group}\DebloaterTool"; Filename: "{app}\{#MyAppExeName}"
-Name: "{commondesktop}\DebloaterTool"; Filename: "{app}\{#MyAppExeName}"
+Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: startmenuicon
+Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{group}\Uninstall"; Filename: "{uninstallexe}"; IconFilename: "{app}\{#MyAppIcon}"
+Name: "{group}\README.txt"; Filename: "{app}\README.txt"
+
+[Tasks]
+Name: "desktopicon"; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:";
+Name: "startmenuicon"; Description: "Create a &Start Menu shortcut"; GroupDescription: "Additional icons:";
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "Launch DebloaterTool"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "Launch {#MyAppName}"; Flags: nowait postinstall skipifsilent
 
 [Code]
-
 var
   ReadmePage: TWizardPage;
   ReadmeMemo: TMemo;
@@ -60,7 +65,9 @@ procedure InitializeWizard;
 var
   TempReadme: string;
 begin
-  ExtractTemporaryFile('README.txt'); 
+  ExtractTemporaryFile('README.txt');
+  ExtractTemporaryFile('LICENSE.txt');
+
   TempReadme := ExpandConstant('{tmp}\README.txt');
 
   ReadmePage := CreateCustomPage(wpWelcome, 'README / Information', 'Please read the following before continuing:');
@@ -84,3 +91,7 @@ begin
   idpDownloadAfter(wpReady);
 end;
 
+function NextButtonClick(CurPageID: Integer): Boolean;
+begin
+  Result := True;
+end;
