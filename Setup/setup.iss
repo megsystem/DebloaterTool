@@ -8,6 +8,7 @@
 #define MyAppURL "https://github.com/megsystem"
 #define MyAppExeName "DebloaterTool.exe"
 #define MyAppIcon "DebloaterTool.ico" ; icon file in script folder
+#define GUID "{84C3FD7D-2128-40E9-90BF-F9054235C7C3}"
 
 [Setup]
 ; AppId requires double braces format; make sure GUID is stable between versions
