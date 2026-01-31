@@ -30,8 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
-            this.winFormButton = new System.Windows.Forms.Button();
-            this.animationTimer = new System.Windows.Forms.Timer(this.components);
             this.checkInfo = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
@@ -45,30 +43,6 @@
             this.webBrowser1.TabIndex = 0;
             this.webBrowser1.Url = new System.Uri("", System.UriKind.Relative);
             // 
-            // winFormButton
-            // 
-            this.winFormButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.winFormButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(107)))), ((int)(((byte)(114)))), ((int)(((byte)(128)))));
-            this.winFormButton.FlatAppearance.BorderSize = 0;
-            this.winFormButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.winFormButton.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.winFormButton.ForeColor = System.Drawing.Color.White;
-            this.winFormButton.Location = new System.Drawing.Point(12, 599);
-            this.winFormButton.Name = "winFormButton";
-            this.winFormButton.Size = new System.Drawing.Size(30, 30);
-            this.winFormButton.TabIndex = 4;
-            this.winFormButton.Text = "?";
-            this.winFormButton.UseVisualStyleBackColor = false;
-            this.winFormButton.Click += new System.EventHandler(this.winFormButton_click);
-            this.winFormButton.MouseEnter += new System.EventHandler(this.HelpButton_MouseEnter);
-            this.winFormButton.MouseLeave += new System.EventHandler(this.HelpButton_MouseLeave);
-            // 
-            // animationTimer
-            // 
-            this.animationTimer.Enabled = true;
-            this.animationTimer.Interval = 1;
-            this.animationTimer.Tick += new System.EventHandler(this.AnimationTimer_Tick);
-            // 
             // checkInfo
             // 
             this.checkInfo.Enabled = true;
@@ -79,7 +53,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(965, 641);
-            this.Controls.Add(this.winFormButton);
             this.Controls.Add(this.webBrowser1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -96,8 +69,6 @@
         #endregion
 
         private System.Windows.Forms.WebBrowser webBrowser1;
-        private System.Windows.Forms.Button winFormButton;
-        private System.Windows.Forms.Timer animationTimer;
         private System.Windows.Forms.Timer checkInfo;
     }
 }

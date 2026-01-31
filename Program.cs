@@ -48,6 +48,7 @@ namespace DebloaterTool
                 Environment.Exit(0);
             }
 
+            ApiResponse result = new ApiResponse();
             Internet.Inizialize();
             Updater.CheckForUpdates();
             Console.Title = $"{(Admins.IsAdministrator() ? "[Administrator]: " : "")}DebloaterTool {Global.Version}";
@@ -56,9 +57,8 @@ namespace DebloaterTool
             // Parse arguments
             bool skipEULA = args.Contains("--skipEULA");
             bool autoUAC = args.Contains("--autoUAC");
-            bool autoRestart = args.Contains("--autoRestart");
+            result.restart = args.Contains("--autoRestart");
             bool fullDebloat = args.Contains("--fullDebloat");
-            bool winform = args.Contains("--winform");
             string modulePath = args.FirstOrDefault(File.Exists);
             bool showHelp = args.Contains("--help");
 
@@ -70,7 +70,6 @@ namespace DebloaterTool
                 Console.WriteLine("  --skipEULA        Skips the EULA prompt - only in the console");
                 Console.WriteLine("  --autoRestart     Automatically restarts the computer after debloating.");
                 Console.WriteLine("  --fullDebloat     Performs a full debloat without selecting modules (all modules will be run).");
-                Console.WriteLine("  --winform         Launch the application with the WinForms UI.");
                 Console.WriteLine("  --help            Displays this help message.");
                 Environment.Exit(0);
             }
@@ -84,23 +83,19 @@ namespace DebloaterTool
             }
 
             InitializeFolders();
-
-            ApiResponse result = new ApiResponse();
             var modules = ModuleList.GetAllModules().ToList();
 
             if (fullDebloat)
             {
+                result.status = -1; // set cli mode
                 EULAConsole(skipEULA);
                 RunFullModules(modules);
             }
             else if (!string.IsNullOrEmpty(modulePath))
             {
+                result.status = -1; // set cli mode
                 EULAConsole(skipEULA);
                 RunModulesFromFile(modulePath, modules);
-            }
-            else if (winform)
-            {
-                result = WinFormUI(modules);
             }
             else
             {
@@ -124,7 +119,7 @@ namespace DebloaterTool
                 }
             }
 
-            if (result.status == "kill") Environment.Exit(0);
+            if (result.status == 1) Environment.Exit(0);
 
             string dateTime = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
             string logFileName = $"DebloaterTool_{dateTime}.log";
@@ -141,16 +136,9 @@ namespace DebloaterTool
             File.WriteAllText(tempPath, Global.welcome.Replace("[INSTALLPATH]", Global.InstallPath), Encoding.Unicode);
             Process.Start("wscript.exe", $"\"{tempPath}\"")?.WaitForExit();
 
-            if (!result.restart)
-            {
-                if (result.status == "close")
-                    Environment.Exit(0);
-
-                return;
-            }
-
-            bool shouldRestart = autoRestart || result.restart
-                    || Display.RequestYesOrNo("Do you want to restart to apply changes?");
+            bool shouldRestart =
+                result.restart ||
+                (result.status == -1 && Display.RequestYesOrNo("Do you want to restart to apply changes?"));
 
             if (shouldRestart)
             {
@@ -166,105 +154,6 @@ namespace DebloaterTool
 
             // End
             Environment.Exit(0);
-        }
-
-        static ApiResponse WinFormUI(List<TweakModule> modules)
-        {
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            ApiResponse responseObj = new ApiResponse();
-
-            var moduleList = modules.Select(m => new
-            {
-                Name = $"{m.Action.Method.DeclaringType.Name}.{m.Action.Method.Name}",
-                m.Description,
-                Default = m.DefaultEnabled
-            }).ToList();
-
-            SettingsForm form = null;
-
-            Thread uiThread = new Thread(() =>
-            {
-                form = new SettingsForm(serializer.Serialize(moduleList));
-                Application.Run(form);
-            });
-            uiThread.SetApartmentState(ApartmentState.STA); // required for WinForms
-            uiThread.Start();
-
-            // Wait until form is created
-            while (form == null)
-            {
-                Thread.Sleep(50);
-            }
-
-            // Dictionary of all modules
-            var allModuleNames = modules.ToDictionary(
-                m => $"{m.Action.Method.DeclaringType.Name}.{m.Action.Method.Name}",
-                m => m
-            );
-
-            // Poll for selected modules
-            while (true)
-            {
-                if (form.SelectedModules != null && form.SelectedModules.Count > 0)
-                {
-                    break;
-                }
-                Thread.Sleep(200);
-            }
-
-            WaitingForm _waitingForm = null;
-            Thread _waitingThread = new Thread(() =>
-            {
-                _waitingForm = new WaitingForm();
-                _waitingForm.AllowClose = false;
-                _waitingForm.StartPosition = FormStartPosition.CenterScreen;
-                Application.Run(_waitingForm);
-            });
-            _waitingThread.SetApartmentState(ApartmentState.STA);
-            _waitingThread.Start();
-            IntPtr consoleHandle = GetConsoleWindow();
-            SetWindowPos(consoleHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-
-            RunSelectedModules(form.SelectedModules, allModuleNames);
-            SetWindowPos(consoleHandle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-            _waitingForm.AllowClose = true;
-            _waitingForm.Close();
-            form.Enabled = true;
-            form.allowClose = true;
-            form.Opacity = 1;
-            form.Enabled = false;
-
-            using (Form topmostForm = new Form())
-            {
-                topmostForm.TopMost = true;
-                topmostForm.StartPosition = FormStartPosition.Manual;
-                topmostForm.Location = new System.Drawing.Point(-1000, -1000);
-                topmostForm.ShowInTaskbar = false;
-                topmostForm.Show();
-
-                var resultreboot = MessageBox.Show(
-                    topmostForm,
-                    "Wanna reboot?",
-                    "Reboot",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                );
-
-                if (resultreboot == DialogResult.Yes)
-                {
-                    responseObj.status = "finished";
-                    responseObj.restart = true;
-                }
-                else
-                {
-                    responseObj.status = "close";
-                    responseObj.restart = false;
-                }
-
-                topmostForm.Close();
-            }
-
-            return responseObj;
         }
 
         static int GetFreePort()
@@ -436,8 +325,9 @@ namespace DebloaterTool
 
         public class ApiResponse
         {
-            public string status { get; set; }
+            public int status { get; set; }
             public bool restart { get; set; }
+            public static int percetage;
         }
 
         public class ApplicationWebServer
@@ -445,7 +335,6 @@ namespace DebloaterTool
             private readonly HttpListener listener;
             private readonly string url;
             private readonly List<TweakModule> modules;
-            public static bool runningDebloating = false;
 
             public ApplicationWebServer(string url, List<TweakModule> modules)
             {
@@ -502,7 +391,7 @@ namespace DebloaterTool
                         }
                         else if (req.Url.AbsolutePath == "/restart")
                         {
-                            responseObj.status = "finished";
+                            responseObj.status = 0;
                             responseObj.restart = true;
                             return responseObj;
                         }
@@ -510,13 +399,13 @@ namespace DebloaterTool
                         {
                             string data = File.ReadAllText(Global.LogFilePath);
                             Respond(resp, data, "text/plain");
-                            responseObj.status = "finished";
+                            responseObj.status = 0;
                             responseObj.restart = false;
                             return responseObj;
                         }
                         else if (req.Url.AbsolutePath == "/kill")
                         {
-                            responseObj.status = "kill";
+                            responseObj.status = 1;
                             return responseObj;
                         }
                         else if (req.Url.AbsolutePath == "/run")
@@ -528,11 +417,20 @@ namespace DebloaterTool
                             Logger.Log("=== Running Modules ===");
                             IntPtr consoleHandle = GetConsoleWindow();
                             SetWindowPos(consoleHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-                            runningDebloating = true;
+
+                            ApiResponse.percetage = 0;
+                            int total = selected.Count;
+                            int current = 0;
 
                             foreach (string name in selected)
                             {
-                                var module = modules.Find(m => $"{m.Action.Method.DeclaringType.Name}.{m.Action.Method.Name}" == name);
+                                current++; // complete add +1
+                                ApiResponse.percetage = (int)Math.Round(((double)current / total * 100) -1);
+                                Logger.Log($"Progress: {ApiResponse.percetage}%");
+
+                                var module = modules.Find(m =>
+                                    $"{m.Action.Method.DeclaringType.Name}.{m.Action.Method.Name}" == name);
+
                                 if (module != null)
                                 {
                                     Logger.Log("[+] Running: " + name);
@@ -545,9 +443,9 @@ namespace DebloaterTool
                                 }
                             }
 
+                            ApiResponse.percetage = 100;
                             Logger.Log("=== Finished ===");
                             SetWindowPos(consoleHandle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-                            runningDebloating = false;
 
                             // Risposta al browser
                             Respond(resp, serializer.Serialize(new { status = "done" }), "application/json");

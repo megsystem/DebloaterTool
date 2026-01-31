@@ -48,12 +48,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\EULAForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\EULAForm.Designer.cs">
-      <DependentUpon>EULAForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\WaitingForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -65,12 +59,6 @@
     </Compile>
     <Compile Include="Forms\WebBrowser.Designer.cs">
       <DependentUpon>WebBrowser.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SettingsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SettingsForm.Designer.cs">
-      <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Internet.cs" />
     <Compile Include="Helpers\Tweakers\TweakRegistry.cs" />
@@ -128,17 +116,11 @@
     <None Include="Settings\Resources\christitus.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\EULAForm.resx">
-      <DependentUpon>EULAForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\WaitingForm.resx">
       <DependentUpon>WaitingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WebBrowser.resx">
       <DependentUpon>WebBrowser.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SettingsForm.resx">
-      <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

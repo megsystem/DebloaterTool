@@ -124,7 +124,7 @@
             z-index: 9999;
         }
 
-        #restart-popup {
+        #restart-popup, #alert-popup {
             display: none;
             position: fixed;
             top: 0;
@@ -137,7 +137,7 @@
             z-index: 10000;
         }
 
-        #restart-box {
+        #restart-box, #alert-box {
             background: #1e1e1e;
             padding: 25px;
             border-radius: 10px;
@@ -146,7 +146,7 @@
             box-shadow: 0 0 12px rgba(0,0,0,0.6);
         }
 
-        #restart-box h2 {
+        #restart-box h2, #alert-box h2 {
             margin-top: 0;
             color: #fff;
         }
@@ -161,12 +161,12 @@
             font-size: 14px;
         }
 
-        #yesBtn {
+        #yesBtn, #bootinstallYes {
             background: #4caf50;
             color: #fff;
         }
 
-        #noBtn {
+        #noBtn, #bootinstallNo {
             background: #b33a3a;
             color: #fff;
         }
@@ -221,6 +221,16 @@
             <h2>Do you want to restart?</h2>
             <button class="popup-btn" id="yesBtn">Yes</button>
             <button class="popup-btn" id="noBtn">No</button>
+        </div>
+    </div>
+
+    <!-- Alert popup -->
+    <div id="alert-popup">
+        <div id="alert-box">
+            <h2>Do you want to run (BootLogo.Install)?</h2>
+            <p>This will change the bootloader!!!</p>
+            <button class="popup-btn" id="bootinstallYes">Yes</button>
+            <button class="popup-btn" id="bootinstallNo">No</button>
         </div>
     </div>
 
@@ -363,21 +373,47 @@
                 boxes[i].checked = false;
         }
 
+        let run = false;
         function runSelected() {
-            var boxes = document.getElementById("modules").getElementsByTagName("input");
-            var selected = [];
+            if (!run) {
+                const checkbox = document.querySelector('input[type="checkbox"][value="BootLogo.Install"]');
 
-            for (var i = 0; i < boxes.length; i++)
-                if (boxes[i].checked)
-                    selected.push(boxes[i].value);
+                if (checkbox.checked) {
+                    document.getElementById("loading-overlay").style.display = "none";
+                    document.getElementById("alert-popup").style.display = "flex";
+                }
+                else {
+                    run = true;
+                }
+            }
 
-            document.getElementById("loading-overlay").style.display = "flex";
+            if (run) {
+                var boxes = document.getElementById("modules").getElementsByTagName("input");
+                var selected = [];
 
-            ajaxPost("/run", JSON.stringify(selected), function () {
-                document.getElementById("loading-overlay").style.display = "none";
-                document.getElementById("restart-popup").style.display = "flex";
-            });
+                for (var i = 0; i < boxes.length; i++)
+                    if (boxes[i].checked)
+                        selected.push(boxes[i].value);
+
+                document.getElementById("loading-overlay").style.display = "flex";
+
+                ajaxPost("/run", JSON.stringify(selected), function () {
+                    document.getElementById("loading-overlay").style.display = "none";
+                    document.getElementById("restart-popup").style.display = "flex";
+                });
+            }
         }
+
+        const alertPopup = document.getElementById("alert-popup");
+        document.getElementById("bootinstallNo").onclick = function () {
+            alertPopup.style.display = "none";
+            run = false;
+        };
+        document.getElementById("bootinstallYes").onclick = function () {
+            alertPopup.style.display = "none";
+            run = true;
+            runSelected()
+        };
 
         document.getElementById("yesBtn").onclick = function () {
             ajaxPost("/restart", JSON.stringify({}), function (response) {
