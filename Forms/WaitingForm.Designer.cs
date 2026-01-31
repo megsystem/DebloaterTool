@@ -32,10 +32,12 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.checkPercentage = new System.Windows.Forms.Timer(this.components);
             this.label1 = new System.Windows.Forms.Label();
+            this.checkLocation = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // progressBar1
             // 
+            this.progressBar1.BackColor = System.Drawing.Color.White;
             this.progressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.progressBar1.Location = new System.Drawing.Point(0, 0);
             this.progressBar1.Name = "progressBar1";
@@ -46,17 +48,23 @@
             // checkPercentage
             // 
             this.checkPercentage.Enabled = true;
+            this.checkPercentage.Interval = 10;
             this.checkPercentage.Tick += new System.EventHandler(this.checkPercentage_Tick);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.BackColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(130, 28);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(82, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Work: VALUE%";
+            // 
+            // checkLocation
+            // 
+            this.checkLocation.Enabled = true;
+            this.checkLocation.Tick += new System.EventHandler(this.checkLocation_Tick);
             // 
             // WaitingForm
             // 
@@ -85,5 +93,6 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Timer checkPercentage;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Timer checkLocation;
     }
 }
