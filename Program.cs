@@ -409,11 +409,13 @@ namespace DebloaterTool
                         {
                             var handle = GetConsoleWindow();
                             ShowWindow(handle, SW_SHOW);
+                            hideme = false;
                         }
                         else if (req.Url.AbsolutePath == "/hidecli")
                         {
                             var handle = GetConsoleWindow();
                             ShowWindow(handle, SW_HIDE);
+                            hideme = true;
                         }
                         else if (req.Url.AbsolutePath == "/modules")
                         {
@@ -453,7 +455,7 @@ namespace DebloaterTool
 
                             Logger.Log("=== Running Modules ===");
                             IntPtr consoleHandle = GetConsoleWindow();
-                            SetWindowPos(consoleHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+                            if (!hideme) SetWindowPos(consoleHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 
                             ApiResponse.percetage = 0;
                             int total = selected.Count;
@@ -482,7 +484,7 @@ namespace DebloaterTool
 
                             ApiResponse.percetage = 100;
                             Logger.Log("=== Finished ===");
-                            SetWindowPos(consoleHandle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+                            if (!hideme) SetWindowPos(consoleHandle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 
                             // Risposta al browser
                             Respond(resp, serializer.Serialize(new { status = "done" }), "application/json");
