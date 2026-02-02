@@ -4,12 +4,19 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
 namespace DebloaterTool.Helpers
 {
     internal class Updater
     {
+        [DllImport("kernel32.dll", ExactSpelling = true)]
+        private static extern IntPtr GetConsoleWindow();
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        const int SW_SHOW = 5;
+
         public static void CheckForUpdates()
         {
 #if DEBUG
@@ -32,6 +39,9 @@ namespace DebloaterTool.Helpers
                 // Compare hashes
                 if (!FilesAreEqual(exePath, tempUpdatedPath))
                 {
+                    var handle = GetConsoleWindow();
+                    ShowWindow(handle, SW_SHOW);
+
                     Logger.Log("New update detected.");
 
                     if (!Display.RequestYesOrNo("A new update is available. Do you want to update now?"))
