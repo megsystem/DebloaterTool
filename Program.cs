@@ -38,8 +38,38 @@ namespace DebloaterTool
         private const uint SWP_NOSIZE = 0x0001;
         private const uint SWP_SHOWWINDOW = 0x0040;
 
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        const int SW_HIDE = 0;
+        const int SW_SHOW = 5;
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern uint GetConsoleProcessList(uint[] processList, uint processCount);
+
+        static bool hideme = false;
+
         static void Main(string[] args)
         {
+            bool climode = args.Contains("--cli");
+            IntPtr handle = GetConsoleWindow();
+
+            if (handle != IntPtr.Zero)
+            {
+                // Get the list of processes attached to this console
+                uint[] processList = new uint[1];
+                uint count = GetConsoleProcessList(processList, 1);
+
+                // If count is 1, it means only THIS process is using the console.
+                // This happens when you double-click the .exe (it creates a new console).
+                // If count > 1, it means the console was already open (cmd, powershell, etc).
+                if (count == 1 && !climode)
+                {
+                    ShowWindow(handle, SW_HIDE);
+                    hideme = true;
+                }
+            }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             if (args.Contains("--generate-module-list"))
@@ -79,6 +109,13 @@ namespace DebloaterTool
             {
                 Logger.Log("Not runned as administrator!", Level.CRITICAL);
                 Logger.Log("Restarting application with administrator privileges.");
+
+                if (!hideme)
+                {
+                    Array.Resize(ref args, args.Length + 1);
+                    args[args.Length - 1] = "--cli";
+                }
+
                 Admins.RestartAsAdmin(args);
             }
 
@@ -102,20 +139,10 @@ namespace DebloaterTool
                 try
                 {
                     result = StartWebInterface(modules, 8080);
-                } 
+                }
                 catch
                 {
-                    try
-                    {
-                        result = StartWebInterface(modules, GetFreePort());
-                    }
-                    catch
-                    {
-                        string exePath = Assembly.GetExecutingAssembly().Location;
-                        string argsNew = "--winform";
-                        Process.Start(exePath, argsNew);
-                        Environment.Exit(0);
-                    }
+                    result = StartWebInterface(modules, GetFreePort());
                 }
             }
 
@@ -374,9 +401,19 @@ namespace DebloaterTool
                             else
                                 Respond(resp, Properties.Resources.SETTINGS, "text/html");
                         }
-                        else if(req.Url.AbsolutePath == "/disableeula")
+                        else if (req.Url.AbsolutePath == "/disableeula")
                         {
                             eula = false;
+                        }
+                        else if (req.Url.AbsolutePath == "/showcli")
+                        {
+                            var handle = GetConsoleWindow();
+                            ShowWindow(handle, SW_SHOW);
+                        }
+                        else if (req.Url.AbsolutePath == "/hidecli")
+                        {
+                            var handle = GetConsoleWindow();
+                            ShowWindow(handle, SW_HIDE);
                         }
                         else if (req.Url.AbsolutePath == "/modules")
                         {

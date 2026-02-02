@@ -56,9 +56,9 @@
             this.Controls.Add(this.webBrowser1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(780, 600);
             this.Name = "WebBrowser";
             this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DebloaterTool";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Local_FormClosing);

@@ -9,15 +9,26 @@
             font-family: Arial, sans-serif;
             background: #121212;
             color: #e0e0e0;
-            padding: 20px;
+            padding: 40px;
             text-align: center;
+            padding-top: 245px; /* same as navbar height */
         }
 
-        img#banner {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 20px;
+        .banner-wrapper {
+            width: 100%;
+            height: 150px;
+            background: #121212;
+            overflow: hidden;
+        }
+
+        #banner-bg {
+            width: 100%;
+            height: 100%;
+            background-image: url('https://raw.githubusercontent.com/megsystem/megsystem/refs/heads/main/banner.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 15px 15px 0 0;
         }
 
         h1 {
@@ -27,9 +38,9 @@
 
         #modules {
             width: 100%;
+            text-align: left;
             max-width: 800px;
             margin: 0 auto 20px auto;
-            text-align: left;
         }
 
         .module-card {
@@ -171,44 +182,149 @@
             color: #fff;
         }
 
-        /* Modern scroll-to-top button */
-        #scrollTopBtn {
-            display: none; /* hidden by default */
+        .top {
             position: fixed;
-            bottom: 25px;
-            right: 25px;
-            z-index: 9999;
-            width: 50px;
-            height: 50px;
-            font-size: 24px;
-            border: none;
-            outline: none;
-            background: linear-gradient(135deg, #4caf50, #2e7d32);
-            color: white;
-            cursor: pointer;
-            border-radius: 50%;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s, background 0.3s;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 0px 20px 0px 20px;
+            box-sizing: border-box;
         }
 
-        #scrollTopBtn:hover {
-            transform: translateY(-3px);
-            background: linear-gradient(135deg, #45a049, #1b5e20);
+        .navbar {
+            margin-top: -5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            background-color: #1a1a1a;
+            color: #fff;
+            height: 70px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border-radius: 0 0 15px 15px;
         }
+
+        .navbar .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .navbar .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .navbar .nav-buttons button {
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 4px;
+            color: #ffffff;
+            background-color: #6200ee;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+        }
+
+        .navbar .nav-buttons button:hover {
+            background-color: #3700b3;
+            box-shadow: 0 4px 5px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+        }
+
+        .navbar .nav-buttons button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(98, 0, 238, 0.3);
+        }
+
+        .menu-button {
+            position: relative;
+            display: inline-block;
+        }
+
+        .menu-button .main-btn {
+            background-color: #2563eb !important;
+        }
+
+        .menu-button .main-btn:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 5px rgba(0,0,0,0.2);
+        }
+
+        .menu-button .dropdown {
+            display: none;
+            position: absolute;
+            top: 100%; 
+            left: 0;
+            background-color: #1f2937; 
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            overflow: hidden;
+            flex-direction: column;
+            min-width: 140px;
+            z-index: 100;
+        }
+
+        .menu-button:hover .dropdown {
+            display: flex;
+        }
+
+        .menu-button .dropdown button {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #fff;
+            background-color: transparent;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .menu-button .dropdown button:hover {
+            background-color: #2563eb;
+        }
+
+        .blank {
+            height: 20px;
+            width: 100%;
+            background-color: #121212;
+        }
+
     </style>
 </head>
 
 <body>
-
-    <img id="banner" src="https://raw.githubusercontent.com/megsystem/megsystem/refs/heads/main/banner.png" alt="DebloaterTool Banner">
-
-    <h1>DebloaterTool</h1>
-
-    <div id="button-container">
-        <button onclick="killserver()" style="background: #af4c4c;">Kill Server</button>
-        <button onclick="deselectAll()" style="background: #6b7280;">Deselect All</button>
-        <button onclick="selectAll()" style="background: #2563eb;">Select All</button>
-        <button onclick="runSelected()">Run Debloater</button>
+    <div class="top">
+        <div class="blank"></div>
+        <div class="banner-wrapper">
+            <div id="banner-bg"></div>
+        </div>
+        <nav class="navbar">
+            <div class="logo">DebloaterTool</div>
+            <div class="nav-buttons">
+                <div class="menu-button">
+                    <button class="main-btn">Settings ▼</button>
+                    <div class="dropdown">
+                        <button onclick="showcli()">Show CLI</button>
+                        <button onclick="hidecli()">Hide CLI</button>
+                        <button onclick="killserver()" style="background: #af4c4c;">Kill Server</button>
+                    </div>
+                </div>
+                <div class="menu-button">
+                    <button class="main-btn">Select ▼</button>
+                    <div class="dropdown">
+                        <button onclick="selectAll()">Select All</button>
+                        <button onclick="deselectAll()">Deselect All</button>
+                    </div>
+                </div>
+                <button onclick="runSelected()">Run Debloater</button>
+            </div>
+        </nav>
     </div>
 
     <div id="modules"></div>
@@ -234,34 +350,7 @@
         </div>
     </div>
 
-    <button id="scrollTopBtn" title="Go to top">↑</button>
-
     <script>
-        // Get the button
-        var scrollBtn = document.getElementById("scrollTopBtn");
-
-        // Show button when scrolling down
-        window.onscroll = function () {
-            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-                scrollBtn.style.display = "block";
-            } else {
-                scrollBtn.style.display = "none";
-            }
-        };
-
-        // Scroll to top on click
-        scrollBtn.onclick = function () {
-            // For older browsers (IE)
-            var scrollToTop = window.setInterval(function () {
-                var pos = document.documentElement.scrollTop || document.body.scrollTop;
-                if (pos > 0) {
-                    window.scrollTo(0, pos - 90); // scroll up by 90px
-                } else {
-                    window.clearInterval(scrollToTop);
-                }
-            }, 10); // adjust speed here
-        };
-
         function ajaxGet(url, callback) {
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
@@ -367,6 +456,14 @@
             });
         }
 
+        function showcli() {
+            ajaxPost("/showcli", JSON.stringify({}), function (response) {});
+        }
+
+        function hidecli() {
+            ajaxPost("/hidecli", JSON.stringify({}), function (response) {});
+        }
+
         function deselectAll() {
             var boxes = document.getElementById("modules").getElementsByTagName("input");
             for (var i = 0; i < boxes.length; i++)
@@ -422,6 +519,8 @@
         };
 
         document.getElementById("noBtn").onclick = function () {
+            document.body.style.paddingTop = "0px";
+            document.body.style.marginTop = "0px";
             ajaxPost("/log", JSON.stringify({}), function (response) {
                 // Clear the entire page
                 document.body.innerHTML = "";
