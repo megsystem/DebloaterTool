@@ -56,7 +56,7 @@
             this.Controls.Add(this.webBrowser1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(780, 600);
+            this.MinimumSize = new System.Drawing.Size(780, 680);
             this.Name = "WebBrowser";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
