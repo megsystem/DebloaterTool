@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -120,6 +119,8 @@ namespace DebloaterTool
             }
 
             InitializeFolders();
+            InizializeConfig();
+            CheckConfig();
             var modules = ModuleList.GetAllModules().ToList();
 
             if (fullDebloat)
@@ -286,6 +287,53 @@ namespace DebloaterTool
             Directory.CreateDirectory(Global.bootlogoPath);
             Directory.CreateDirectory(Global.debloatersPath);
             Directory.CreateDirectory(Global.wallpapersPath);
+        }
+
+        static void InizializeConfig()
+        {
+            string configPath = Global.configFilePath;
+
+            if (File.Exists(configPath))
+            {
+                Logger.Log("Config file already exists. Skipping creation.");
+                return;
+            }
+
+            string defaultConfig = "{\n  \"DEBUG\": \"false\"\n}";
+
+            File.WriteAllText(configPath, defaultConfig, new UTF8Encoding(false));
+
+            Logger.Log("Config file created.", Level.SUCCESS);
+        }
+
+        static void CheckConfig()
+        {
+            if (!File.Exists(Global.configFilePath)) return;
+
+            string json = File.ReadAllText(Global.configFilePath);
+
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                Logger.Log("Config file is empty!", Level.ERROR);
+                return;
+            }
+
+            try
+            {
+                var serializer = new JavaScriptSerializer();
+                var dict = serializer.Deserialize<Dictionary<string, object>>(json);
+
+                if (Convert.ToBoolean(dict["DEBUG"]))
+                {
+                    Logger.Log("DEBUG is TRUE");
+                    IntPtr handle = GetConsoleWindow();
+                    ShowWindow(handle, SW_SHOW);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Error parsing JSON: " + ex.Message, Level.ERROR);
+            }
         }
 
         static void RunFullModules(List<TweakModule> modules)

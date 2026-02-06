@@ -11,7 +11,47 @@
             color: #e0e0e0;
             padding: 40px;
             text-align: center;
-            padding-top: 245px; /* same as navbar height */
+            padding-top: 250px;
+            transition: padding-top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+            /* IE scrollbar styles */
+            scrollbar-face-color: #333333;
+            scrollbar-track-color: #1e1e1e;
+            scrollbar-arrow-color: #ffffff;
+            scrollbar-highlight-color: #555555;
+            scrollbar-shadow-color: #000000;
+            scrollbar-3dlight-color: #444444;
+            scrollbar-darkshadow-color: #111111;
+        }
+
+        body::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        body::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background-color: #333333;
+            border-radius: 6px;
+            border: 3px solid #1e1e1e;
+        }
+
+        body.scrolled {
+            padding-top: 110px; /* Reduced padding when banner is hidden */
+        }
+
+        .top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 0px 20px 0px 20px;
+            box-sizing: border-box;
+            background-color: #121212;
+            transition: transform 0.4s ease;
         }
 
         .banner-wrapper {
@@ -19,6 +59,18 @@
             height: 150px;
             background: #121212;
             overflow: hidden;
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            opacity: 1;
+        }
+
+        /* Hide banner and blank space when scrolled */
+        body.scrolled .banner-wrapper {
+            height: 0;
+            opacity: 0;
+        }
+
+        body.scrolled .blank {
+            height: 0;
         }
 
         #banner-bg {
@@ -29,6 +81,26 @@
             background-position: center;
             background-repeat: no-repeat;
             border-radius: 15px 15px 0 0;
+        }
+
+        .blank {
+            height: 20px;
+            width: 100%;
+            background-color: #121212;
+            transition: height 0.4s ease;
+        }
+
+        .navbar {
+            margin-top: -5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            background-color: #1a1a1a;
+            color: #fff;
+            height: 70px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border-radius: 0 0 15px 15px;
         }
 
         h1 {
@@ -78,11 +150,6 @@
 
         button:hover {
             background: #45a049;
-        }
-
-        #button-container {
-            text-align: center;
-            margin-bottom: 15px;
         }
 
         .group-box {
@@ -135,109 +202,130 @@
             z-index: 9999;
         }
 
-        #restart-popup, #alert-popup {
-            display: none;
+        .popup-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
-            justify-content: center;
-            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
             z-index: 10000;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
         }
 
-        #restart-box, #alert-box {
-            background: #1e1e1e;
-            padding: 25px;
-            border-radius: 10px;
+        .popup-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .popup-table {
+            display: table;
+            width: 100%;
+            height: 100%;
+        }
+
+        .popup-cell {
+            display: table-cell;
+            vertical-align: middle;
             text-align: center;
-            width: 300px;
-            box-shadow: 0 0 12px rgba(0,0,0,0.6);
         }
 
-        #restart-box h2, #alert-box h2 {
-            margin-top: 0;
-            color: #fff;
+        .modern-box {
+            display: inline-block;
+            background: #222222;
+            border: 1px solid #444444;
+            padding: 35px;
+            border-radius: 12px;
+            width: 360px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+            transform: scale(0.9);
+            transition: transform 0.2s ease-out;
+        }
+
+        .popup-overlay.active .modern-box {
+            transform: scale(1);
+        }
+
+        .modern-box h2 {
+            margin: 0 0 12px 0;
+            font-size: 22px;
+            color: #ffffff;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        .modern-box p {
+            color: #aaaaaa;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            font-family: "Segoe UI", Arial, sans-serif;
         }
 
         .popup-btn {
-            margin: 10px;
-            padding: 10px 20px;
+            display: inline-block;
+            padding: 10px 22px;
+            margin: 0 5px;
             cursor: pointer;
             font-weight: bold;
             border: none;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 13px;
+            text-transform: uppercase;
+            color: #ffffff;
         }
 
-        #yesBtn, #bootinstallYes {
+        .btn-green {
+            background: #2e7d32;
+        }
+
+        .btn-green:hover {
             background: #4caf50;
-            color: #fff;
         }
 
-        #noBtn, #bootinstallNo {
-            background: #b33a3a;
-            color: #fff;
+        .btn-red {
+            background: #c62828;
         }
 
-        .top {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            padding: 0px 20px 0px 20px;
-            box-sizing: border-box;
+        .btn-red:hover {
+            background: #e53935;
         }
 
-        .navbar {
-            margin-top: -5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 40px;
-            background-color: #1a1a1a;
-            color: #fff;
-            height: 70px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            border-radius: 0 0 15px 15px;
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #555555;
+            color: #cccccc;
         }
 
-        .navbar .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            letter-spacing: 1px;
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #777777;
+            color: #ffffff;
         }
 
-        .navbar .nav-buttons {
-            display: flex;
-            gap: 15px;
+        .btn-green,
+        .btn-red,
+        .btn-outline {
+            transition: all 0.2s ease;
         }
 
         .navbar .nav-buttons button {
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 600;
             padding: 8px 16px;
             border-radius: 4px;
             color: #ffffff;
             background-color: #6200ee;
             border: none;
             cursor: pointer;
-            box-shadow: 0 2px 2px rgba(0,0,0,0.15);
             transition: all 0.2s ease;
         }
 
         .navbar .nav-buttons button:hover {
             background-color: #3700b3;
-            box-shadow: 0 4px 5px rgba(0,0,0,0.2);
             transform: translateY(-2px);
-        }
-
-        .navbar .nav-buttons button:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(98, 0, 238, 0.3);
         }
 
         .menu-button {
@@ -249,70 +337,70 @@
             background-color: #2563eb !important;
         }
 
-        .menu-button .main-btn:hover {
-            background-color: #1d4ed8;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 5px rgba(0,0,0,0.2);
-        }
-
         .menu-button .dropdown {
             display: none;
             position: absolute;
-            top: 100%; 
+            top: 100%;
             left: 0;
-            background-color: #1f2937; 
+            background-color: #1f2937;
             border-radius: 6px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             overflow: hidden;
+            display: none;
             flex-direction: column;
+            gap: 0;
             min-width: 140px;
             z-index: 100;
-        }
-
-        .menu-button:hover .dropdown {
-            display: flex;
         }
 
         .menu-button .dropdown button {
             padding: 8px 12px;
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 600;
             color: #fff;
             background-color: transparent;
             border: none;
             text-align: left;
             cursor: pointer;
             transition: background 0.2s ease;
+            margin: 0;
+            border-radius: 0;
+        }
+
+        .menu-button:hover .dropdown {
+            display: flex;
         }
 
         .menu-button .dropdown button:hover {
             background-color: #2563eb;
+            transform: translateY(0px);
         }
 
-        .blank {
-            height: 20px;
-            width: 100%;
-            background-color: #121212;
+        .menu-button .dropdown .kill-btn {
+            background: #af4c4c;
         }
 
+        .menu-button .dropdown .kill-btn:hover {
+            background: #d67a7a;
+        }
     </style>
 </head>
 
 <body>
-    <div class="top">
+    <div class="top" id="top-nav">
         <div class="blank"></div>
         <div class="banner-wrapper">
             <div id="banner-bg"></div>
         </div>
         <nav class="navbar">
-            <div class="logo">DebloaterTool</div>
+            <div class="logo" style="font-weight: 800; font-size: 1.5rem;">Debloater<span style="color:#6366f1">Tool</span></div>
             <div class="nav-buttons">
                 <div class="menu-button">
                     <button class="main-btn">Settings ▼</button>
                     <div class="dropdown">
                         <button onclick="showcli()">Show CLI</button>
                         <button onclick="hidecli()">Hide CLI</button>
-                        <button onclick="killserver()" style="background: #af4c4c;">Kill Server</button>
+                        <button onclick="killserver()" class="kill-btn">Kill Server</button>
                     </div>
                 </div>
                 <div class="menu-button">
@@ -332,25 +420,43 @@
     <div id="loading-overlay">Running modules...</div>
 
     <!-- Restart popup -->
-    <div id="restart-popup">
-        <div id="restart-box">
-            <h2>Do you want to restart?</h2>
-            <button class="popup-btn" id="yesBtn">Yes</button>
-            <button class="popup-btn" id="noBtn">No</button>
+    <div id="restart-popup" class="popup-overlay">
+        <div class="popup-table">
+            <div class="popup-cell">
+                <div class="modern-box">
+                    <h2>Restart Required</h2>
+                    <p>Optimization is complete. Please restart your computer to apply the system changes.</p>
+                    <button class="popup-btn btn-green" id="yesBtn">Restart Now</button>
+                    <button class="popup-btn btn-outline" id="noBtn">Later</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Alert popup -->
-    <div id="alert-popup">
-        <div id="alert-box">
-            <h2>Do you want to run (BootLogo.Install)?</h2>
-            <p>This will change the bootloader!!!</p>
-            <button class="popup-btn" id="bootinstallYes">Yes</button>
-            <button class="popup-btn" id="bootinstallNo">No</button>
+    <div id="alert-popup" class="popup-overlay">
+        <div class="popup-table">
+            <div class="popup-cell">
+                <div class="modern-box" style="border-top: 4px solid #c62828;">
+                    <h2 style="color:#ff5252">System Warning</h2>
+                    <p>The <b>BootLogo.Install</b> module modifies critical system files. This action cannot be easily undone. Continue?</p>
+                    <button class="popup-btn btn-red" id="bootinstallYes">Proceed</button>
+                    <button class="popup-btn btn-outline" id="bootinstallNo">Cancel</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
+        // --- Scroll Handling Logic ---
+        window.onscroll = function () {
+            if (document.body.scrollTop > 40 || document.documentElement.scrollTop > 40) {
+                document.body.classList.add("scrolled");
+            } else {
+                document.body.classList.remove("scrolled");
+            }
+        };
+
         function ajaxGet(url, callback) {
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
@@ -457,11 +563,11 @@
         }
 
         function showcli() {
-            ajaxPost("/showcli", JSON.stringify({}), function (response) {});
+            ajaxPost("/showcli", JSON.stringify({}), function (response) { });
         }
 
         function hidecli() {
-            ajaxPost("/hidecli", JSON.stringify({}), function (response) {});
+            ajaxPost("/hidecli", JSON.stringify({}), function (response) { });
         }
 
         function deselectAll() {
@@ -474,10 +580,10 @@
         function runSelected() {
             if (!run) {
                 const checkbox = document.querySelector('input[type="checkbox"][value="BootLogo.Install"]');
-
-                if (checkbox.checked) {
+                if (checkbox && checkbox.checked) {
                     document.getElementById("loading-overlay").style.display = "none";
-                    document.getElementById("alert-popup").style.display = "flex";
+                    document.getElementById("alert-popup").classList.add("active");
+                    return;
                 }
                 else {
                     run = true;
@@ -487,45 +593,39 @@
             if (run) {
                 var boxes = document.getElementById("modules").getElementsByTagName("input");
                 var selected = [];
-
                 for (var i = 0; i < boxes.length; i++)
                     if (boxes[i].checked)
                         selected.push(boxes[i].value);
 
                 document.getElementById("loading-overlay").style.display = "flex";
-
                 ajaxPost("/run", JSON.stringify(selected), function () {
                     document.getElementById("loading-overlay").style.display = "none";
-                    document.getElementById("restart-popup").style.display = "flex";
+                    document.getElementById("restart-popup").classList.add("active");
                 });
             }
         }
 
         const alertPopup = document.getElementById("alert-popup");
         document.getElementById("bootinstallNo").onclick = function () {
-            alertPopup.style.display = "none";
+            alertPopup.classList.remove("active");
             run = false;
         };
         document.getElementById("bootinstallYes").onclick = function () {
-            alertPopup.style.display = "none";
+            alertPopup.classList.remove("active");
             run = true;
-            runSelected()
+            runSelected();
         };
 
         document.getElementById("yesBtn").onclick = function () {
             ajaxPost("/restart", JSON.stringify({}), function (response) {
-                document.getElementById("restart-popup").style.display = "none";
+                document.getElementById("restart-popup").classList.remove("active");
             });
         };
 
         document.getElementById("noBtn").onclick = function () {
             document.body.style.paddingTop = "0px";
-            document.body.style.marginTop = "0px";
             ajaxPost("/log", JSON.stringify({}), function (response) {
-                // Clear the entire page
                 document.body.innerHTML = "";
-
-                // Create a container for the logs
                 var container = document.createElement("pre");
                 container.style.whiteSpace = "pre-wrap";
                 container.style.padding = "20px";
@@ -534,7 +634,6 @@
                 container.style.overflow = "auto";
                 container.style.fontFamily = "monospace";
                 container.textContent = response;
-
                 document.body.appendChild(container);
             });
         };

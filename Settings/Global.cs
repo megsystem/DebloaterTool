@@ -73,5 +73,6 @@ namespace DebloaterTool.Settings
         public static string wallpapersPath = $@"{InstallPath}\Wallpapers";
         public static string themePath = $@"{InstallPath}\WinTheme";
         public static string bootlogoPath = $@"{InstallPath}\Bootlogo";
+        public static string configFilePath = $@"{InstallPath}\config.json";
     }
 }
