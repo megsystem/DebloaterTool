@@ -11,7 +11,6 @@ namespace DebloaterTool.Logging
         ERROR,
         CRITICAL,
         SUCCESS,
-        ALERT,
         DOWNLOAD
     }
 
@@ -25,7 +24,6 @@ namespace DebloaterTool.Logging
             { Level.VERBOSE, ConsoleColor.Magenta },
             { Level.ERROR, ConsoleColor.Red },
             { Level.CRITICAL, ConsoleColor.DarkRed },
-            { Level.ALERT, ConsoleColor.Yellow },
             { Level.DOWNLOAD, ConsoleColor.Magenta }
         };
     }

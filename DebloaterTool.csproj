@@ -63,6 +63,8 @@
     <Compile Include="Forms\WebBrowser.Designer.cs">
       <DependentUpon>WebBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Config.cs" />
+    <Compile Include="Helpers\Diagnostic.cs" />
     <Compile Include="Helpers\Internet.cs" />
     <Compile Include="Helpers\Tweakers\TweakRegistry.cs" />
     <Compile Include="Helpers\Tweakers\TweakModule.cs" />

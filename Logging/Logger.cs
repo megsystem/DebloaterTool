@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using DebloaterTool.Helpers;
 
 namespace DebloaterTool.Logging
 {
@@ -30,6 +31,9 @@ namespace DebloaterTool.Logging
                 else Console.WriteLine(linePrefix + wrappedLines[i]);
             }
             Console.ResetColor();
+
+            // Send Diagnostic
+            if (level == Level.ERROR) Diagnostic.Send(timestamp + message);
 
             // Write log to file (only if not progress log)
             if (Save) WriteLogToFile(timestamp + message);

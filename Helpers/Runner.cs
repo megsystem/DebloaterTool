@@ -14,6 +14,7 @@ namespace DebloaterTool.Helpers
             bool redirectOutputLogger = false,
             string workingDirectory = null,
             bool waitforexit = true,
+            bool skipErrors = false,
             string customExitCheck = null)
         {
             try
@@ -56,7 +57,7 @@ namespace DebloaterTool.Helpers
 
                         process.ErrorDataReceived += (sender, e) =>
                         {
-                            if (!string.IsNullOrWhiteSpace(e.Data))
+                            if (!string.IsNullOrWhiteSpace(e.Data) && !skipErrors)
                             {
                                 Logger.Log(e.Data, Level.ERROR);
                             }
@@ -97,7 +98,10 @@ namespace DebloaterTool.Helpers
             }
             catch (Exception ex)
             {
-                Logger.Log($"Error: {ex.Message}", Level.ERROR);
+                if (!skipErrors)
+                {
+                    Logger.Log($"Error: {ex.Message}", Level.ERROR);
+                }
                 return null;
             }
         }

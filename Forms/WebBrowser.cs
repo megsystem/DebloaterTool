@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DebloaterTool.Helpers;
+using DebloaterTool.Settings;
+using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using static DebloaterTool.Program;
@@ -63,6 +65,7 @@ namespace DebloaterTool
         {
             InitializeComponent();
             webBrowser1.Url = new Uri(url);
+            this.Text = $"{(Admins.IsAdministrator() ? "[Administrator]: " : "")}DebloaterTool {Global.Version} - {Diagnostic.GetHardwareId()}";
         }
 
         private void Local_FormClosing(object sender, FormClosingEventArgs e)

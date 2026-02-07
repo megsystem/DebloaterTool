@@ -447,6 +447,24 @@
         </div>
     </div>
 
+    <!-- Diagnostic popup -->
+    <div id="diagnostic-popup" class="popup-overlay">
+        <div class="popup-table">
+            <div class="popup-cell">
+                <div class="modern-box" style="border-top: 4px solid #c62828;">
+                    <h2 style="color:#ff5252">Enable Diagnostics</h2>
+                    <p>
+                        Would you like to help us improve the program? <br>
+                        Enabling diagnostics will securely send anonymized usage and error data to the developer.
+                        This information helps identify bugs, optimize performance, and enhance future updates.
+                    </p>
+                    <button class="popup-btn btn-red" id="enablediagnostic">Yes, Send Data</button>
+                    <button class="popup-btn btn-outline" id="disablediagnostic">No, Thanks</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // --- Scroll Handling Logic ---
         window.onscroll = function () {
@@ -456,6 +474,24 @@
                 document.body.classList.remove("scrolled");
             }
         };
+
+        document.addEventListener("DOMContentLoaded", function () {
+            ajaxGet("/getdiagnostic", function (response) {
+                try {
+                    var data = JSON.parse(response);
+                    if (!data.diagnostic) {
+                        document
+                            .getElementById("diagnostic-popup")
+                            .classList.add("active");
+                    }
+                } catch (e) {
+                    console.error("Invalid JSON from /getdiagnostic", e);
+                    document
+                        .getElementById("diagnostic-popup")
+                        .classList.add("active");
+                }
+            });
+        });
 
         function ajaxGet(url, callback) {
             var xhr = new XMLHttpRequest();
@@ -581,7 +617,6 @@
             if (!run) {
                 const checkbox = document.querySelector('input[type="checkbox"][value="BootLogo.Install"]');
                 if (checkbox && checkbox.checked) {
-                    document.getElementById("loading-overlay").style.display = "none";
                     document.getElementById("alert-popup").classList.add("active");
                     return;
                 }
@@ -614,6 +649,15 @@
             alertPopup.classList.remove("active");
             run = true;
             runSelected();
+        };
+
+        const diagnosticPopup = document.getElementById("diagnostic-popup");
+        document.getElementById("enablediagnostic").onclick = function () {
+            diagnosticPopup.classList.remove("active");
+            ajaxPost("/enablediagnostic", JSON.stringify({}), function (response) { });
+        };
+        document.getElementById("disablediagnostic").onclick = function () {
+            diagnosticPopup.classList.remove("active");
         };
 
         document.getElementById("yesBtn").onclick = function () {

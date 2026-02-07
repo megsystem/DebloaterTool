@@ -23,29 +23,23 @@ namespace DebloaterTool
         // Import Win32 functions
         [DllImport("kernel32.dll", ExactSpelling = true)]
         private static extern IntPtr GetConsoleWindow();
-
         [DllImport("user32.dll")]
         private static extern bool SetWindowPos(
             IntPtr hWnd,
             IntPtr hWndInsertAfter,
             int X, int Y, int cx, int cy,
             uint uFlags);
-
         private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
         private static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
         private const uint SWP_NOMOVE = 0x0002;
         private const uint SWP_NOSIZE = 0x0001;
         private const uint SWP_SHOWWINDOW = 0x0040;
-
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
         const int SW_HIDE = 0;
         const int SW_SHOW = 5;
-
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern uint GetConsoleProcessList(uint[] processList, uint processCount);
-
         static bool hideme = false;
 
         static void Main(string[] args)
@@ -80,7 +74,7 @@ namespace DebloaterTool
             ApiResponse result = new ApiResponse();
             Internet.Inizialize();
             Updater.CheckForUpdates();
-            Console.Title = $"{(Admins.IsAdministrator() ? "[Administrator]: " : "")}DebloaterTool {Global.Version}";
+            Console.Title = $"{(Admins.IsAdministrator() ? "[Administrator]: " : "")}DebloaterTool {Global.Version} - {Diagnostic.GetHardwareId()}";
             DisplayWelcomeScreen();
 
             // Parse arguments
@@ -119,8 +113,8 @@ namespace DebloaterTool
             }
 
             InitializeFolders();
-            InizializeConfig();
-            CheckConfig();
+            Config.InizializeConfig();
+            Config.CheckConfig();
             var modules = ModuleList.GetAllModules().ToList();
 
             if (fullDebloat)
@@ -289,53 +283,6 @@ namespace DebloaterTool
             Directory.CreateDirectory(Global.wallpapersPath);
         }
 
-        static void InizializeConfig()
-        {
-            string configPath = Global.configFilePath;
-
-            if (File.Exists(configPath))
-            {
-                Logger.Log("Config file already exists. Skipping creation.");
-                return;
-            }
-
-            string defaultConfig = "{\n  \"DEBUG\": \"false\"\n}";
-
-            File.WriteAllText(configPath, defaultConfig, new UTF8Encoding(false));
-
-            Logger.Log("Config file created.", Level.SUCCESS);
-        }
-
-        static void CheckConfig()
-        {
-            if (!File.Exists(Global.configFilePath)) return;
-
-            string json = File.ReadAllText(Global.configFilePath);
-
-            if (string.IsNullOrWhiteSpace(json))
-            {
-                Logger.Log("Config file is empty!", Level.ERROR);
-                return;
-            }
-
-            try
-            {
-                var serializer = new JavaScriptSerializer();
-                var dict = serializer.Deserialize<Dictionary<string, object>>(json);
-
-                if (Convert.ToBoolean(dict["DEBUG"]))
-                {
-                    Logger.Log("DEBUG is TRUE");
-                    IntPtr handle = GetConsoleWindow();
-                    ShowWindow(handle, SW_SHOW);
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Log("Error parsing JSON: " + ex.Message, Level.ERROR);
-            }
-        }
-
         static void RunFullModules(List<TweakModule> modules)
         {
             var allModuleNames = modules.ToDictionary(
@@ -452,6 +399,16 @@ namespace DebloaterTool
                         else if (req.Url.AbsolutePath == "/disableeula")
                         {
                             eula = false;
+                        }
+                        else if (req.Url.AbsolutePath == "/enablediagnostic")
+                        {
+                            Logger.Log("Diagnostic Enabled");
+                            Diagnostic.enabled = true;
+                            Config.UpdateConfigValue("DIAGNOSTIC", true);
+                        }
+                        else if (req.Url.AbsolutePath == "/getdiagnostic")
+                        {
+                            Respond(resp, serializer.Serialize(new { diagnostic = Config.GetConfigValue("DIAGNOSTIC") }), "application/json");
                         }
                         else if (req.Url.AbsolutePath == "/showcli")
                         {
