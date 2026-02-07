@@ -121,7 +121,7 @@ namespace DebloaterTool.Helpers
             catch (Exception ex)
             {
                 Logger.Log(
-                    $"Download failed. Url: {url}. Exception: {ex}",
+                    $"Download failed. Url: {url}. Exception: {ex.Message}",
                     Level.ERROR
                 );
                 return false;
