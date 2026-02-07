@@ -120,7 +120,10 @@ namespace DebloaterTool.Helpers
             }
             catch (Exception ex)
             {
-                Logger.Log($"Download error: {ex.Message}", Level.ERROR);
+                Logger.Log(
+                    $"Download failed. Url: {url}. Exception: {ex}",
+                    Level.ERROR
+                );
                 return false;
             }
         }
