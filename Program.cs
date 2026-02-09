@@ -24,6 +24,8 @@ namespace DebloaterTool
         [DllImport("kernel32.dll", ExactSpelling = true)]
         private static extern IntPtr GetConsoleWindow();
         [DllImport("user32.dll")]
+        static extern bool IsWindowVisible(IntPtr hWnd);
+        [DllImport("user32.dll")]
         private static extern bool SetWindowPos(
             IntPtr hWnd,
             IntPtr hWndInsertAfter,
@@ -357,6 +359,7 @@ namespace DebloaterTool
             private readonly HttpListener listener;
             private readonly string url;
             private readonly List<TweakModule> modules;
+            private JavaScriptSerializer serializer = new JavaScriptSerializer();
 
             public ApplicationWebServer(string url, List<TweakModule> modules)
             {
@@ -377,7 +380,6 @@ namespace DebloaterTool
                 });
                 thread.SetApartmentState(ApartmentState.STA);
                 thread.Start();
-                JavaScriptSerializer serializer = new JavaScriptSerializer();
                 ApiResponse responseObj = new ApiResponse();
                 bool eula = true;
 
@@ -406,21 +408,36 @@ namespace DebloaterTool
                             Diagnostic.enabled = true;
                             Config.UpdateConfigValue("DIAGNOSTIC", true);
                         }
-                        else if (req.Url.AbsolutePath == "/getdiagnostic")
+                        else if (req.Url.AbsolutePath == "/getinfo")
                         {
-                            Respond(resp, serializer.Serialize(new { diagnostic = Config.GetConfigValue("DIAGNOSTIC") }), "application/json");
+                            SendInfo(resp);
                         }
-                        else if (req.Url.AbsolutePath == "/showcli")
+                        else if (req.Url.AbsolutePath == "/toggledebug")
                         {
-                            var handle = GetConsoleWindow();
-                            ShowWindow(handle, SW_SHOW);
-                            hideme = false;
+                            bool debugConfig = Config.GetConfigValue("DEBUG");
+                            Config.UpdateConfigValue("DEBUG", !debugConfig);
+                            SendInfo(resp);
                         }
-                        else if (req.Url.AbsolutePath == "/hidecli")
+                        else if (req.Url.AbsolutePath == "/togglediagnostic")
                         {
-                            var handle = GetConsoleWindow();
-                            ShowWindow(handle, SW_HIDE);
-                            hideme = true;
+                            bool diagnosticConfig = Config.GetConfigValue("DIAGNOSTIC");
+                            Config.UpdateConfigValue("DIAGNOSTIC", !diagnosticConfig);
+                            SendInfo(resp);
+                        }
+                        else if (req.Url.AbsolutePath == "/togglecli")
+                        {
+                            IntPtr handle = GetConsoleWindow();
+                            if (IsWindowVisible(handle))
+                            {
+                                ShowWindow(handle, SW_HIDE);
+                                hideme = true;
+                            }
+                            else
+                            {
+                                ShowWindow(handle, SW_SHOW);
+                                hideme = false;
+                            }
+                            SendInfo(resp);
                         }
                         else if (req.Url.AbsolutePath == "/modules")
                         {
@@ -509,6 +526,16 @@ namespace DebloaterTool
                         resp.OutputStream.Close();
                     }
                 }
+            }
+
+            private void SendInfo(HttpListenerResponse resp)
+            {
+                Respond(resp, serializer.Serialize(new
+                {
+                    diagnostic = Config.GetConfigValue("DIAGNOSTIC"),
+                    debug = Config.GetConfigValue("DEBUG"),
+                    cli = !hideme
+                }), "application/json");
             }
 
             private void Respond(HttpListenerResponse resp, string content, string contentType)

@@ -39,7 +39,7 @@
         }
 
         body.scrolled {
-            padding-top: 110px; /* Reduced padding when banner is hidden */
+            padding-top: 110px;
         }
 
         .top {
@@ -63,7 +63,6 @@
             opacity: 1;
         }
 
-        /* Hide banner and blank space when scrolled */
         body.scrolled .banner-wrapper {
             height: 0;
             opacity: 0;
@@ -372,7 +371,7 @@
         }
 
         .menu-button .dropdown button:hover {
-            background-color: #2563eb;
+            background-color: #7ab3d6;
             transform: translateY(0px);
         }
 
@@ -382,6 +381,14 @@
 
         .menu-button .dropdown .kill-btn:hover {
             background: #d67a7a;
+        }
+
+        .menu-button .dropdown .active {
+            background: #2563eb;
+        }
+
+        .menu-button .dropdown .active:hover {
+            background: #2563eb;
         }
     </style>
 </head>
@@ -398,16 +405,17 @@
                 <div class="menu-button">
                     <button class="main-btn">Settings ▼</button>
                     <div class="dropdown">
-                        <button onclick="showcli()">Show CLI</button>
-                        <button onclick="hidecli()">Hide CLI</button>
+                        <button onclick="togglecli()" id="cli">CLI</button>
+                        <button onclick="toggledebug()" id="debug">DEBUG</button>
+                        <button onclick="togglediagnostic()" id="diagnostic">DIAGNOSTIC</button>
                         <button onclick="killserver()" class="kill-btn">Kill Server</button>
                     </div>
                 </div>
                 <div class="menu-button">
                     <button class="main-btn">Select ▼</button>
                     <div class="dropdown">
-                        <button onclick="selectAll()">Select All</button>
-                        <button onclick="deselectAll()">Deselect All</button>
+                        <button onclick="toggleModules();" id="toggleButton">Select All</button>
+                        <button onclick="selectDefaults()" id="toggleButton">Select Defaults</button>
                     </div>
                 </div>
                 <button onclick="runSelected()">Run Debloater</button>
@@ -475,8 +483,29 @@
             }
         };
 
+        function updateUI(data) {
+            var buttons = [
+                { id: "debug", label: "DEBUG", state: data.debug },
+                { id: "cli", label: "CLI", state: data.cli },
+                { id: "diagnostic", label: "Diagnostic", state: data.diagnostic }
+            ];
+
+            for (var i = 0; i < buttons.length; i++) {
+                var btnInfo = buttons[i];
+                var btn = document.getElementById(btnInfo.id);
+                if (btn) {
+                    btn.textContent = (btnInfo.state ? "Disable " : "Enable ") + btnInfo.label;
+                    if (btnInfo.state) {
+                        btn.classList.add("active");
+                    } else {
+                        btn.classList.remove("active");
+                    }
+                }
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
-            ajaxGet("/getdiagnostic", function (response) {
+            ajaxGet("/getinfo", function (response) {
                 try {
                     var data = JSON.parse(response);
                     if (!data.diagnostic) {
@@ -484,8 +513,9 @@
                             .getElementById("diagnostic-popup")
                             .classList.add("active");
                     }
+                    updateUI(data);
                 } catch (e) {
-                    console.error("Invalid JSON from /getdiagnostic", e);
+                    console.error("Invalid JSON from /getinfo", e);
                     document
                         .getElementById("diagnostic-popup")
                         .classList.add("active");
@@ -586,11 +616,55 @@
             });
         }
 
-        function selectAll() {
-            var boxes = document.getElementById("modules").getElementsByTagName("input");
-            for (var i = 0; i < boxes.length; i++)
-                boxes[i].checked = true;
+        var container = document.getElementById("modules");
+        var button = document.getElementById("toggleButton");
+        var boxes = container.getElementsByTagName("input");
+
+        function toggleModules() {
+            var select = !button.classList.contains("active");
+            for (var i = 0; i < boxes.length; i++) {
+                boxes[i].checked = select;
+            }
+            button.textContent = select ? "Selected All" : "Select All";
+            if (select) {
+                button.classList.add("active");
+            } else {
+                button.classList.remove("active");
+            }
         }
+
+        function updateButtonOnChange() {
+            var boxes = container.getElementsByTagName("input");
+            var anyUnchecked = false;
+            for (var i = 0; i < boxes.length; i++) {
+                if (!boxes[i].checked) {
+                    anyUnchecked = true;
+                    break;
+                }
+            }
+            if (anyUnchecked) {
+                button.classList.remove("active");
+                button.textContent = "Select All";
+            } else {
+                button.classList.add("active");
+                button.textContent = "Selected All";
+            }
+        }
+
+        function selectDefaults() {
+            document.getElementById("toggleButton")
+                .classList.remove("active");
+            document.getElementById("toggleButton")
+                .textContent = "Select All";
+            loadModules();
+        }
+
+        container.onclick = function (event) {
+            var target = event.target || event.srcElement;
+            if (target.tagName.toLowerCase() === "input" && target.type === "checkbox") {
+                updateButtonOnChange();
+            }
+        };
 
         function killserver() {
             ajaxPost("/kill", JSON.stringify({}), function (response) {
@@ -598,18 +672,22 @@
             });
         }
 
-        function showcli() {
-            ajaxPost("/showcli", JSON.stringify({}), function (response) { });
+        function togglecli() {
+            ajaxPost("/togglecli", JSON.stringify({}), function (response) {
+                updateUI(JSON.parse(response));
+            });
         }
 
-        function hidecli() {
-            ajaxPost("/hidecli", JSON.stringify({}), function (response) { });
+        function toggledebug() {
+            ajaxPost("/toggledebug", JSON.stringify({}), function (response) {
+                updateUI(JSON.parse(response));
+            });
         }
 
-        function deselectAll() {
-            var boxes = document.getElementById("modules").getElementsByTagName("input");
-            for (var i = 0; i < boxes.length; i++)
-                boxes[i].checked = false;
+        function togglediagnostic() {
+            ajaxPost("/togglediagnostic", JSON.stringify({}), function (response) {
+                updateUI(JSON.parse(response));
+            });
         }
 
         let run = false;
