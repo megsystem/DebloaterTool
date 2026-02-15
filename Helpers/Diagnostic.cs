@@ -1,6 +1,6 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Net;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -36,7 +36,12 @@ namespace DebloaterTool.Helpers
                         .Replace("\n", "\\n") // Escape newlines
                         .Replace("\r", "\\r"); // Escape carriage returns
 
-                    string payload = string.Format("{{\"content\": \"**[{0}]**\\n{1}\"}}", id, escapedContent);
+                    string version = Assembly.GetExecutingAssembly()
+                         .GetName()
+                         .Version?
+                         .ToString();
+
+                    string payload = string.Format("{{\"content\": \"**[{0}] - [{1}]**\\n{2}\"}}", id, version, escapedContent);
 
                     // 4. Upload as string
                     client.UploadString(webhook, "POST", payload);

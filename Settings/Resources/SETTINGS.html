@@ -408,6 +408,7 @@
                         <button onclick="togglecli()" id="cli">CLI</button>
                         <button onclick="toggledebug()" id="debug">DEBUG</button>
                         <button onclick="togglediagnostic()" id="diagnostic">DIAGNOSTIC</button>
+                        <button onclick="checkUpdate()" id="diagnostic">Check Update</button>
                         <button onclick="killserver()" class="kill-btn">Kill Server</button>
                     </div>
                 </div>
@@ -473,6 +474,42 @@
         </div>
     </div>
 
+
+    <!-- Update popup -->
+    <div id="update-popup" class="popup-overlay">
+        <div class="popup-table">
+            <div class="popup-cell">
+                <div class="modern-box" style="border-top: 4px solid #2e7d32;">
+                    <h2 style="color:#4caf50">Update Available</h2>
+                    <p>
+                        A new version of the application has been detected. <br>
+                        Updating now will install the latest improvements, bug fixes, and performance enhancements.
+                        We recommend keeping your software up to date for the best experience.
+                    </p>
+                    <button class="popup-btn btn-green" id="yesupdate">Update Now</button>
+                    <button class="popup-btn btn-outline" id="noupdate">Later</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Update Found popup -->
+    <div id="noupdatefound-popup" class="popup-overlay">
+        <div class="popup-table">
+            <div class="popup-cell">
+                <div class="modern-box" style="border-top: 4px solid #2e7d32;">
+                    <h2 style="color:#4caf50">You're Up to Date</h2>
+                    <p>
+                        You are already using the latest version of the application. <br>
+                        No updates are currently available. Please check again later for new features and improvements.
+                    </p>
+                    <button class="popup-btn btn-outline" id="noupdatefound">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         // --- Scroll Handling Logic ---
         window.onscroll = function () {
@@ -508,20 +545,67 @@
             ajaxGet("/getinfo", function (response) {
                 try {
                     var data = JSON.parse(response);
-                    if (!data.diagnostic) {
-                        document
-                            .getElementById("diagnostic-popup")
-                            .classList.add("active");
+                    var updatePopup = document.getElementById("update-popup");
+                    var diagnosticPopup = document.getElementById("diagnostic-popup");
+
+                    function showDiagnosticIfNeeded() {
+                        if (!data.diagnostic && !updatePopup.classList.contains("active")) {
+                            diagnosticPopup.classList.add("active");
+                        }
                     }
+
+                    if (data.needupdate) {
+                        updatePopup.classList.add("active");
+
+                        // Observe when update popup is closed
+                        var observer = new MutationObserver(function () {
+                            if (!updatePopup.classList.contains("active")) {
+                                observer.disconnect();
+                                showDiagnosticIfNeeded();
+                            }
+                        });
+
+                        observer.observe(updatePopup, {
+                            attributes: true,
+                            attributeFilter: ["class"]
+                        });
+
+                    } else {
+                        // No update needed → show diagnostic immediately if required
+                        showDiagnosticIfNeeded();
+                    }
+
                     updateUI(data);
+
                 } catch (e) {
                     console.error("Invalid JSON from /getinfo", e);
-                    document
-                        .getElementById("diagnostic-popup")
-                        .classList.add("active");
+                    document.getElementById("update-popup").classList.add("active");
+                    document.getElementById("diagnostic-popup").classList.add("active");
                 }
             });
         });
+
+        function checkUpdate() {
+            ajaxGet("/getinfo", function (response) {
+                try {
+                    var data = JSON.parse(response);
+                    var updatePopup = document.getElementById("update-popup");
+                    var noUpdatePopup = document.getElementById("noupdatefound-popup");
+
+                    if (data.needupdate) {
+                        updatePopup.classList.add("active");
+                    }
+                    else {
+                        noUpdatePopup.classList.add("active");
+                    }
+
+                    updateUI(data);
+                } catch (e) {
+                    console.error("Invalid JSON from /getinfo", e);
+                    document.getElementById("update-popup").classList.add("active");
+                }
+            });
+        }
 
         function ajaxGet(url, callback) {
             var xhr = new XMLHttpRequest();
@@ -738,12 +822,25 @@
             diagnosticPopup.classList.remove("active");
         };
 
+        const updatepopup = document.getElementById("update-popup");
+        document.getElementById("yesupdate").onclick = function () {
+            updatepopup.classList.remove("active");
+            ajaxPost("/update", JSON.stringify({}), function (response) { });
+        };
+        document.getElementById("noupdate").onclick = function () {
+            updatepopup.classList.remove("active");
+        };
+
+        const noUpdatePopup = document.getElementById("noupdatefound-popup");
+        document.getElementById("noupdatefound").onclick = function () {
+            noUpdatePopup.classList.remove("active");
+        };
+
         document.getElementById("yesBtn").onclick = function () {
             ajaxPost("/restart", JSON.stringify({}), function (response) {
                 document.getElementById("restart-popup").classList.remove("active");
             });
         };
-
         document.getElementById("noBtn").onclick = function () {
             document.body.style.paddingTop = "0px";
             ajaxPost("/log", JSON.stringify({}), function (response) {

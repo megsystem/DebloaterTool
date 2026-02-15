@@ -13,95 +13,121 @@ namespace DebloaterTool.Helpers
     {
         [DllImport("kernel32.dll", ExactSpelling = true)]
         private static extern IntPtr GetConsoleWindow();
+
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
         const int SW_SHOW = 5;
 
-        public static void CheckForUpdates()
+        private static string exePath = Assembly.GetExecutingAssembly().Location;
+        private static string updatedExeName = Path.GetFileNameWithoutExtension(exePath) + ".update.exe";
+        private static string tempUpdatedPath = Path.Combine(Path.GetTempPath(), updatedExeName);
+        private static string updaterScriptPath = Path.Combine(Path.GetTempPath(), "apply_update.bat");
+
+        public static void CheckUpdateCLI()
         {
 #if DEBUG
             return;
 #endif
             try
             {
-                string exePath = Assembly.GetExecutingAssembly().Location;
-                string updatedExeName = Path.GetFileNameWithoutExtension(exePath) + ".update.exe";
-                string tempUpdatedPath = Path.Combine(Path.GetTempPath(), updatedExeName);
-                string updaterScriptPath = Path.Combine(Path.GetTempPath(), "apply_update.bat");
-
-                // Download updated executable to temp location
-                if (!Internet.DownloadFile(Global.lastversionurl, tempUpdatedPath))
+                if (!NeedUpdate())
                 {
-                    Logger.Log("Failed to download latest version.", Level.ERROR);
+                    Logger.Log("Application is already up to date.");
+                    TryDeleteFile(tempUpdatedPath);
+                    Console.Clear();
                     return;
                 }
 
-                // Compare hashes
-                if (!FilesAreEqual(exePath, tempUpdatedPath))
+                var handle = GetConsoleWindow();
+                ShowWindow(handle, SW_SHOW);
+
+                Logger.Log("New update detected.");
+
+                if (!Display.RequestYesOrNo("A new update is available. Do you want to update now?"))
                 {
-                    var handle = GetConsoleWindow();
-                    ShowWindow(handle, SW_SHOW);
-
-                    Logger.Log("New update detected.");
-
-                    if (!Display.RequestYesOrNo("A new update is available. Do you want to update now?"))
-                    {
-                        Logger.Log("User chose to skip the update.");
-                        File.Delete(tempUpdatedPath);
-                        Console.Clear();
-                        return;
-                    }
-
-                    if (!Internet.DownloadFile(Global.updaterbat, updaterScriptPath))
-                    {
-                        Logger.Log("Failed to download updater script.", Level.ERROR);
-                        File.Delete(tempUpdatedPath);
-                        Console.Clear();
-                        return;
-                    }
-
-                    Logger.Log("Launching update script...");
-                    Runner.Command(updaterScriptPath, $"\"{exePath}\" \"{tempUpdatedPath}\"", waitforexit: false);
-                    Environment.Exit(0);
+                    Logger.Log("User chose to skip the update.");
+                    TryDeleteFile(tempUpdatedPath);
+                    Console.Clear();
+                    return;
                 }
-                else
-                {
-                    Logger.Log("Application is already up to date.");
-                    TryDeleteFile(tempUpdatedPath); // Clean up unused download
-                }
+
+                InstallUpdate();
             }
             catch (Exception ex)
             {
                 Logger.Log($"Updater failed: {ex.Message}", Level.ERROR);
             }
 
-            // Cleanup console
             Console.Clear();
+        }
+
+        /// <summary>
+        /// Checks if an update is required by downloading latest exe and comparing hashes.
+        /// </summary>
+        public static bool NeedUpdate()
+        {
+            try
+            {
+                // Download updated executable to temp location
+                if (!Internet.DownloadFile(Global.lastversionurl, tempUpdatedPath))
+                {
+                    Logger.Log("Failed to download latest version.", Level.ERROR);
+                    return false;
+                }
+
+                return !FilesAreEqual(exePath, tempUpdatedPath);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"NeedUpdate failed: {ex.Message}", Level.ERROR);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Installs the update by downloading updater script and launching it.
+        /// </summary>
+        public static void InstallUpdate()
+        {
+            try
+            {
+                if (!File.Exists(tempUpdatedPath))
+                {
+                    Logger.Log("Updated file not found. Run NeedUpdate first.", Level.ERROR);
+                    return;
+                }
+
+                if (!Internet.DownloadFile(Global.updaterbat, updaterScriptPath))
+                {
+                    Logger.Log("Failed to download updater script.", Level.ERROR);
+                    TryDeleteFile(tempUpdatedPath);
+                    return;
+                }
+
+                Logger.Log("Launching update script...");
+                Runner.Command(updaterScriptPath, $"\"{exePath}\" \"{tempUpdatedPath}\"", waitforexit: false);
+
+                Environment.Exit(0);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"InstallUpdate failed: {ex.Message}", Level.ERROR);
+            }
         }
 
         private static bool FilesAreEqual(string path1, string path2)
         {
             if (!File.Exists(path1) || !File.Exists(path2)) return false;
 
-            FileStream fs1 = null;
-            FileStream fs2 = null;
-            SHA256 sha = null;
-            try
+            using (var fs1 = File.OpenRead(path1))
+            using (var fs2 = File.OpenRead(path2))
+            using (var sha = SHA256.Create())
             {
-                fs1 = File.OpenRead(path1);
-                fs2 = File.OpenRead(path2);
-                sha = SHA256.Create();
-
                 byte[] hash1 = sha.ComputeHash(fs1);
                 byte[] hash2 = sha.ComputeHash(fs2);
 
                 return StructuralComparisons.StructuralEqualityComparer.Equals(hash1, hash2);
-            }
-            finally
-            {
-                if (fs1 != null) fs1.Dispose();
-                if (fs2 != null) fs2.Dispose();
-                if (sha != null) sha.Dispose();
             }
         }
 

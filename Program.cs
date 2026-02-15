@@ -75,7 +75,7 @@ namespace DebloaterTool
 
             ApiResponse result = new ApiResponse();
             Internet.Inizialize();
-            Updater.CheckForUpdates();
+            if (!hideme) Updater.CheckUpdateCLI();
             Console.Title = $"{(Admins.IsAdministrator() ? "[Administrator]: " : "")}DebloaterTool {Global.Version} - {Diagnostic.GetHardwareId()}";
             DisplayWelcomeScreen();
 
@@ -412,6 +412,10 @@ namespace DebloaterTool
                         {
                             SendInfo(resp);
                         }
+                        else if (req.Url.AbsolutePath == "/update")
+                        {
+                            Updater.InstallUpdate();
+                        }
                         else if (req.Url.AbsolutePath == "/toggledebug")
                         {
                             bool debugConfig = Config.GetConfigValue("DEBUG");
@@ -534,7 +538,8 @@ namespace DebloaterTool
                 {
                     diagnostic = Config.GetConfigValue("DIAGNOSTIC"),
                     debug = Config.GetConfigValue("DEBUG"),
-                    cli = !hideme
+                    cli = !hideme,
+                    needupdate = Updater.NeedUpdate()
                 }), "application/json");
             }
 
