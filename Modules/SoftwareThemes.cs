@@ -49,6 +49,45 @@ namespace DebloaterTool.Modules
             }
         }
 
+        public static void DWMBlurGlass()
+        {
+            try
+            {
+                string zipPath = Path.Combine(Global.themePath, "DWMBlurGlass.zip");
+                string zipUrl = Global.dwmblurglass;
+
+                if (!DownloadFile(zipUrl, zipPath)) return;
+                Logger.Log($"Extracting DWMBlurGlass to '{Global.themePath}'...", Level.INFO);
+                Zip.ExtractZipFile(zipPath, Global.themePath);
+
+                Directory.Move(Path.Combine(Global.themePath, "Release"), Path.Combine(Global.themePath, "DWMBlurGlass"));
+                string DWMBlurGlassExe = Path.Combine(Global.themePath, "DWMBlurGlass", "DWMBlurGlass.exe");
+                if (File.Exists(DWMBlurGlassExe))
+                {
+                    Logger.Log("Running DWMBlurGlass.exe...", Level.INFO);
+                    Runner.Command(DWMBlurGlassExe, waitforexit: false);
+                    Logger.Log("DWMBlurGlass.exe finished.", Level.INFO);
+                }
+                else
+                {
+                    Logger.Log("DWMBlurGlass.exe not found in extracted folder.", Level.ERROR);
+                }
+
+                try
+                {
+                    File.Delete(zipPath);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log($"Failed to delete '{zipPath}': {ex.Message}", Level.WARNING);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Unexpected error in DWMBlurGlass: {ex.Message}", Level.ERROR);
+            }
+        }
+
         public static void BorderTheme()
         {
             try

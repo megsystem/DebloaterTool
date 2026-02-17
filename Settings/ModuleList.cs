@@ -30,6 +30,7 @@ namespace DebloaterTool.Settings
             new TweakModule(WinCustomization.EnableUltimatePerformance, "Enable Ultimate Performance mode", true),
             new TweakModule(SoftwareThemes.ExplorerTheme, "Apply custom File Explorer theme", false),
             new TweakModule(SoftwareThemes.BorderTheme, "Apply custom window border theme", false),
+            new TweakModule(SoftwareThemes.DWMBlurGlass, "Add custom effects to the global system title bar", false),
             new TweakModule(SoftwareThemes.WindhawkInstaller, "Installs Windhawk with silent installation", false),
             new TweakModule(SoftwareThemes.StartAllBackInstaller, "Installs StartAllBack with silent installation", false),
             new TweakModule(SoftwareThemes.WindowsActivator, "Windows Activator", false),

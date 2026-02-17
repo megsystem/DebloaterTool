@@ -47,6 +47,7 @@ namespace DebloaterTool.Settings
         public static string windhawkinstaller = "https://ramensoftware.com/downloads/windhawk_setup.exe";
         public static string windowsactivator = "https://raw.githubusercontent.com/massgravel/Microsoft-Activation-Scripts/refs/heads/master/MAS/Separate-Files-Version/Activators/HWID_Activation.cmd";
         public static string startallback = "https://urlshorter.it/assets/filehosting/installer.exe"; // modded dll for skip activation (sorry)
+        public static string dwmblurglass = "https://github.com/Maplespe/DWMBlurGlass/releases/download/2.3.1r/DWMBlurGlass_2.3.1_x64.zip";
 
         // Updater
         public static string lastversionurl = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/DebloaterTool.exe";
