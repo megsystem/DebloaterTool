@@ -4,21 +4,12 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
 namespace DebloaterTool.Helpers
 {
     internal class Updater
     {
-        [DllImport("kernel32.dll", ExactSpelling = true)]
-        private static extern IntPtr GetConsoleWindow();
-
-        [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-        const int SW_SHOW = 5;
-
         private static string exePath = Assembly.GetExecutingAssembly().Location;
         private static string updatedExeName = Path.GetFileNameWithoutExtension(exePath) + ".update.exe";
         private static string tempUpdatedPath = Path.Combine(Path.GetTempPath(), updatedExeName);
@@ -34,19 +25,6 @@ namespace DebloaterTool.Helpers
                 if (!NeedUpdate())
                 {
                     Logger.Log("Application is already up to date.");
-                    TryDeleteFile(tempUpdatedPath);
-                    Console.Clear();
-                    return;
-                }
-
-                var handle = GetConsoleWindow();
-                ShowWindow(handle, SW_SHOW);
-
-                Logger.Log("New update detected.");
-
-                if (!Display.RequestYesOrNo("A new update is available. Do you want to update now?"))
-                {
-                    Logger.Log("User chose to skip the update.");
                     TryDeleteFile(tempUpdatedPath);
                     Console.Clear();
                     return;

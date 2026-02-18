@@ -42,11 +42,10 @@ namespace DebloaterTool
         const int SW_SHOW = 5;
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern uint GetConsoleProcessList(uint[] processList, uint processCount);
-        static bool hideme = false;
 
         static void Main(string[] args)
         {
-            bool climode = args.Contains("--cli");
+            bool DEBUGCONSOLE = args.Contains("--DEBUGCONSOLE") || Config.GetConfigValue("DEBUG");
             IntPtr handle = GetConsoleWindow();
 
             if (handle != IntPtr.Zero)
@@ -58,10 +57,14 @@ namespace DebloaterTool
                 // If count is 1, it means only THIS process is using the console.
                 // This happens when you double-click the .exe (it creates a new console).
                 // If count > 1, it means the console was already open (cmd, powershell, etc).
-                if (count == 1 && !climode)
+                if (count == 1 && !DEBUGCONSOLE)
                 {
                     ShowWindow(handle, SW_HIDE);
-                    hideme = true;
+                    DEBUGCONSOLE = false;
+                }
+                else
+                {
+                    DEBUGCONSOLE = true;
                 }
             }
 
@@ -75,12 +78,12 @@ namespace DebloaterTool
 
             ApiResponse result = new ApiResponse();
             Internet.Inizialize();
-            if (!hideme) Updater.CheckUpdateCLI();
             Console.Title = $"{(Admins.IsAdministrator() ? "[Administrator]: " : "")}DebloaterTool {Global.Version} - {Diagnostic.GetHardwareId()}";
             DisplayWelcomeScreen();
 
             // Parse arguments
             bool skipEULA = args.Contains("--skipEULA");
+            bool skipUpdater = args.Contains("--skipUpdater");
             bool autoUAC = args.Contains("--autoUAC");
             result.restart = args.Contains("--autoRestart");
             bool fullDebloat = args.Contains("--fullDebloat");
@@ -93,6 +96,7 @@ namespace DebloaterTool
                 Console.WriteLine("Usage:");
                 Console.WriteLine("  [PATH]            Loads custom modules listed in the specified text file.");
                 Console.WriteLine("  --skipEULA        Skips the EULA prompt - only in the console");
+                Console.WriteLine("  --skipUpdater     Skips the Updater     - only in the console");
                 Console.WriteLine("  --autoRestart     Automatically restarts the computer after debloating.");
                 Console.WriteLine("  --fullDebloat     Performs a full debloat without selecting modules (all modules will be run).");
                 Console.WriteLine("  --help            Displays this help message.");
@@ -105,10 +109,10 @@ namespace DebloaterTool
                 Logger.Log("Not runned as administrator!", Level.CRITICAL);
                 Logger.Log("Restarting application with administrator privileges.");
 
-                if (!hideme)
+                if (DEBUGCONSOLE)
                 {
                     Array.Resize(ref args, args.Length + 1);
-                    args[args.Length - 1] = "--cli";
+                    args[args.Length - 1] = "--DEBUGCONSOLE";
                 }
 
                 Admins.RestartAsAdmin(args);
@@ -122,12 +126,14 @@ namespace DebloaterTool
             if (fullDebloat)
             {
                 result.status = -1; // set cli mode
+                if (!skipUpdater) Updater.CheckUpdateCLI();
                 EULAConsole(skipEULA);
                 RunFullModules(modules);
             }
             else if (!string.IsNullOrEmpty(modulePath))
             {
                 result.status = -1; // set cli mode
+                if (!skipUpdater) Updater.CheckUpdateCLI();
                 EULAConsole(skipEULA);
                 RunModulesFromFile(modulePath, modules);
             }
@@ -419,6 +425,9 @@ namespace DebloaterTool
                         else if (req.Url.AbsolutePath == "/toggledebug")
                         {
                             bool debugConfig = Config.GetConfigValue("DEBUG");
+                            IntPtr handle = GetConsoleWindow();
+                            if (debugConfig) ShowWindow(handle, SW_HIDE);
+                            else ShowWindow(handle, SW_SHOW);
                             Config.UpdateConfigValue("DEBUG", !debugConfig);
                             SendInfo(resp);
                         }
@@ -426,21 +435,6 @@ namespace DebloaterTool
                         {
                             bool diagnosticConfig = Config.GetConfigValue("DIAGNOSTIC");
                             Config.UpdateConfigValue("DIAGNOSTIC", !diagnosticConfig);
-                            SendInfo(resp);
-                        }
-                        else if (req.Url.AbsolutePath == "/togglecli")
-                        {
-                            IntPtr handle = GetConsoleWindow();
-                            if (IsWindowVisible(handle))
-                            {
-                                ShowWindow(handle, SW_HIDE);
-                                hideme = true;
-                            }
-                            else
-                            {
-                                ShowWindow(handle, SW_SHOW);
-                                hideme = false;
-                            }
                             SendInfo(resp);
                         }
                         else if (req.Url.AbsolutePath == "/modules")
@@ -481,7 +475,10 @@ namespace DebloaterTool
 
                             Logger.Log("=== Running Modules ===");
                             IntPtr consoleHandle = GetConsoleWindow();
-                            if (!hideme) SetWindowPos(consoleHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+                            if (IsWindowVisible(consoleHandle))
+                            {
+                                SetWindowPos(consoleHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+                            }
 
                             ApiResponse.percetage = 0;
                             int total = selected.Count;
@@ -510,7 +507,10 @@ namespace DebloaterTool
 
                             ApiResponse.percetage = 100;
                             Logger.Log("=== Finished ===");
-                            if (!hideme) SetWindowPos(consoleHandle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+                            if (IsWindowVisible(consoleHandle))
+                            {
+                                SetWindowPos(consoleHandle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+                            }
 
                             // Risposta al browser
                             Respond(resp, serializer.Serialize(new { status = "done" }), "application/json");
@@ -538,7 +538,6 @@ namespace DebloaterTool
                 {
                     diagnostic = Config.GetConfigValue("DIAGNOSTIC"),
                     debug = Config.GetConfigValue("DEBUG"),
-                    cli = !hideme,
                     needupdate = Updater.NeedUpdate()
                 }), "application/json");
             }

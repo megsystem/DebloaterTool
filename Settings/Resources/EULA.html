@@ -4,16 +4,13 @@
     <meta charset="UTF-8" />
     <title>EULA</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
     <style>
-        /* Reset */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* IE-friendly centering using table-cell */
         html, body {
             height: 100%;
         }
@@ -34,7 +31,7 @@
         }
 
         .container {
-            width: 450px;
+            width: 570px;
             max-width: 90%;
             border: 2px solid #4a4a4a;
             border-radius: 5px;
@@ -47,7 +44,7 @@
         .banner {
             max-width: 100%;
             height: auto;
-            margin-bottom: 20px;
+            border-radius: 5px;
         }
 
         h1 {
@@ -55,47 +52,69 @@
             margin-bottom: 10px;
         }
 
-        h2 {
-            margin-top: 15px;
-            font-size: 1.2rem;
-        }
-
         p {
             margin: 8px 0;
         }
 
-        /* Button */
-        .btn-settings {
-            background-color: #4caf50;
+        .btn-settings, .btn-decline {
+            margin: 0 5px;
+            width: 100%;
             border: none;
-            padding: 12px 20px;
+            padding: 14px 24px;
             color: white;
             cursor: pointer;
             font-size: 15px;
-            font-weight: bold;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-
-        .btn-settings:hover {
-            background-color: #45a049;
+            font-weight: 600;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            outline: none;
         }
 
         .btn-decline {
-            background-color: #f44336;
-            border: none;
-            padding: 12px 20px;
-            color: white;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: bold;
-            border-radius: 5px;
-            margin-top: 20px;
-            margin-left: 10px;
+            background-color: #e53935;
+            margin-left: 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
 
         .btn-decline:hover {
-            background-color: #d32f2f;
+            background-color: #c62828;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-settings {
+            background-color: #43a047;
+            margin-right: 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-settings:hover {
+            background-color: #2e7d32;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-settings:active, .btn-decline:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-box {
+            border-radius: 5px;
+            font-family: monospace;
+            border: 2px solid #4a4a4a;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .eula-box {
+            border-radius: 5px;
+            font-family: monospace;
+            border: 2px solid #4a4a4a;
+            padding: 5px;
         }
     </style>
 </head>
@@ -103,34 +122,44 @@
 <body>
     <div class="center-wrapper">
         <div class="container">
-
             <img class="banner"
                  src="https://raw.githubusercontent.com/megsystem/megsystem/refs/heads/main/banner.png"
                  alt="Page Banner" />
 
-            <h1>End User License Agreement (EULA) 📜</h1>
-            <p>Last Updated: April 7, 2025</p>
+            <h1>End User License Agreement 📜</h1>
+            <p>Last Updated: February 18, 2026</p>
 
-            <h2>1. Introduction 👋</h2>
+            <div class="eula-box">
+<pre>
++=============================================================+
+| By using this software, you agree to the following terms:   |
+| 1. This software is open source under the MIT License.      |
+| 2. You may not distribute modified versions without         |
+|    including the original license.                          |
+| 3. The developers are not responsible for any damages.      |
+| 4. Please disable your antivirus before proceeding.         |
+| 5. No warranty is provided; use at your own risk.           |
+| 6. Use --help to see all available automation options.      |
+| 7. Support at https://megsystem.github.io/DebloaterTool/    |
++=============================================================+
+</pre>
+            </div>
+
             <p>
                 Thank you for choosing our software! By downloading, installing, or using this application,
                 you agree to be bound by the terms of this End User License Agreement (“Agreement”).
                 If you do not agree, please do not use the software. 🙅
             </p>
 
-            <h2>2. License Grant 🔑</h2>
-            <p>
-                We grant you a limited, non-exclusive, non-transferable, revocable license to use the software
-                for personal or commercial purposes, in accordance with this EULA.
-            </p>
+            <div class="button-box">
+                <button class="btn-decline" onclick="decline()">
+                    Don’t Accept
+                </button>
 
-            <button class="btn-decline" onclick="decline()">
-                Don’t Accept
-            </button>
-
-            <button class="btn-settings" onclick="accept()">
-                Accept the EULA →
-            </button>
+                <button class="btn-settings" onclick="accept()">
+                    Accept the EULA →
+                </button>
+            </div>
         </div>
     </div>
     <script>

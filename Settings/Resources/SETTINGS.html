@@ -405,7 +405,6 @@
                 <div class="menu-button">
                     <button class="main-btn">Settings ▼</button>
                     <div class="dropdown">
-                        <button onclick="togglecli()" id="cli">CLI</button>
                         <button onclick="toggledebug()" id="debug">DEBUG</button>
                         <button onclick="togglediagnostic()" id="diagnostic">DIAGNOSTIC</button>
                         <button onclick="checkUpdate()" id="diagnostic">Check Update</button>
@@ -523,7 +522,6 @@
         function updateUI(data) {
             var buttons = [
                 { id: "debug", label: "DEBUG", state: data.debug },
-                { id: "cli", label: "CLI", state: data.cli },
                 { id: "diagnostic", label: "Diagnostic", state: data.diagnostic }
             ];
 
@@ -753,12 +751,6 @@
         function killserver() {
             ajaxPost("/kill", JSON.stringify({}), function (response) {
                 document.body.innerHTML = "<h2>Server has been stopped. You can safely close this tab.</h2>";
-            });
-        }
-
-        function togglecli() {
-            ajaxPost("/togglecli", JSON.stringify({}), function (response) {
-                updateUI(JSON.parse(response));
             });
         }
 
