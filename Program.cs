@@ -42,11 +42,10 @@ namespace DebloaterTool
         const int SW_SHOW = 5;
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern uint GetConsoleProcessList(uint[] processList, uint processCount);
-        public static bool DEBUGCONSOLE = false;
 
         static void Main(string[] args)
         {
-            DEBUGCONSOLE = args.Contains("--DEBUGCONSOLE") || Config.GetConfigValue("DEBUG");
+            bool DEBUGCONSOLE = args.Contains("--DEBUGCONSOLE") || Config.GetConfigValue("DEBUG");
             IntPtr handle = GetConsoleWindow();
 
             if (handle != IntPtr.Zero)
@@ -430,14 +429,11 @@ namespace DebloaterTool
                         }
                         else if (req.Url.AbsolutePath == "/toggledebug")
                         {
-                            if (!DEBUGCONSOLE)
-                            {
-                                bool debugConfig = Config.GetConfigValue("DEBUG");
-                                IntPtr handle = GetConsoleWindow();
-                                if (debugConfig) ShowWindow(handle, SW_HIDE);
-                                else ShowWindow(handle, SW_SHOW);
-                                Config.UpdateConfigValue("DEBUG", !debugConfig);
-                            }
+                            bool debugConfig = Config.GetConfigValue("DEBUG");
+                            IntPtr handle = GetConsoleWindow();
+                            if (debugConfig) ShowWindow(handle, SW_HIDE);
+                            else ShowWindow(handle, SW_SHOW);
+                            Config.UpdateConfigValue("DEBUG", !debugConfig);
                             SendInfo(resp);
                         }
                         else if (req.Url.AbsolutePath == "/togglediagnostic")
@@ -549,8 +545,7 @@ namespace DebloaterTool
                     diagnostic = Diagnostic.enabled,
                     debug = Config.GetConfigValue("DEBUG"),
                     needupdate = Updater.NeedUpdate(),
-                    compiledasdebug = Diagnostic.CompiledAsDebug(),
-                    hidedebugbutton = DEBUGCONSOLE
+                    compiledasdebug = Diagnostic.CompiledAsDebug()
                 }), "application/json");
             }
 
