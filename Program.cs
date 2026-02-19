@@ -42,10 +42,11 @@ namespace DebloaterTool
         const int SW_SHOW = 5;
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern uint GetConsoleProcessList(uint[] processList, uint processCount);
+        public static bool DEBUGCONSOLE = false;
 
         static void Main(string[] args)
         {
-            bool DEBUGCONSOLE = args.Contains("--DEBUGCONSOLE") || Config.GetConfigValue("DEBUG");
+            DEBUGCONSOLE = args.Contains("--DEBUGCONSOLE") || Config.GetConfigValue("DEBUG");
             IntPtr handle = GetConsoleWindow();
 
             if (handle != IntPtr.Zero)
@@ -57,7 +58,11 @@ namespace DebloaterTool
                 // If count is 1, it means only THIS process is using the console.
                 // This happens when you double-click the .exe (it creates a new console).
                 // If count > 1, it means the console was already open (cmd, powershell, etc).
-                if (count == 1 && !DEBUGCONSOLE)
+                if (Diagnostic.CompiledAsDebug())
+                {
+                    DEBUGCONSOLE = true;
+                }
+                else if (count == 1 && !DEBUGCONSOLE)
                 {
                     ShowWindow(handle, SW_HIDE);
                     DEBUGCONSOLE = false;
@@ -121,6 +126,7 @@ namespace DebloaterTool
             InitializeFolders();
             Config.InizializeConfig();
             Config.CheckConfig();
+            Diagnostic.enabled = Config.GetConfigValue("DIAGNOSTIC") || Diagnostic.CompiledAsDebug();
             var modules = ModuleList.GetAllModules().ToList();
 
             if (fullDebloat)
@@ -424,17 +430,21 @@ namespace DebloaterTool
                         }
                         else if (req.Url.AbsolutePath == "/toggledebug")
                         {
-                            bool debugConfig = Config.GetConfigValue("DEBUG");
-                            IntPtr handle = GetConsoleWindow();
-                            if (debugConfig) ShowWindow(handle, SW_HIDE);
-                            else ShowWindow(handle, SW_SHOW);
-                            Config.UpdateConfigValue("DEBUG", !debugConfig);
+                            if (!DEBUGCONSOLE)
+                            {
+                                bool debugConfig = Config.GetConfigValue("DEBUG");
+                                IntPtr handle = GetConsoleWindow();
+                                if (debugConfig) ShowWindow(handle, SW_HIDE);
+                                else ShowWindow(handle, SW_SHOW);
+                                Config.UpdateConfigValue("DEBUG", !debugConfig);
+                            }
                             SendInfo(resp);
                         }
                         else if (req.Url.AbsolutePath == "/togglediagnostic")
                         {
                             bool diagnosticConfig = Config.GetConfigValue("DIAGNOSTIC");
                             Config.UpdateConfigValue("DIAGNOSTIC", !diagnosticConfig);
+                            Diagnostic.enabled = !diagnosticConfig;
                             SendInfo(resp);
                         }
                         else if (req.Url.AbsolutePath == "/modules")
@@ -536,9 +546,11 @@ namespace DebloaterTool
             {
                 Respond(resp, serializer.Serialize(new
                 {
-                    diagnostic = Config.GetConfigValue("DIAGNOSTIC"),
+                    diagnostic = Diagnostic.enabled,
                     debug = Config.GetConfigValue("DEBUG"),
-                    needupdate = Updater.NeedUpdate()
+                    needupdate = Updater.NeedUpdate(),
+                    compiledasdebug = Diagnostic.CompiledAsDebug(),
+                    hidedebugbutton = DEBUGCONSOLE
                 }), "application/json");
             }
 

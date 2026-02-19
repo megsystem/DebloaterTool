@@ -17,9 +17,6 @@ namespace DebloaterTool.Helpers
 
         public static void CheckUpdateCLI()
         {
-#if DEBUG
-            return;
-#endif
             try
             {
                 if (!NeedUpdate())
@@ -47,6 +44,13 @@ namespace DebloaterTool.Helpers
         {
             try
             {
+                // Check if compiled as Debug
+                if (Diagnostic.CompiledAsDebug())
+                {
+                    Logger.Log("Compiled as debug - UPDATE SKIPPED", Level.INFO);
+                    return false;
+                }
+
                 // Download updated executable to temp location
                 if (!Internet.DownloadFile(Global.lastversionurl, tempUpdatedPath))
                 {

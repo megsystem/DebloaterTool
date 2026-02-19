@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -41,7 +42,13 @@ namespace DebloaterTool.Helpers
                          .Version?
                          .ToString();
 
-                    string payload = string.Format("{{\"content\": \"**[{0}] - [{1}]**\\n{2}\"}}", id, version, escapedContent);
+                    string versionLabel = CompiledAsDebug()
+                        ? $"{version}D"
+                        : version;
+
+                    string payload = string.Format(
+                        "{{\"content\": \"**[{0}] - [{1}]**\\n{2}\"}}",
+                        id, versionLabel, escapedContent);
 
                     // 4. Upload as string
                     client.UploadString(webhook, "POST", payload);
@@ -68,6 +75,15 @@ namespace DebloaterTool.Helpers
                 foreach (byte b in hashBytes) sb.Append(b.ToString("X2"));
                 return sb.ToString(); // Returns a 32-char hex string
             }
+        }
+
+        public static bool CompiledAsDebug()
+        {
+            var attr = (DebuggableAttribute)Attribute.GetCustomAttribute(
+                Assembly.GetExecutingAssembly(),
+                    typeof(DebuggableAttribute));
+
+            return attr.IsJITTrackingEnabled;
         }
     }
 }
