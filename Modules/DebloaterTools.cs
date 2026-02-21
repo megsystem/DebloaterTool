@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web.Script.Serialization;
 
 namespace DebloaterTool.Modules
@@ -21,12 +22,10 @@ namespace DebloaterTool.Modules
             Logger.Log("Starting Windows configuration process...", Level.WARNING);
             try
             {
-                // Write JSON configuration to a temporary file.
-                string jsonPath = Path.Combine(Global.debloatersPath, "config.json");
-                File.WriteAllBytes(jsonPath, Global.config);
+                Console.WriteLine(Encoding.UTF8.GetString(Global.config));
                 string sectionName = "raphiTool";
                 string outputPath = Path.Combine(Global.debloatersPath, $"{sectionName}.json");
-                string combinedArgs = ProcessSection(jsonPath, sectionName, outputPath);
+                string combinedArgs = ProcessSection(ExtractJson(Global.config), sectionName, outputPath);
 
                 // Install
                 string scriptUrl = Global.raphiToolUrl;
@@ -59,12 +58,9 @@ namespace DebloaterTool.Modules
         {
             try
             {
-                // Write JSON configuration to a temporary file.
-                string jsonPath = Path.Combine(Global.debloatersPath, "config.json");
-                File.WriteAllBytes(jsonPath, Global.config);
                 string sectionName = "ChrisUtils";
                 string outputPath = Path.Combine(Global.debloatersPath, $"{sectionName}.json");
-                ProcessSection(jsonPath, sectionName, outputPath);
+                ProcessSection(ExtractJson(Global.config), sectionName, outputPath);
 
                 // Install
                 string scriptUrl = Global.christitusUrl;
@@ -93,10 +89,10 @@ namespace DebloaterTool.Modules
         /// <summary>
         /// Reads a section from JSON, converts arrays to List<string>, builds combined string of all array values, and writes to file.
         /// </summary>
-        static string ProcessSection(string jsonPath, string sectionName, string outputPath)
+        static string ProcessSection(string json, string sectionName, string outputPath)
         {
             var serializer = new JavaScriptSerializer();
-            var config = serializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(jsonPath));
+            var config = serializer.Deserialize<Dictionary<string, object>>(json);
 
             if (!config.ContainsKey(sectionName))
                 throw new Exception($"Section '{sectionName}' not found in JSON.");
@@ -130,6 +126,32 @@ namespace DebloaterTool.Modules
 
             // Return a single string of all values in all arrays
             return string.Join(" ", allArgsList);
+        }
+
+        /// <summary>
+        /// Extracts the first well-formed JSON object from a UTF-8 encoded byte array.
+        /// </summary>
+        static string ExtractJson(byte[] jsonbytes)
+        {
+            string input = Encoding.UTF8.GetString(jsonbytes);
+            int startIndex = input.IndexOf('{');
+            if (startIndex == -1) return null;
+
+            int braceCount = 0;
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = startIndex; i < input.Length; i++)
+            {
+                char c = input[i];
+                if (c == '{') braceCount++;
+                if (c == '}') braceCount--;
+
+                sb.Append(c);
+
+                if (braceCount == 0) break;
+            }
+
+            return sb.ToString();
         }
     }
 }
