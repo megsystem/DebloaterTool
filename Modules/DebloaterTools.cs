@@ -2,8 +2,11 @@
 using DebloaterTool.Logging;
 using DebloaterTool.Settings;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
+using System.Web.Script.Serialization;
 
 namespace DebloaterTool.Modules
 {
@@ -18,6 +21,13 @@ namespace DebloaterTool.Modules
             Logger.Log("Starting Windows configuration process...", Level.WARNING);
             try
             {
+                // Write JSON configuration to a temporary file.
+                string jsonPath = Path.Combine(Global.debloatersPath, "config.json");
+                File.WriteAllBytes(jsonPath, Global.config);
+                string sectionName = "raphiTool";
+                string outputPath = Path.Combine(Global.debloatersPath, $"{sectionName}.json");
+                string combinedArgs = ProcessSection(jsonPath, sectionName, outputPath);
+
                 // Install
                 string scriptUrl = Global.raphiToolUrl;
                 string scriptPath = Path.Combine(Global.debloatersPath, "Win11Debloat.ps1");
@@ -29,7 +39,7 @@ namespace DebloaterTool.Modules
                 // Build the PowerShell command string.
                 string powershellCommand =
                     "Set-ExecutionPolicy Bypass -Scope Process -Force; " +
-                    "& '" + scriptPath + $"' {Global.raphiToolArgs}";
+                    "& '" + scriptPath + $"' {combinedArgs}";
 
                 Logger.Log("Executing PowerShell command with parameters:", Level.INFO);
                 Logger.Log("Command: " + powershellCommand, Level.INFO);
@@ -50,8 +60,11 @@ namespace DebloaterTool.Modules
             try
             {
                 // Write JSON configuration to a temporary file.
-                string jsonPath = Path.Combine(Global.debloatersPath, "christitus.json");
-                File.WriteAllBytes(jsonPath, Global.christitusConfig);
+                string jsonPath = Path.Combine(Global.debloatersPath, "config.json");
+                File.WriteAllBytes(jsonPath, Global.config);
+                string sectionName = "ChrisUtils";
+                string outputPath = Path.Combine(Global.debloatersPath, $"{sectionName}.json");
+                ProcessSection(jsonPath, sectionName, outputPath);
 
                 // Install
                 string scriptUrl = Global.christitusUrl;
@@ -64,7 +77,7 @@ namespace DebloaterTool.Modules
                 // Build the PowerShell command string.
                 string powershellCommand =
                     "Set-ExecutionPolicy Bypass -Scope Process -Force; " +
-                    "& '" + scriptPath + $"' -Config '{jsonPath}' -Run -NoUI";
+                    "& '" + scriptPath + $"' -Config '{outputPath}' -Run -NoUI";
 
                 Logger.Log("Executing PowerShell command with parameters:", Level.INFO);
                 Logger.Log("Command: " + powershellCommand, Level.INFO);
@@ -75,6 +88,48 @@ namespace DebloaterTool.Modules
             {
                 Logger.Log("Error: " + ex.Message, Level.ERROR);
             }
+        }
+
+        /// <summary>
+        /// Reads a section from JSON, converts arrays to List<string>, builds combined string of all array values, and writes to file.
+        /// </summary>
+        static string ProcessSection(string jsonPath, string sectionName, string outputPath)
+        {
+            var serializer = new JavaScriptSerializer();
+            var config = serializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(jsonPath));
+
+            if (!config.ContainsKey(sectionName))
+                throw new Exception($"Section '{sectionName}' not found in JSON.");
+
+            var section = (Dictionary<string, object>)config[sectionName];
+            var outputSection = new Dictionary<string, object>();
+
+            // Collect all array values for combined args string
+            var allArgsList = new List<string>();
+
+            foreach (var kvp in section)
+            {
+                if (kvp.Value is ArrayList arrayList)
+                {
+                    // Convert ArrayList to List<string>
+                    var list = arrayList.Cast<object>().Select(x => x.ToString()).ToList();
+                    outputSection[kvp.Key] = list;
+
+                    // Add all array values to combined args string
+                    allArgsList.AddRange(list);
+                }
+                else
+                {
+                    outputSection[kvp.Key] = kvp.Value;
+                }
+            }
+
+            // Serialize section to JSON file
+            string outputJson = serializer.Serialize(outputSection);
+            File.WriteAllText(outputPath, outputJson);
+
+            // Return a single string of all values in all arrays
+            return string.Join(" ", allArgsList);
         }
     }
 }

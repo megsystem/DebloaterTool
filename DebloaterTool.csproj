@@ -118,7 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="Settings\Resources\christitus.json" />
+    <None Include="Settings\Resources\config.json" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\WaitingForm.resx">

@@ -63,37 +63,37 @@ namespace DebloaterTool.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] christitus {
+        internal static byte[] config {
             get {
-                object obj = ResourceManager.GetObject("christitus", resourceCulture);
+                object obj = ResourceManager.GetObject("config", resourceCulture);
                 return ((byte[])(obj));
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-        ///&lt;html lang=&quot;&quot; en&quot;&quot;&gt;
+        ///&lt;html lang=&quot;en&quot;&gt;
         ///&lt;head&gt;
-        ///    &lt;meta charset=&quot;&quot; UTF-8&quot;&quot; /&gt;
+        ///    &lt;meta charset=&quot;UTF-8&quot; /&gt;
         ///    &lt;title&gt;EULA&lt;/title&gt;
-        ///    &lt;meta http-equiv=&quot;&quot; X-UA-Compatible&quot;&quot; content=&quot;&quot; IE=edge&quot;&quot; /&gt;
-        ///
+        ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
         ///    &lt;style&gt;
-        ///        /* Reset */
         ///        * {
         ///            margin: 0;
         ///            padding: 0;
         ///            box-sizing: border-box;
         ///        }
         ///
-        ///        /* IE-friendly centering using table-cell */
         ///        html, body {
         ///            height: 100%;
         ///        }
         ///
         ///        body {
         ///            background-color: #1e1e1e;
-        ///            font-fami [rest of string was truncated]&quot;;.
+        ///            font-family: Arial, sans-serif;
+        ///            color: #ffffff;
+        ///            display: table;
+        ///        [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string EULA {
             get {
@@ -103,29 +103,22 @@ namespace DebloaterTool.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-        ///&lt;html lang=&apos;en&apos;&gt;
+        ///&lt;html lang=&quot;en&quot;&gt;
         ///&lt;head&gt;
-        ///    &lt;meta charset=&apos;UTF-8&apos;&gt;
+        ///    &lt;meta charset=&quot;UTF-8&quot;&gt;
         ///    &lt;title&gt;DebloaterTool&lt;/title&gt;
         ///    &lt;style&gt;
         ///        body {
         ///            margin: 0;
-        ///            font-family: Arial,sans-serif;
+        ///            font-family: Arial, sans-serif;
         ///            background: #121212;
         ///            color: #e0e0e0;
-        ///            padding: 20px;
+        ///            padding: 40px;
         ///            text-align: center;
-        ///        }
-        ///
-        ///        img#banner {
-        ///            max-width: 100%;
-        ///            height: auto;
-        ///            border-radius: 8px;
-        ///            margin-bottom: 20px;
-        ///        }
-        ///
-        ///        h1 {
-        /// [rest of string was truncated]&quot;;.
+        ///            padding-top: 250px;
+        ///            transition: padding-top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        ///            scrollbar-face-color: #333333;
+        ///            scrollbar-track-color: # [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SETTINGS {
             get {
