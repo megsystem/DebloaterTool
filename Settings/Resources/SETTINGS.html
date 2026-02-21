@@ -520,14 +520,21 @@
         function updateUI(data) {
             var buttons = [
                 { id: "debug", label: "DEBUG", state: data.debug },
-                { id: "diagnostic", label: "Diagnostic", state: data.diagnostic }
+                { id: "diagnostic", label: "Diagnostic", state: data.diagnostic },
+                { id: "updater", label: "Update", state: data.needupdate }
             ];
 
             for (var i = 0; i < buttons.length; i++) {
                 var btnInfo = buttons[i];
                 var btn = document.getElementById(btnInfo.id);
                 if (btn) {
-                    btn.textContent = (btnInfo.state ? "Disable " : "Enable ") + btnInfo.label;
+                    // Special logic for updater button
+                    if (btnInfo.id === "updater") {
+                        btn.textContent = btnInfo.state ? "Update Now" : "Check Update";
+                    } else {
+                        btn.textContent = (btnInfo.state ? "Disable " : "Enable ") + btnInfo.label;
+                    }
+                    // Add/remove "active" class
                     if (btnInfo.state) {
                         btn.classList.add("active");
                     } else {
