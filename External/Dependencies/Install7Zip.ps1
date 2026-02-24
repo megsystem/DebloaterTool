@@ -7,7 +7,7 @@ Write-Host "Fetching latest 7-Zip installer URL based on system architecture..."
 $is64Bit = $env:PROCESSOR_ARCHITECTURE -eq 'AMD64'
 
 try {
-    $response = Invoke-WebRequest -Uri $baseUrl
+    $response = Invoke-WebRequest -Uri $baseUrl -UseBasicParsing
     $links = $response.Links
 
     if ($is64Bit) {
