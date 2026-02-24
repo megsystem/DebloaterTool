@@ -120,9 +120,11 @@ namespace DebloaterTool.Modules
                 }
 
                 // Wait for the config file to appear
+                var profile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
+                    .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar); // fixed weird bug
+
                 string configPath = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                    ".config", "tacky-borders", "config.yaml"
+                    profile, ".config", "tacky-borders", "config.yaml"
                 );
 
                 int waited = 0;

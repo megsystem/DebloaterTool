@@ -9,6 +9,11 @@ DebloaterTool is a powerful and lightweight Windows debloater designed to remove
 
 ![DebloaterTool UI](https://raw.githubusercontent.com/megsystem/DebloaterTool/refs/heads/main/Screenshot/1.png)
 
+> [!IMPORTANT]  
+> Thanks to everyone who had diagnostic mode enabled 🙏  
+> The error reports coming through the Discord webhook helped me finally pinpoint and fix a pretty elusive bug that would’ve been a pain to reproduce locally.  
+> Appreciate the help ❤️
+
 ---
 
 ## Table of Contents
