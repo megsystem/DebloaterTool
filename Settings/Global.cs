@@ -54,7 +54,7 @@ namespace DebloaterTool.Settings
         public static string updaterbat = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/apply_update.bat";
 
         // Debloaters Settings
-        public static string christitusUrl = "https://christitus.com/win";
+        public static string christitusUrl = "https://github.com/ChrisTitusTech/winutil/releases/download/26.02.11/winutil.ps1"; // tempfix
         public static string raphiToolUrl = "https://win11debloat.raphi.re/";
         public static byte[] config = Resources.config;
 
