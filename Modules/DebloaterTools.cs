@@ -60,7 +60,7 @@ namespace DebloaterTool.Modules
             {
                 string sectionName = "ChrisUtils";
                 string outputPath = Path.Combine(Global.debloatersPath, $"{sectionName}.json");
-                ProcessSection(ExtractJson(Global.config), sectionName, outputPath);
+                ProcessSection(ExtractJson(Global.config), sectionName, outputPath, "Tweaks");
 
                 // Install
                 string scriptUrl = Global.christitusUrl;
@@ -78,7 +78,7 @@ namespace DebloaterTool.Modules
                 Logger.Log("Executing PowerShell command with parameters:", Level.INFO);
                 Logger.Log("Command: " + powershellCommand, Level.INFO);
                 Runner.Command("powershell", "-Command \"" + powershellCommand + "\"", 
-                    redirectOutputLogger: true, customExitCheck: "Tweaks are Finished");
+                    redirectOutputLogger: true, customExitCheck: "Features are Installed");
             }
             catch (Exception ex)
             {
@@ -89,7 +89,7 @@ namespace DebloaterTool.Modules
         /// <summary>
         /// Reads a section from JSON, converts arrays to List<string>, builds combined string of all array values, and writes to file.
         /// </summary>
-        static string ProcessSection(string json, string sectionName, string outputPath)
+        static string ProcessSection(string json, string sectionName, string outputPath, string specificValue = null)
         {
             var serializer = new JavaScriptSerializer();
             var config = serializer.Deserialize<Dictionary<string, object>>(json);
@@ -100,18 +100,14 @@ namespace DebloaterTool.Modules
             var section = (Dictionary<string, object>)config[sectionName];
             var outputSection = new Dictionary<string, object>();
 
-            // Collect all array values for combined args string
             var allArgsList = new List<string>();
 
             foreach (var kvp in section)
             {
                 if (kvp.Value is ArrayList arrayList)
                 {
-                    // Convert ArrayList to List<string>
                     var list = arrayList.Cast<object>().Select(x => x.ToString()).ToList();
                     outputSection[kvp.Key] = list;
-
-                    // Add all array values to combined args string
                     allArgsList.AddRange(list);
                 }
                 else
@@ -120,11 +116,24 @@ namespace DebloaterTool.Modules
                 }
             }
 
-            // Serialize section to JSON file
-            string outputJson = serializer.Serialize(outputSection);
+            string outputJson;
+
+            if (!string.IsNullOrEmpty(specificValue))
+            {
+                if (!outputSection.ContainsKey(specificValue))
+                    throw new Exception($"Value '{specificValue}' not found in section '{sectionName}'.");
+
+                // Serialize ONLY the array
+                outputJson = serializer.Serialize(outputSection[specificValue]);
+            }
+            else
+            {
+                // Serialize the whole object
+                outputJson = serializer.Serialize(outputSection);
+            }
+
             File.WriteAllText(outputPath, outputJson);
 
-            // Return a single string of all values in all arrays
             return string.Join(" ", allArgsList);
         }
 
