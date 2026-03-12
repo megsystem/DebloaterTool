@@ -25,7 +25,7 @@ namespace DebloaterTool.Modules
                 Console.WriteLine(Encoding.UTF8.GetString(Global.config));
                 string sectionName = "raphiTool";
                 string outputPath = Path.Combine(Global.debloatersPath, $"{sectionName}.json");
-                string combinedArgs = ProcessSection(ExtractJson(Global.config), sectionName, outputPath);
+                string combinedArgs = ProcessSection(ExtractJson(Global.config), sectionName, outputPath, "Args");
 
                 // Install
                 string scriptUrl = Global.raphiToolUrl;
