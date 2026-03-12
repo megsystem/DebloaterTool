@@ -55,7 +55,7 @@ namespace DebloaterTool.Settings
 
         // Debloaters Settings
         public static string christitusUrl = "https://github.com/ChrisTitusTech/winutil/releases/download/26.02.11/winutil.ps1"; // tempfix
-        public static string raphiToolUrl = "https://win11debloat.raphi.re/";
+        public static string raphiToolUrl = "https://debloat.raphi.re/";
         public static byte[] config = Resources.config;
 
         // Resources files
