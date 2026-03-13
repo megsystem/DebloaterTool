@@ -47,7 +47,7 @@ namespace DebloaterTool.Helpers
                 // Check if compiled as Debug
                 if (Diagnostic.CompiledAsDebug())
                 {
-                    Logger.Log("Compiled as debug - UPDATE SKIPPED", Level.INFO);
+                    Logger.Log("Updater disabled in debug builds.", Level.SKIP);
                     return false;
                 }
 

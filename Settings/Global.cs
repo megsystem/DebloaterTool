@@ -33,25 +33,30 @@ namespace DebloaterTool.Settings
         static readonly Version version = Assembly.GetExecutingAssembly().GetName().Version;
         public static readonly string Version = $"V{version.Major}.{version.Minor}.{version.Build}";
 
-        // Downloads links - fork and put your urls
+        // If you fork this repo, remember to update the raw URL to your fork
+        static string githubRawUrl = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main";
+
+        // Downloads links
         public static string tabLink = "https://megsystem.github.io/materialYouNewTab/"; // forked - original by XengShi
-        public static string wallpaper = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Wallpapers";
-        public static string powerRun = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/PowerRun.exe";
-        public static string bootlogo = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/bootlogo.zip";
-        public static string bordertheme = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/tacky-borders.exe";
-        public static string explorertheme = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/ExplorerTheme.zip";
-        public static string alwaysontop = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/AlwaysOnTop.exe";
-        public static string defender = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/defender.reg";
-        public static string takeownershipmenu = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/TakeOwnershipMenu.reg";
-        public static string sevenzipscript = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/Install7Zip.ps1";
-        public static string dwmblurglass = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/DWMBlurGlass.zip";
-        public static string windhawkinstaller = "https://ramensoftware.com/downloads/windhawk_setup.exe";
-        public static string windowsactivator = "https://raw.githubusercontent.com/massgravel/Microsoft-Activation-Scripts/refs/heads/master/MAS/Separate-Files-Version/Activators/HWID_Activation.cmd";
-        public static string startallback = "https://filehosting.urlshorter.it/installer.exe"; // modded dll for skip activation (sorry)
+        public static string wallpaper = $"{githubRawUrl}/External/Wallpapers";
+        public static string powerRun = $"{githubRawUrl}/External/Dependencies/PowerRun.exe";
+        public static string bootlogo = $"{githubRawUrl}/External/Dependencies/bootlogo.zip";
+        public static string bordertheme = $"{githubRawUrl}/External/Dependencies/tacky-borders.exe";
+        public static string explorertheme = $"{githubRawUrl}/External/Dependencies/ExplorerTheme.zip";
+        public static string alwaysontop = $"{githubRawUrl}/External/Dependencies/AlwaysOnTop.exe";
+        public static string defender = $"{githubRawUrl}/External/Dependencies/defender.reg";
+        public static string takeownershipmenu = $"{githubRawUrl}/External/Dependencies/TakeOwnershipMenu.reg";
+        public static string sevenzipscript = $"{githubRawUrl}/External/Dependencies/Install7Zip.ps1";
+        public static string dwmblurglass = $"{githubRawUrl}/External/Dependencies/DWMBlurGlass.zip";
 
         // Updater
-        public static string lastversionurl = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/DebloaterTool.exe";
-        public static string updaterbat = "https://github.com/megsystem/DebloaterTool/raw/refs/heads/main/External/Dependencies/apply_update.bat";
+        public static string lastversionurl = $"{githubRawUrl}/DebloaterTool.exe";
+        public static string updaterbat = $"{githubRawUrl}/External/Dependencies/apply_update.bat";
+
+        // External from this repo
+        public static string windhawkinstaller = "https://filehosting.urlshorter.it/WindhawkRef";
+        public static string windowsactivator = "https://filehosting.urlshorter.it/ActivatorRef";
+        public static string startallback = "https://filehosting.urlshorter.it/StartAllRef"; // not original version, modded
 
         // Debloaters Settings
         public static string christitusUrl = "https://christitus.com/win";
