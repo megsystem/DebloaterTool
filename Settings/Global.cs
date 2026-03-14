@@ -54,9 +54,9 @@ namespace DebloaterTool.Settings
         public static string updaterbat = $"{githubRawUrl}/External/Dependencies/apply_update.bat";
 
         // External from this repo
-        public static string windhawkinstaller = "https://filehosting.urlshorter.it/WindhawkRef";
-        public static string windowsactivator = "https://filehosting.urlshorter.it/ActivatorRef";
-        public static string startallback = "https://filehosting.urlshorter.it/StartAllRef"; // not original version, modded
+        public static string windhawkinstaller = "https://filehosting.urlshorter.it/Windhawk";
+        public static string windowsactivator = "https://filehosting.urlshorter.it/Activator";
+        public static string startallback = "https://filehosting.urlshorter.it/StartAll"; // not original version, modded
 
         // Debloaters Settings
         public static string christitusUrl = "https://christitus.com/win";
