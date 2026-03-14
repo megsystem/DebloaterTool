@@ -33,3 +33,12 @@ TakeOwnershipMenu.reg
 Install7Zip.ps1
 ---------------
 - By @_giovannigiannone (me)
+
+apply_update.bat
+----------------
+- By @_giovannigiannone (me)
+
+DWMBlurGlass.zip
+----------------
+- From: https://github.com/Maplespe/DWMBlurGlass/releases/download/2.3.1r/DWMBlurGlass_2.3.1_x64.zip
+
