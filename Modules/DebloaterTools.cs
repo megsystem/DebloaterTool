@@ -19,7 +19,6 @@ namespace DebloaterTool.Modules
         /// </summary>
         public static void RunRaphiTool()
         {
-            Logger.Log("Starting Windows configuration process...", Level.WARNING);
             try
             {
                 Console.WriteLine(Encoding.UTF8.GetString(Global.config));
