@@ -12,7 +12,8 @@ namespace DebloaterTool.Logging
         CRITICAL,
         SUCCESS,
         DOWNLOAD,
-        SKIP
+        SKIP,
+        DEBUG
     }
 
     public static class LevelColors
@@ -26,7 +27,8 @@ namespace DebloaterTool.Logging
             { Level.VERBOSE, ConsoleColor.Magenta },
             { Level.ERROR, ConsoleColor.Red },
             { Level.CRITICAL, ConsoleColor.DarkRed },
-            { Level.DOWNLOAD, ConsoleColor.Magenta }
+            { Level.DOWNLOAD, ConsoleColor.Magenta },
+            { Level.DEBUG, ConsoleColor.DarkBlue }
         };
     }
 }

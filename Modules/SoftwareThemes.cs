@@ -122,10 +122,13 @@ namespace DebloaterTool.Modules
                 // Wait for the config file to appear
                 var profile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
                     .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar); // fixed weird bug
+                Logger.Log($"DEBUG: Looking for profile at: '{profile}'", Level.DEBUG); // this is just temporary
+                                                                                        // to understand the bug.
 
-                string configPath = Path.Combine(
-                    profile, ".config", "tacky-borders", "config.yaml"
-                );
+                string[] parts = { profile, ".config", "tacky-borders", "config.yaml" };
+                string configPath = string.Join(Path.DirectorySeparatorChar.ToString(), parts); // idk gemini give me this
+                Logger.Log($"DEBUG: Looking for config at: '{configPath}'", Level.DEBUG); // this is just temporary
+                                                                                          // to understand the bug.
 
                 int waited = 0;
                 while (!File.Exists(configPath))

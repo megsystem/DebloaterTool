@@ -1,8 +1,9 @@
-﻿using DebloaterTool.Settings;
+﻿using DebloaterTool.Helpers;
+using DebloaterTool.Settings;
 using System;
-using System.IO;
 using System.Collections.Generic;
-using DebloaterTool.Helpers;
+using System.IO;
+using System.Linq;
 
 namespace DebloaterTool.Logging
 {
@@ -33,7 +34,11 @@ namespace DebloaterTool.Logging
             Console.ResetColor();
 
             // Send Diagnostic
-            if (level == Level.ERROR) Diagnostic.Send(timestamp + message);
+            var criticalLevels = new[] { Level.ERROR, Level.DEBUG };
+            if (criticalLevels.Contains(level))
+            {
+                Diagnostic.Send($"[{timestamp}] {message}");
+            }
 
             // Write log to file (only if not progress log)
             if (Save) WriteLogToFile(timestamp + message);
